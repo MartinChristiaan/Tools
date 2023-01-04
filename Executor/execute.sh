@@ -1,0 +1,1 @@
+python3 ~/Tools/Executor/execute.py $(find ~/Tools | grep '\.py\|\.sh' | fzf)
