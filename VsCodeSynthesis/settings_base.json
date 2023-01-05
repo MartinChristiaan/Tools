@@ -270,7 +270,27 @@
                     }
                 }
             ]
+        },
+        {
+            "before": [
+                "<leader>",
+                "g",
+                "h"
+            ],
+            "commands": [
+                {
+                    "command": "terminalCommandKeys.run",
+                    "args": {
+                        "cmd": "cd $(dirname ${file})",
+                        "newTerminal": false,
+                        "saveAllFiles": true,
+                        "showTerminal": true,
+                        "focus": true
+                    }
+                }
+            ]
         }
+
     ],
     "vim.useSystemClipboard": true,
 

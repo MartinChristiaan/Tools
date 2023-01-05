@@ -8,3 +8,7 @@
 <leader>mf:fileutils.moveFile
 # CopyPath
 <leader>cp:copyFilePath
+# GoToReference
+<leader>gr:editor.action.findReferences
+# workbench.action.showAllEditorsByMostRecentlyUsed
+<leader>?:workbench.action.showAllEditorsByMostRecentlyUsed
