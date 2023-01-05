@@ -7,6 +7,7 @@
     "workbench.colorCustomizations": {
         "[Material Theme Darker]": {}
     },
+
     "vim.highlightedyank.enable": true,
     "glassit.alpha": 221,
     "vim.handleKeys":{
@@ -311,7 +312,7 @@
     "window.menuBarVisibility": "toggle",
     "editor.cursorStyle": "line",
     "editor.insertSpaces": false,
-    "editor.lineNumbers": "on",
+    "editor.lineNumbers": "relative",
     "editor.wordSeparators": "/\\()\"':,.;<>~!@#$%^&*|+=[]{}`?-",
     "editor.wordWrap": "off",
     "notebook.cellToolbarLocation": {
