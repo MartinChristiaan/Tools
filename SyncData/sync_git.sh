@@ -1,0 +1,1 @@
+while sleep 1; do find ~/git/mantis | entr -d bash -c "rsync  -azP -e 'ssh -p 31000' --delete ~/git/mantis  leeuwenmcv@pc-11393.tsn.tno.nl:/uhome/leeuwenmcv/git//mantis "; done
