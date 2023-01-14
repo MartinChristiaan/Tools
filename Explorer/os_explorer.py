@@ -9,7 +9,7 @@ from colorama import init as colorama_init
 colorama_init()
 RESET = Style.RESET_ALL
 
-def get_output_string(current_folder,combinations):
+def get_output_string(current_folder,combinations,curkey = ""):
 
 	num_cols = 4
 	output_string = Back.BLUE + Fore.WHITE + Style.BRIGHT +  f"{current_folder}".center(25 * num_cols,"-") + f"{RESET}\n"
@@ -18,8 +18,10 @@ def get_output_string(current_folder,combinations):
 	folder_combos = [x for x in combinations if os.path.isdir(get_full_path(x))]
 	file_combos = [x for x in combinations if not os.path.isdir(get_full_path(x))]
 	combinations = folder_combos + file_combos
+
+	keys_entered = len(curkey)
 	for i,combo in enumerate(combinations):
-		keybind_label = f'{combo["keybind"]}'.rjust(4)
+		keybind_label = f'{combo["keybind"][keys_entered:]}'.rjust(4)
 
 		item_path = f'{current_folder}/{combo["item"]}' 
 		max_label_length = 20
@@ -39,12 +41,16 @@ def get_output_string(current_folder,combinations):
 
 command_message = """
 q : quit
+b : parent dir
 t : terminal here
+e : explorer here
+n : nautilus here
 c : copy mode
 """
 
 def get_parent_directory(directory):
-	return "/".join(directory.split("/")[:-1])
+	return "/".join(directory.split("/")[:-1]) or "/"
+
 
 
 while True:
@@ -112,7 +118,14 @@ while True:
 			if char == "b":
 				current_folder = get_parent_directory(current_folder)
 				print(current_folder)
+				os.system("clear")
 				break
+			if char == "n":
+				os.system(f"nautilus {current_folder}")
+				
+			if char == "e":
+				os.system(f"explorer.exe {current_folder}")
+
 			if char == "t":
 				with open('/tmp/dest','w') as f:
 					f.write(current_folder)
@@ -135,10 +148,10 @@ while True:
 		elif len(cur_selection) == 0:
 			cur_selection = combinations
 			cur_word = ""
-		get_output_string(current_folder,cur_selection)
+		get_output_string(current_folder,cur_selection,cur_word)
 	if final_result :
 		if os.path.isfile(f"{current_folder}/{item}"):
-			os.system(f"xdg-open {current_folder}/{item}")
+			os.system(f'xdg-open "{current_folder}/{item}"')
 			break
 		else:
 			current_folder = f"{current_folder}/{item}"
