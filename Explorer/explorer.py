@@ -5,7 +5,7 @@ import sys
 items = []
 for line in sys.stdin:
     # sys.stdout.write(line)
-	items.append(line)
+	items.append(line.replace('\n',"").replace(" ",""))
 
 items.sort()
 
@@ -19,9 +19,11 @@ identifier_chars = [x for x in "asdfjkl;qweruiopzsxxcvnm,."]
 for item in items:
 	if item.endswith('/'):
 		item = item[:-1]
+	if len(item) < 2:
+		continue
+	print(item)
 	
 	item = item.split('/')[-1].replace("\n","")
-	print(item)
 	c1 = item[0] 
 	c2 = item[1] 
 	starting_char.append(c1)
@@ -34,6 +36,8 @@ combinations = []
 for item in items:
 	if item.endswith('/'):
 		item = item[:-1]
+	if len(item) < 2:
+		continue
 	itemk = item.split('/')[-1].replace("\n","")
 	c1 = itemk[0] 
 	c2 = itemk[1] 
