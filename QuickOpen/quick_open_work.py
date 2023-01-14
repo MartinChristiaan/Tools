@@ -5,7 +5,7 @@ import sys
 home = os.path.expanduser('~')
 program = sys.argv[1]
 
-with open(f'{home}/Tools/QuickOpen/quick_folders_work','r') as f:
+with open(f'{home}/git/Tools/QuickOpen/quick_folders_work','r') as f:
     folders = f.readlines()
 
 combined_dirs = []

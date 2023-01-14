@@ -18,7 +18,7 @@ def update_snippets():
 		with open(f'{folder}/{filename}', 'r') as f:
 			body = f.read()
 		
-		snippets = body.split("#")
+		snippets = body.split("# ")
 		print(snippets)
 		for snippet in snippets:
 			if len(snippet) == 0:

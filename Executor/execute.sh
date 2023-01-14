@@ -1,1 +1,1 @@
-python3 ~/git/Tools/Executor/execute.py $(find ~/git/Tools | grep '\.py\|\.sh' | fzf)
+python3 ~/git/Tools/Executor/execute.py $(find ~/git/Tools | grep '.sh' | fzf)

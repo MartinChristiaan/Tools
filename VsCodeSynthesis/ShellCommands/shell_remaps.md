@@ -13,4 +13,6 @@
 # openRDA
 <leader>or:bash ~/git/Tools/QuickOpen/open_rda.sh:True:True:False:False
 # updateCode
-<leader>uc:cd ~/git/Tools/VsCodeSynthesis/ && bash update_settings.sh
+<leader>uc:cd ~/git/Tools/VsCodeSynthesis/ && bash update_settings.sh:True:True:False:False
+# openVideostepper
+<leader>ov:cd ~/git/Tools/SyncData/ && bash open_videostepper.sh:True:True:False:False
