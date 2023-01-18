@@ -12,7 +12,7 @@ items.sort()
 starting_char = []
 starting_charpairs = []
 
-identifier_chars = [x for x in "asdfjkl;qweruiopzsxxcvnm,."]
+identifier_chars = [x for x in "asdfjkl;qweruiopzsxcvnm,."]
 
 
 

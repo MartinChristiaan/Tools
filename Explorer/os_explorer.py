@@ -1,157 +1,99 @@
-
 import os
+import click
 import sys
-import time
-current_folder = os.getcwd()
-import sys
-from colorama import Fore,Style,Back
-from colorama import init as colorama_init
-colorama_init()
-RESET = Style.RESET_ALL
+from state import State,Combination,MODES,Processedpath
+from view import get_output_string
+from control import get_parent_directory, handle_control_keys
 
-def get_output_string(current_folder,combinations,curkey = ""):
-
-	num_cols = 4
-	output_string = Back.BLUE + Fore.WHITE + Style.BRIGHT +  f"{current_folder}".center(25 * num_cols,"-") + f"{RESET}\n"
-	get_full_path = lambda x: f"{current_folder}/{x['item']}"
-
-	folder_combos = [x for x in combinations if os.path.isdir(get_full_path(x))]
-	file_combos = [x for x in combinations if not os.path.isdir(get_full_path(x))]
-	combinations = folder_combos + file_combos
-
-	keys_entered = len(curkey)
-	for i,combo in enumerate(combinations):
-		keybind_label = f'{combo["keybind"][keys_entered:]}'.rjust(4)
-
-		item_path = f'{current_folder}/{combo["item"]}' 
-		max_label_length = 20
-		item_label = f'{combo["item"][:max_label_length]}'.rjust(20)
-
-		if os.path.isdir(item_path):
-			color = Fore.BLUE
-		else:
-			color = Fore.GREEN
-		output_string += f'{Fore.RED}{keybind_label}{RESET} : {color}{item_label}{RESET} | '
-		if i % num_cols == num_cols-1:
-			output_string += "\n"
-	if len(combinations) == 0:
-		output_string += f"{Fore.RED} no items found {RESET} "
-
-	print(output_string)
-
-command_message = """
-q : quit
-b : parent dir
-t : terminal here
-e : explorer here
-n : nautilus here
-c : copy mode
-"""
-
-def get_parent_directory(directory):
-	return "/".join(directory.split("/")[:-1]) or "/"
-
+state = State(os.getcwd(),[],"",MODES.OPEN,"",[])
 
 
 while True:
-	items = os.listdir(current_folder)
-	# for line in sys.stdin:
-	#     # sys.stdout.write(line)
-	# 	items.append(line.replace('\n',"").replace(" ",""))
-
-	items.sort()
+	if state.current_folder.startswith("//"):
+		state.current_folder = state.current_folder[1:]
+	## Prepare keybinds
+	# print(state)
+	subpaths = os.listdir(state.current_folder)
+	subpaths.sort()
 
 	starting_char = []
 	starting_charpairs = []
 
-	identifier_chars = [x for x in "asdfjkl;qweruiopzsxxcvnm,."]
+	identifier_chars = [x for x in "asdfjkl;qweruiopzsxcvnm,."]
+	processed_paths = []
 
-	# Scan for possible keybinds
-
-	for item in items:
-		if item.endswith('/'):
-			item = item[:-1]
-		if len(item) < 2:
+	for path in subpaths:
+		full_path = f"{state.current_folder}/{path}"
+		if path.endswith('/'):
+			path = path[:-1]
+		if len(path) < 2:
 			continue
-		item = item.split('/')[-1].replace("\n","")
-		c1 = item[0] 
-		c2 = item[1] 
-		starting_char.append(c1)
-		starting_charpairs.append(c1+c2)
+		path = path.split('/')[-1].replace("\n","")
+		processed_paths.append(Processedpath(full_path,path))
+		starting_char.append(path[0])
+		starting_charpairs.append(path[:2])
 
-	next_identifier_char_lookup = {charpair:identifier_chars.copy() for charpair in starting_charpairs}
+	final_keybind_char_lookup = {charpair:identifier_chars.copy() for charpair in starting_charpairs}
 	# Get combinations
 
 	combinations = []
-	for item in items:
-		if item.endswith('/'):
-			item = item[:-1]
-		if len(item) < 2:
-			continue
-		itemk = item.split('/')[-1].replace("\n","")
-		c1 = itemk[0] 
-		c2 = itemk[1] 
+	for path in processed_paths:
+		c1,c2 = path.shorthand[:2]
 		if len([x for x in starting_char if x == c1]) == 1: # unique starting char
-			combinations.append(dict(keybind=c1,item=item))
+			combination = Combination(path,c1)
+			combinations.append(combination)
 		elif len([x for x in starting_charpairs if x == c1+c2]) == 1: # unique starting char
-			combinations.append(dict(keybind=c1+c2,item=item))
+			combinations.append(Combination(path,c1+c2))
 		else:
-			identifier_list = next_identifier_char_lookup[itemk[:2]]
+			identifier_list = final_keybind_char_lookup[path.shorthand[:2]]
 			if len(identifier_list) == 0:
 				continue
 			identifier = identifier_list.pop(0)
-			combinations.append(dict(keybind=c1+c2+identifier,item=item))
+			combinations.append(Combination(path,c1+c2+identifier))
+	state.combinations = combinations
 
-	get_output_string(current_folder,combinations)
-	import click
-	cur_selection = []
-	cur_word= ""
+	# UI loop
+
+	get_output_string(state)
 	final_result = False
+	state.cur_selection = []
+	state.curkey = ""
 	while True:
 		char = click.getchar()
-		if char == " ":
-			os.system('clear')
-			print(command_message)
-			char = click.getchar()
-			if char == "q":
-				sys.exit()
-			if char == "b":
-				current_folder = get_parent_directory(current_folder)
-				print(current_folder)
-				os.system("clear")
-				break
-			if char == "n":
-				os.system(f"nautilus {current_folder}")
-				
-			if char == "e":
-				os.system(f"explorer.exe {current_folder}")
+		# input(f"u pressed {char} with {len(char)}")
+		if char == " " and handle_control_keys(state):
+			break
 
-			if char == "t":
-				with open('/tmp/dest','w') as f:
-					f.write(current_folder)
-				# os.system(f"{current_folder} > /tmp/dest")
-				sys.exit()
-
-			
-
-
-
-
+		elif char == "\x1b":
+			state.current_folder = get_parent_directory(state.current_folder)
+			os.system("clear")
+			break
 
 		os.system("clear")
-		cur_word+=char
-		cur_selection = [x for x in combinations if x["keybind"].startswith(cur_word)]
-		if len(cur_selection) == 1:
-			item = cur_selection[0]["item"]
+		state.curkey+=char
+		state.cur_selection = [x for x in state.combinations if x.keybind.startswith(state.curkey)]
+		if len(state.cur_selection) == 1:
+			path = state.cur_selection[0].path.full_path
 			final_result = True
 			break
-		elif len(cur_selection) == 0:
-			cur_selection = combinations
-			cur_word = ""
-		get_output_string(current_folder,cur_selection,cur_word)
+		elif len(state.cur_selection) == 0:
+			state.cur_selection = state.combinations
+			state.curkey = ""
+		get_output_string(state)
+
 	if final_result :
-		if os.path.isfile(f"{current_folder}/{item}"):
-			os.system(f'xdg-open "{current_folder}/{item}"')
-			break
+		if os.path.isfile(path):
+			if state.mode == MODES.OPEN:
+				os.system(f'xdg-open "{path}"')
+				break
+			elif state.mode == MODES.COPY or state.mode == MODES.MOVE:
+				# os.system(f'clip.exe "{filepath}"')
+				state.path_to_copy = path
+				state.curkey = ""
+			elif state.mode == MODES.DELETE:
+				os.system(f"rm {path}")
+				# state.current_folder = path
 		else:
-			current_folder = f"{current_folder}/{item}"
+			state.curkey = ""
+			state.current_folder = path
+			
