@@ -1,4 +1,4 @@
-export PATH="~/git/Tools/bin:$PATH"
-export TOOLS=~/git/Tools
+export PATH="~/git/tools/bin:$PATH"
+export TOOLS=~/git/tools
 alias ex='source explorer'
 

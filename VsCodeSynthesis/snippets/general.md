@@ -67,7 +67,6 @@ import os
 class ${1:EngineExample}(Input1MixIn,Output1DictListMixIn,AbstractEngine):
     def __init__(self, parameter1=0, parameter2=2.0):
         super().__init__()
-        # configuration parameters
         self._config["parameter1"] = parameter1 # int
         self._config["parameter2"] = parameter2 # float
 
@@ -77,5 +76,4 @@ class ${1:EngineExample}(Input1MixIn,Output1DictListMixIn,AbstractEngine):
     def process_sample(self, timestampdata, data):
         data = data[0][0]["data"]
         d = 1.0
-        # when a list of dicts is returned, add timestamp!!!
         return [[{"timestamp": timestampdata["timestamp"], "some_value": d}]]

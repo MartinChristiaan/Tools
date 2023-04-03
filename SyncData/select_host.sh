@@ -1,1 +1,0 @@
-cd ~/git/Tools/SyncData && python3 select_hosts.py
