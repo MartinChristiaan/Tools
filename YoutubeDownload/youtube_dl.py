@@ -6,7 +6,6 @@ import pyperclip
 
 # f7 is download
 # f8 is fzf to select from items
-time.sleep(1)
 def grab_url():
     hotkey('ctrl', 'l')
     time.sleep(1)
