@@ -2,6 +2,6 @@
 cd /mnt && find . -maxdepth 1 -type d -empty -delete
 
 mkdir -p /mnt/spear-delft-dynamics-jetson/
-sshfs -o allow_other -o identityfile=/home/martin/.ssh/id_rsa -o ServerAliveInterval=1 -o reconnect -p 1143 tno@srv.delftdynamics.nl:/ /mnt/spear-delft-dynamics-jetson/
+sshfs -o allow_other -o identityfile=/home/leeuwenmcv/.ssh/id_rsa -o ServerAliveInterval=1 -o reconnect -p 1143 tno@srv.delftdynamics.nl:/ /mnt/spear-delft-dynamics-jetson/
 	
 	

@@ -19,14 +19,14 @@ ssh  -p {port}  -t {user}@{host} "cd {gitpath} ; bash --login"
 	"""
 
     script_contents_rsync = f"""#!/bin/bash
-while sleep 0.1; do find ~/git  -not -path "*/node_modules/*" | entr -d bash -c "rsync  -azP -e 'ssh -p {data.get('port', 22)}' --delete ~/git/{project}/  {user}@{host}:{gitpath}/{project}/"; done
+while sleep 0.1; do find ~/git  -not -path "*/node_modules/*" | entr -d bash -c "rsync  -azP -e 'ssh -p {data.get('port', 22)}' --delete ~/git/projects/{project}/  {user}@{host}:{gitpath}/{project}/"; done
 	"""
 
     script_contents_mount = f"""#!/bin/bash
 cd /mnt && find . -maxdepth 1 -type d -empty -delete
 
 mkdir -p /mnt/{hostname}/
-sshfs -o allow_other -o identityfile=/home/martin/.ssh/id_rsa -o ServerAliveInterval=1 -o reconnect -p {port} {user}@{host}:/ /mnt/{hostname}/
+sshfs -o allow_other -o identityfile=/home/leeuwenmcv/.ssh/id_rsa -o ServerAliveInterval=1 -o reconnect -p {port} {user}@{host}:/ /mnt/{hostname}/
 	
 	"""
 

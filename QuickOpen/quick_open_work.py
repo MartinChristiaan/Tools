@@ -5,7 +5,7 @@ import sys
 home = os.path.expanduser('~')
 program = sys.argv[1]
 
-with open(f'{home}/git/Tools/QuickOpen/quick_folders_work','r') as f:
+with open(f'quick_folders_work','r') as f:
     folders = f.readlines()
 
 combined_dirs = []
@@ -18,11 +18,13 @@ for folder in folders:
     folder = folder+"/*"
     combined_dirs += [x for x in glob.glob(folder) if os.path.isdir(x)]
 
-with open('/tmp/interesting_dirs','w') as f:
-    f.write("\n".join(combined_dirs))
+# with open('/tmp/interesting_dirs','w') as f:
+#     f.write("\n".join(combined_dirs))
 
-cmd= f'{program} $(cat /tmp/interesting_dirs | fzf)'
-os.system(cmd)
+print(combined_dirs)
+
+# cmd= f'{program} $(cat /tmp/interesting_dirs | fzf)'
+# os.system(cmd)
 
 
 
