@@ -1,1 +1,0 @@
-echo "source ~/git/Tools/bash_extension/bash_extension.sh" >> ~/.bashrc

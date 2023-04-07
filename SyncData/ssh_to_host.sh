@@ -1,1 +1,0 @@
-ssh -p 31000 -t leeuwenmcv@pc-11393.tsn.tno.nl "cd /uhome/leeuwenmcv/git/mantis//mantis; bash --login"
