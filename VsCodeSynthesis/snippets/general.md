@@ -76,4 +76,21 @@ class ${1:EngineExample}(Input1MixIn,Output1DictListMixIn,AbstractEngine):
     def process_sample(self, timestampdata, data):
         data = data[0][0]["data"]
         d = 1.0
+        # when a list of dicts is returned, add timestamp!!!
         return [[{"timestamp": timestampdata["timestamp"], "some_value": d}]]
+
+# bookmarks
+
+import json
+
+bookmarks = "/home/martin/.config/BraveSoftware/Brave-Browser/Default/Bookmarks"
+
+with open(bookmarks,'r') as f:
+	bookmarks = json.load(f)
+
+top_level_items =bookmarks['roots']['bookmark_bar']['children']
+for item in top_level_items:
+	if "Spotify" in item['name']:
+		for linkitem in item['children']:
+			url = linkitem['url']
+			print(url)

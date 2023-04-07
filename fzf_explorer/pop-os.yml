@@ -1,0 +1,11 @@
+folders:
+  =
+    path: /mnt/HardDrive/Media
+    depth: 2
+command:
+  nautilus .
+
+
+
+    
+
