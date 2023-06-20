@@ -35,7 +35,6 @@ def handle_control_keys(state:State):
 	if char == "t":
 		with open('/tmp/dest','w') as f:
 			f.write(state.current_folder)
-		# os.system(f"{current_folder} > /tmp/dest")
 		sys.exit()
 	if char == "p":
 		if state.mode == MODES.MOVE:

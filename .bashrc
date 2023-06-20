@@ -94,7 +94,9 @@ alias l='ls -CF'
 alias x='bash ~/git/tools/executor/execute.sh'
 alias qe='bash -c "cd ~/git/tools/quick_open && python3 quick.py --explore"'
 alias qc='bash -c "cd ~/git/tools/quick_open && python3 quick.py --clip"'
-alias qc='bash -c "cd ~/git/tools/quick_open && python3 quick.py --rsync"'
+alias qr='bash -c "cd ~/git/tools/quick_open && python3 quick.py --rsync"'
+alias qr='cd ~/git/tools/quick_open && cd $(python3 folder_select.py)'
+alias ex='source ~/git/tools/explorer/explore.sh'
 
 
 # Add an "alert" alias for long running commands.  Use like so:
@@ -120,3 +122,4 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
+
