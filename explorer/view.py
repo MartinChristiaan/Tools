@@ -10,6 +10,8 @@ RESET = Style.RESET_ALL
 
 command_message = """
 q  : quit
+a  : add bookmark
+b  : open bookmark
 b  : parent dir
 t  : terminal here
 e  : explorer here

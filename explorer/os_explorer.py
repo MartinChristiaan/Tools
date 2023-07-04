@@ -4,17 +4,21 @@ import sys
 from state import State,Combination,MODES,Processedpath
 from view import get_output_string
 from control import get_parent_directory, handle_control_keys
+home = os.path.expanduser('~')
 
 state = State(os.getcwd(),[],"",MODES.OPEN,"",[])
 
-
 while True:
+	
 	if state.current_folder.startswith("//"):
 		state.current_folder = state.current_folder[1:]
 	## Prepare keybinds
-	# print(state)
 	subpaths = os.listdir(state.current_folder)
+	if state.mode == MODES.BOOKMARK:
+		with open(f'{home}/git/tools/explorer/bookmarks','r') as f:
+			subpaths = f.read().split('\n')
 	subpaths.sort()
+
 
 	starting_char = []
 	starting_charpairs = []
@@ -74,6 +78,9 @@ while True:
 		state.cur_selection = [x for x in state.combinations if x.keybind.startswith(state.curkey)]
 		if len(state.cur_selection) == 1:
 			path = state.cur_selection[0].path.full_path
+			if state.mode == MODES.BOOKMARK:
+				path = path.replace(state.current_folder,"")
+				state.mode = MODES.OPEN
 			final_result = True
 			break
 		elif len(state.cur_selection) == 0:

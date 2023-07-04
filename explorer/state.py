@@ -28,3 +28,4 @@ class MODES:
 	COPY="copy"
 	MOVE="move"
 	DELETE="delete"
+	BOOKMARK="bookmark"
