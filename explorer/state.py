@@ -29,3 +29,5 @@ class MODES:
 	MOVE="move"
 	DELETE="delete"
 	BOOKMARK="bookmark"
+	SEARCH="search"
+	HISTORY="history"

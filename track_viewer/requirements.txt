@@ -1,0 +1,7 @@
+# pyside6==6.5.0 is known to cause an error
+pyside6==6.4.1
+matplotlib>=3.6.2
+seaborn
+loguru
+trackertoolbox @ git+https://toolboxes:glpat-TozmQ6kmAsaNB-M_sfQr@gitlab.tsn.tno.nl/intelligent_imaging/python/toolboxes.git#subdirectory=trackertoolbox
+media_manager @ git+https://media_manager:glpat-FQPEDyrPz5SfbsbMyMfy@gitlab.tsn.tno.nl/intelligent_imaging/python/pipelines/media_manager.git

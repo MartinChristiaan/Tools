@@ -1,3 +1,3 @@
 #!/bin/bash
-ssh  -p 22  -t dev@iilab52.labs.tno.nl "cd /home/dev/git/ ; bash --login"
+ssh  -p 22  -t leeuwenmcv@iilab34.labs.tno.nl "cd /home/leeuwenmcv/git/ ; bash --login"
 	

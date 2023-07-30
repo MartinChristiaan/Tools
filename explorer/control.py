@@ -8,7 +8,8 @@ home = os.path.expanduser('~')
 def get_parent_directory(directory):
 	return "/".join(directory.split("/")[:-1]) or "/"
 explorer_path = f"{home}/git/tools/explorer/"
-
+image_viewer_path = f"{home}/git/tools/yolo_explorer/"
+tools_path  = f"{home}/git/tools/"
 
 def add_bookmark(folder):
 	with open(f"{explorer_path}/bookmarks",'r') as f:
@@ -49,8 +50,17 @@ def handle_control_keys(state:State):
 		state.mode = MODES.MOVE
 	if char == "d":
 		state.mode = MODES.DELETE
+	if char == 's':
+		state.mode = MODES.SEARCH
+		return True
+	if char == 'h':
+		state.mode = MODES.HISTORY
+		return True
 	if char == "v":
-		os.system(f"python.exe {explorer_path}/image_viewer.py {state.current_folder}")
+		os.system(f"cd {image_viewer_path} && python.exe yolo_explorer.py {state.current_folder}")
+	if char == "z":
+		os.system(f"cd {tools_path} && python.exe run_guitoolbox.py {state.current_folder}")
+
 	if char == "t":
 		with open('/tmp/dest','w') as f:
 			f.write(state.current_folder)
