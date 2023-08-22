@@ -3,7 +3,7 @@ import click
 import sys
 from state import State,Combination,MODES,Processedpath
 from view import get_output_string
-from control import get_parent_directory, handle_control_keys,explorer_path
+from control import get_parent_directory, handle_control_keys,explorer_path,tools_path
 from pyfzf.pyfzf import FzfPrompt
 home = os.path.expanduser('~')
 history_file = f"{explorer_path}/history"
@@ -120,8 +120,10 @@ while True:
 		add_to_history_file(path)
 		if os.path.isfile(path):
 			if state.mode in [MODES.OPEN,MODES.SEARCH]:
-				os.system(f'xdg-open "{path}"')
-				break
+				if path.split('.')[-1] in ['xlsx','csv','pkl']:
+					os.system(f'python3 {tools_path}/csv_master/csv_master.py "{path}"')
+				else:
+					os.system(f'xdg-open "{path}" &')
 			elif state.mode == MODES.COPY or state.mode == MODES.MOVE:
 				# os.system(f'clip.exe "{filepath}"')
 				state.path_to_copy = path

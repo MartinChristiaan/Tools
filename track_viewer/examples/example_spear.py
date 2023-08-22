@@ -6,18 +6,32 @@ from trackertoolbox.tracks import Tracks
 from media_manager.core import MediaManager
 from guitoolbox.app import SyncMode, MainGUI
 
-dirname = r'C:\Users\leeuwenmcv\Downloads\20230612T140302_jeroen_volgend'
-mm = MediaManager(os.path.join(dirname,r'video\EO'),
-                  result_dirpath=os.path.join(dirname,r'\results\EO'),
-                  video_suffix='.avi', log_column_to_use=0)
+from utils.dataframe_utils import update_csv_with_dataclass
 
-tracks = Tracks.load(os.path.join(dirname,r'results\tracks\tracks_live.csv'))
-detections = Detections.load(os.path.join(dirname,r'results\detections\detections_EO_live.csv'))
+from dataclasses import dataclass
+@dataclass
+class TrackViewerConfig:
+	videodir: str
+	resultsdir : str
+	detections_path:str
+	tracks_path:str
+	video_suffix:str
+	log_column:int
+	@staticmethod
+	def from_df(df):
+		return [TrackViewerConfig(**row) for i,row in df.iterrows()]
 
-
-# GUI
-gui = MainGUI(
-        videos=[mm],
-        tracks=[tracks],
-       sync_mode=SyncMode.ALL,
-    )
+df =update_csv_with_dataclass(TrackViewerConfig,"spear.csv")
+cfgs=  TrackViewerConfig.from_df(df)
+for cfg in cfgs:
+	print(cfg.__dict__)
+	mm = MediaManager(cfg.videodir,
+			result_dirpath=cfg.resultsdir,
+			video_suffix=cfg.video_suffix, 
+   			log_column_to_use=cfg.log_column)
+	tracks = Tracks.load(cfg.tracks_path)
+	gui = MainGUI(
+		videos=[mm],
+		tracks=[tracks],
+	sync_mode=SyncMode.ALL,
+	)
