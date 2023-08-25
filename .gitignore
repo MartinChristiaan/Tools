@@ -3,6 +3,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 gpt-cli/key.py
+budget_parser/2023.xls
 
 # C extensions
 *.so

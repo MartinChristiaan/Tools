@@ -130,8 +130,8 @@ class App:
 				'rs':self.rsyncer.rsync_set_source,
 				'rd':self.rsyncer.rsync_set_dest,
 				're':self.rsyncer.rsync_execute,
-				't': self.open_terminal
-				'v'
+				't': self.open_terminal,
+				'v': self.file_viewer
 			}
 			charmenu(action_lut)
 
