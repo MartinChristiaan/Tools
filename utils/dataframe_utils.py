@@ -1,15 +1,13 @@
-
 import importlib.util
 import multiprocessing
+import os
 from pathlib import Path
-
 import click
 import sys
 import pandas as pd
 from dataclasses import fields
 
 from tqdm import tqdm
-
 from utils.SFzfPrompt import SFzfPrompt
 
 def load_config(dataclass,csv_path,query_file_path):
@@ -22,6 +20,14 @@ def map_multiprocessed(action,persons):
     tqdm(pool.imap(action, persons), total=len(persons))
     pool.close()
     pool.join()
+
+def create_config_csv(csv_path,dataclass):
+	headers = [field.name for field in fields(dataclass)]
+	df = pd.DataFrame(columns=headers)
+	df.to_csv(csv_path, index=False)
+	print(f"CSV file created with headers from {dataclass.__name__}.")
+	os.system(f'xdg-open {csv_path}')
+	return df
 
 def update_csv_with_dataclass(dataclass, csv_path):
 	# Check if the CSV file exists
@@ -65,6 +71,8 @@ def update_csv_with_dataclass(dataclass, csv_path):
 			print("CSV file updated successfully.")
 		else:
 			print("No changes were saved.")
+	else:
+		print('df is up to date')
 	return df
 
 def import_module_from_path(module_path):

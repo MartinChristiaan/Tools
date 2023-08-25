@@ -96,7 +96,8 @@ alias qe='bash -c "cd ~/git/tools/quick_open && python3 quick.py --explore"'
 alias qc='bash -c "cd ~/git/tools/quick_open && python3 quick.py --clip"'
 alias qr='bash -c "cd ~/git/tools/quick_open && python3 quick.py --rsync"'
 alias qr='cd ~/git/tools/quick_open && cd $(python3 folder_select.py)'
-alias ex='source ~/git/tools/explorer/explore.sh'
+# alias ex='source ~/git/tools/explorer/explore.sh'
+alias ex='source ~/git/tools/explorer2/explore.sh'
 
 
 # Add an "alert" alias for long running commands.  Use like so:

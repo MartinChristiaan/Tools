@@ -1,17 +1,7 @@
 import argparse
+from dtypes import ExampleArgClass
 from utils.dataframe_utils import load_config
-from dataclasses import dataclass
 from tqdm import tqdm
-
-@dataclass
-class ExampleArgClass:
-	name: str
-	age: int
-	number: float
-
-	@staticmethod
-	def from_df(df):
-		return [ExampleArgClass(**row) for i,row in df.iterrows()]
 
 def action(args:ExampleArgClass):
 	"""
