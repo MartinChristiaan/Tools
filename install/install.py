@@ -2,13 +2,12 @@ import os
 from pathlib import Path
 import shutil
 import sys
-import click
 home = os.path.expanduser('~')
 
 toolpath = Path(f'{home}/git/tools')
 if toolpath.exists():
 	print('tool path exists, would you like to replace it?')
-	if not click.getchar() == 'y':
+	if not input() == 'y':
 		print('exiting')
 		sys.exit()
 	shutil.rmtree(toolpath)
