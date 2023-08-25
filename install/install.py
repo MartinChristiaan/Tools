@@ -13,7 +13,7 @@ if toolpath.exists():
 	shutil.rmtree(toolpath)
 
 os.system(f'git clone https://github.com/MartinChristiaan/Tools.git && move Tools {home}/git/tools')
-with open('.bashrc','r') as f:
+with open(f'{home}/.bashrc','r') as f:
 	text = f.read()
 os.makedirs(f'{home}/git',exist_ok=True)
 if not 'bash_extension' in text:
