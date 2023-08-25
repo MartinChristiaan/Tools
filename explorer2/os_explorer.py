@@ -5,7 +5,7 @@ from typing import Any
 # import click
 import sys
 
-from explorer2.RSYNCER import RSYNCER
+from RSYNCER import RSYNCER
 # from state import State,Combination,MODES,Processedpath
 # from view import get_output_string
 # from control import get_parent_directory, handle_control_keys,explorer_path,tools_path
