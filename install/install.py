@@ -20,8 +20,5 @@ if not 'bash_extension' in text:
 	os.system('echo "source ~/git/tools/bash_extension/bash_extension.sh" >> ~/.bashrc')
 	print('adding bash extension')
 os.system(f'cd {toolpath/"install"};pip3 install -r requirements.txt')
-
-
-
-
+os.system(f'apt-get install fzf')
 

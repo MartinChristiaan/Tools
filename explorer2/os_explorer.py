@@ -1,12 +1,11 @@
 from dataclasses import dataclass
 import os
 from pathlib import Path
-import pickle
 from typing import Any
 # import click
 import sys
 
-import click
+from explorer2.RSYNCER import RSYNCER
 # from state import State,Combination,MODES,Processedpath
 # from view import get_output_string
 # from control import get_parent_directory, handle_control_keys,explorer_path,tools_path
@@ -42,42 +41,6 @@ class FZFCMD:
 	action:any
 	def get_bind(self):
 		return f""" --bind="ctrl-{self.key}:execute(echo \'__{self.key}\')+abort" """
-
-class RSYNCER:
-	def __init__(self,app) -> None:
-		
-		self.source = ''
-		self.dest= ''
-		self.delete = False
-		self.app= app
-		self.cache = Path('/tmp/rsync.pkl')
-		if self.cache.exists():
-			with open(self.cache,'rb') as f:
-				d = pickle.load(f)
-				self.source = d['source']
-				self.dest = d['dest']
-
-	def rsync_execute(self):
-		print(f'will execute rsync from {self.source} to {self.dest}, ok? [y/n]')
-		if click.getchar() == 'y':
-			if os.path.isdir(self.dest):
-				self.dest=str(self.dest) + '/'
-			os.system(f'nohup rsync -azP {self.source} {self.dest} > tmp.log &')
-	def write_cache(self):
-		with open(self.cache,'wb') as f:
-			d = {
-				'source' : self.source,
-				'dest' : self.dest
-			}
-			pickle.dump(d,f)
-
-	def rsync_set_source(self):
-		self.source = self.app.current_folder
-		self.write_cache()
-	def rsync_set_dest(self):
-		self.dest = self.app.current_folder
-		self.write_cache()
-
 
 class App:
 	def __init__(self) -> None:
@@ -140,6 +103,10 @@ class App:
 				action_lut[target]()
 			else:
 				self.open_path(target)
+	def file_viewer(self):
+		os.system(f"cd {image_viewer_path} && python yolo_explorer.py {self.current_folder}")
+		
+
 
 	# def set_rsync_source(self):
 	# 	self.rsyncer.source = self.current_folder
@@ -164,6 +131,7 @@ class App:
 				'rd':self.rsyncer.rsync_set_dest,
 				're':self.rsyncer.rsync_execute,
 				't': self.open_terminal
+				'v'
 			}
 			charmenu(action_lut)
 
