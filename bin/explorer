@@ -1,4 +1,0 @@
-#!/bin/bash
-pwd>/tmp/dest
-python3 $TOOLS/Explorer/os_explorer.py
-cd $(cat /tmp/dest)
