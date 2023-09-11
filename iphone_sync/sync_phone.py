@@ -31,8 +31,12 @@ def get_all_files(path):
 phone_location_audio = '/run/user/1000/gvfs/afc:host=00008110-001460D41145801E,port=3/com.foobar2000.mobile'
 phone_location_video = '/run/user/1000/gvfs/afc:host=00008110-001460D41145801E,port=3/org.videolan.vlc-ios'
 phone_location_obsidian='/run/user/1000/gvfs/afc:host=00008110-001460D41145801E,port=3/md.obsidian/Notes/'
+phone_location_voide_notes = '/run/user/1000/gvfs/afc:host=00008110-001460D41145801E,port=3/com.TapMediaLtd.VoiceRecorderFREE/'
 last_sync_time = 0
+
 computer_location_music = '/mnt/HardDrive/Media/Music'
+computer_location_voice_notes = '/mnt/HardDrive/Media/VoiceNotes/'
+
 import glob
 
 def look_for_transfer():
@@ -50,6 +54,8 @@ def look_for_transfer():
 	from tqdm import tqdm
 	for p in tqdm(files_to_transfer):
 		dest = p.replace(computer_location_music,phone_location_audio)
+		out_dir = '/'.join(dest.split('/')[:-1])
+		os.makedirs( out_dir,exist_ok=True)
 		os.system(f"cp \"{p}\" \"{dest}\"")
 
 
@@ -60,6 +66,7 @@ while True:
 		# say("Master, I am syncing your phone")
 		cmd = f'unison -auto -batch -fat -fastcheck true /home/martin/Documents/NotesObsidian/ {phone_location_obsidian}'
 		os.system(cmd)
+		os.system(f"rsync -azP {phone_location_voide_notes} {computer_location_voice_notes}")
 		look_for_transfer()
 		last_sync_time = time.time()
 

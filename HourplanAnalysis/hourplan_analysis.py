@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 from tqdm import tqdm
 
 
-ourplan = pd.read_csv("./ourplan_new.csv")
+ourplan = pd.read_csv("./ourplan_june.csv")
 print(ourplan.columns)
 
 
