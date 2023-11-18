@@ -1,3 +1,6 @@
+
+import yaml
+from pathlib import Path
 import re
 from typing import Any
 import click
@@ -6,6 +9,8 @@ from key import key
 from utils.charmenu import charmenu
 import sys 
 from pyperclip import copy,paste
+import os
+home = os.path.expanduser('~')
 
 class GPTCLI:
 	def __init__(self) -> None:
@@ -31,6 +36,7 @@ class GPTCLI:
 			extracted_code = python_code.group(1).strip()
 			print(extracted_code)
 			copy(extracted_code)
+			return extracted_code
 		else:
 			print("No Python code found.")
 	def modify_function(self):
@@ -47,6 +53,23 @@ class GPTCLI:
 			return
 		question = "create a test for the function below \n" + code
 		self.request_code(question)			
+	
+	def create_examples(self):
+		code = paste()
+		print(code+"\n continue? (y/.)")
+		if not click.getchar() == 'y':
+			return
+		question = "create a few brief examples for the code below \n" + code
+		code = self.request_code(question)			
+		example_db = Path(f'{home}/git/tools/gpt-cli/example-db.yaml')
+		examples = {}
+		if example_db.exists():
+			with open(example_db) as f:
+				examples = yaml.load(f, yaml.SafeLoader)
+		name = input('example_name : ')
+		examples[name]=code
+		with open(example_db, 'w') as yaml_file:
+			yaml.dump(examples, yaml_file)
 
 	def __call__(self):
 		while True:
@@ -54,7 +77,8 @@ class GPTCLI:
 				'q':sys.exit,
 				'f':self.create_function,
 				't':self.create_test,
-				'm':self.modify_function
+				'm':self.modify_function,
+				'e':self.create_examples
 			}
 
 			charmenu(actions)

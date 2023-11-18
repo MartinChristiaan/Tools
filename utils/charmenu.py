@@ -2,6 +2,9 @@ import os
 from typing import Any
 from click import getchar
 
+
+import numpy as np
+
 def charmenu(action_lut={}, args={}):
 	current_keys = list(action_lut.keys())
 	cur_value = ""

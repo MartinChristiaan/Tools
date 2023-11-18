@@ -104,7 +104,7 @@ class App:
 			else:
 				self.open_path(target)
 	def file_viewer(self):
-		os.system(f"cd {image_viewer_path} && python yolo_explorer.py {self.current_folder}")
+		os.system(f"cd {image_viewer_path} && python.exe yolo_explorer.py {self.current_folder}")
 		
 
 
