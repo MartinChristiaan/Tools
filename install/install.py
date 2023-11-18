@@ -14,6 +14,7 @@ if toolpath.exists():
 
 os.makedirs(f'{home}/git',exist_ok=True)
 os.system(f'git clone https://github.com/MartinChristiaan/Tools.git && mv Tools {home}/git/tools')
+os.system(f'touch {home}/.bashrc')
 with open(f'{home}/.bashrc','r') as f:
 	text = f.read()
 if not 'bash_extension' in text:
