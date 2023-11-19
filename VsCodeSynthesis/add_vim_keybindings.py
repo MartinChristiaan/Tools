@@ -25,7 +25,7 @@ class terminalCommand(BaseCommand):
     newTerminal: bool = False
     saveAllFiles: bool = True
     showTerminal: bool = True
-    focas: bool = False
+    focus: bool = False
 
     def get_dict(self):
         return {
@@ -35,7 +35,7 @@ class terminalCommand(BaseCommand):
                 "newTerminal": self.newTerminal,
                 "saveAllFiles": self.saveAllFiles,
                 "showTerminal": self.showTerminal,
-                "focus": self.focas,
+                "focus": self.focus,
             },
         }
 

@@ -26,8 +26,15 @@ with open("./vscode_commands.py", "w") as f:
     f.write(out_str)
 
 # %%
+from pathlib import Path
+import numpy as np
+import matplotlib.pyplot as plt
+
 import vscode_commands as v
 
 v.VSCODE_DIFF
+
+# x = Path("sads")
+
 
 # %%
