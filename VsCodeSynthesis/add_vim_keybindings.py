@@ -11,7 +11,6 @@ import os
 from typing import List
 
 from loguru import logger
-from traitlets import CUnicode
 
 
 class BaseCommand:
@@ -77,11 +76,12 @@ def add_keybindings(new_bindings: List[keybinding]):
 
     key = "vim.normalModeKeyBindingsNonRecursive"
     keybindings = data[key]
-    current_keys = [x["before"] for x in keybindings]
+    current_keys = [str(x["before"]) for x in keybindings]
+    current_idxs = list(range(len(current_keys)))
+    idx_lut = dict(zip(current_keys, current_idxs))
     for binding in new_bindings:
-        # ic(current_keys, binding.binding)
-        if binding.binding in current_keys:
-            continue
+        if str(binding.binding) in current_keys:
+            del data[key][idx_lut[str(binding.binding)]]
         logger.info(f"adding {binding}")
         keybindings.append(binding.get_data())
 
