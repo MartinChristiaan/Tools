@@ -1,4 +1,5 @@
 # %%
+from black import NewLine
 from icecream import ic
 
 # goal easily add keybindings using python file
@@ -62,6 +63,34 @@ class keybinding:
         return dict(
             before=self.key.split("+"), commands=[x.get_dict() for x in self.commands]
         )
+
+
+def add_bashrc(new_bindings: List[keybinding]):
+    home = os.path.expanduser("~")
+    bashrc_path = f"{home}/.bashrc"
+    with open(bashrc_path, "r") as f:
+        text = f.read()
+    lines = text.split("\n")
+    new_lines = []
+    aliases = []
+
+    for binding in new_bindings:
+        keys = "".join(binding.key.split("+")).replace("<leader>", "")
+        alias = f"alias {keys}"
+        aliases.append(alias)
+
+    for i, line in enumerate(lines):
+        keep = True
+        for alias in aliases:
+            if alias in line:
+                keep = False
+                logger.debug(f"detected {keys}")
+        if keep:
+            new_lines.append(line)
+    for binding, alias in zip(new_bindings, aliases):
+        new_lines.append(f"{alias}='{binding.commands[0].cmd}'")
+    with open(bashrc_path, "w") as f:
+        f.write("\n".join(new_lines))
 
 
 def add_keybindings(new_bindings: List[keybinding]):

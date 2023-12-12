@@ -1,5 +1,6 @@
 # %%
 from add_vim_keybindings import (
+    add_bashrc,
     add_keybindings,
     vscodeCommand,
     terminalCommand,
@@ -54,3 +55,4 @@ keys = [
     ),
 ]
 add_keybindings(keys)
+add_bashrc(keys)

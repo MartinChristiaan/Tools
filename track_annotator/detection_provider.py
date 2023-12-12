@@ -55,7 +55,12 @@ class DetectionProvider:
         # self.annotations = pd.DataFrame
         self.pathfinder = pathfinder
         # TODO add sourcing
-        self.annotations = pathfinder.media_manager.load_annotations()
+        if source == "annotations":
+            self.annotations = pathfinder.media_manager.load_annotations()
+        else:
+            self.annotations = pathfinder.load_detections(
+                pathfinder.media_manager, [source]
+            )[0]
         self.dt = time_between_annotations
         self.max_imgs_per_batch = 120
         self.batched_annotations = self.get_batched_annotations()
@@ -103,7 +108,7 @@ class DetectionProvider:
         ]
         frame_lookup = {
             t: self.pathfinder.media_manager.get_frame_nearest(t)[0]
-            for t in cur_tracks.timestamp.unique()
+            for t in tqdm(cur_tracks.timestamp.unique())
         }
         data = []
         for i, row in cur_tracks.iterrows():

@@ -125,3 +125,8 @@ if ! shopt -oq posix; then
   fi
 fi
 
+alias cs='cd ~/git/tools/VsCodeSynthesis && bash create_snippet.sh'
+alias ri='autoflake --in-place --remove-all-unused-imports ${file} '
+alias tm='tmux'
+alias at='cd ~/git/tools/VsCodeSynthesis && python3 add_tool.py'
+alias et='cd ~/git/tools/VsCodeSynthesis && python3 edit_tool.py'

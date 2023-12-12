@@ -1,3 +1,4 @@
+# %%
 # Plan
 # load track_updates
 # Select current rows to use (Also maintain which tracks have been seen already) -> use some king of saved appstate
@@ -5,11 +6,6 @@
 # app class for app things
 # data management class for loading data (serve tracks to rate, save annotations?)
 
-from csv import writer
-from dataclasses import dataclass
-from math import ceil
-from typing import List
-import pandas as pd
 import streamlit as st
 
 # %%
@@ -19,6 +15,7 @@ import numpy as np
 from AnnotationWriter import AnnotationWriter
 from config import get_example_dataset_configs
 from detection_provider import DetectionProvider
+import dlutils_ii as du
 
 st.set_page_config("Track Annotator", layout="wide")
 NUM_COLS = 4
@@ -29,12 +26,13 @@ class App:
         self.batch_id = 0
 
 
-# @st.cache_resource
+@st.cache_resource
 def setup(config_index=0):
-    configs = get_example_dataset_configs()
-    detection_provider = DetectionProvider(configs[config_index].pathfinder)
+    # configs = get_example_dataset_configs()
+    pf = du.Pathfinder("mantis_drone_2023", "DJI_202309100220_001/wide_hd")
+    detection_provider = DetectionProvider(pf, "tyolov8/tracks_tyolov8m-30112023.csv")
     app = App()
-    annotation_writer = AnnotationWriter(configs[config_index].pathfinder)
+    annotation_writer = AnnotationWriter(pf)
     return app, detection_provider, annotation_writer
 
 
@@ -60,3 +58,5 @@ for i, update in enumerate(updatedata):
                 ]
                 detections = detection_provider.get_rows(row_ids)
                 annotation_writer.accept_detection(detections)
+
+# %%
