@@ -1,5 +1,9 @@
+import math
+from typing import List
 import cv2
 from trackertoolbox.detections import Detections
+
+from annotation import Annotation
 
 
 class DrawBboxEngine:
@@ -23,14 +27,11 @@ class DrawBboxEngine:
         self.label_keys = label_keys
         self.colors = colors
 
-    def color_id(self, id):
-        return self.colors[id % len(self.colors)]
-
     def write_bbox(self, image, detection, color, label=None):
-        x = int(detection["bbox_x"])
-        y = int(detection["bbox_y"])
-        w = int(detection["bbox_w"])
-        h = int(detection["bbox_h"])
+        x = int(detection.bbox_x)
+        y = int(detection.bbox_y)
+        w = int(detection.bbox_w)
+        h = int(detection.bbox_h)
         x2 = x + w
         y2 = y + h
 
@@ -62,29 +63,14 @@ class DrawBboxEngine:
         frame = self.draw(image, bboxs)
         return [frame]
 
-    def draw(self, image, bboxs):
-        if isinstance(bboxs, Detections):
-            bboxs = bboxs.to_pandas().to_dict(orient="records")
-        # Copy image and draw bounding boxes on the final image
+    def draw(self, image, annotations: List[Annotation]):
         bbox_image = image.copy()
-        for bbox in bboxs:
+        for annotation in annotations:
             # set color for bounding box
-            if self.color_key not in bbox:  # if key does not exist in dictionary
-                color_id = 1  # set bounding box to default color
-            else:
-                color_id = bbox[self.color_key]
-            color = self.color_id(color_id)
-
+            # color = self.color_id(color_id)
+            color = annotation.get_color()
             # set label for bounding box
-            labels = []
-            for key in self.label_keys:
-                if key in bbox:
-                    labels.append(str(bbox[key])[:5])
-            if len(labels) == 0:
-                label = None
-            else:
-                label = " ".join(labels)  # add spaces
-
-            # burn bboxes on image
-            bbox_image = self.write_bbox(bbox_image, bbox, color=color, label=label)
+            bbox_image = self.write_bbox(
+                bbox_image, annotation, color=color, label=annotation.label
+            )
         return bbox_image
