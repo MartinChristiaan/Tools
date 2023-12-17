@@ -14,6 +14,7 @@ c = vscodeCommand
 keys = [
     keybinding("<leader>+c+o", [c('workbench.action.closeOtherEditors')]),
     keybinding("<leader>+c+a", [c('workbench.action.closeAllGroups')]),
+    keybinding("<tab>", [c('workbench.action.nextEditor')]),
 
 ]
 add_keybindings(keys)

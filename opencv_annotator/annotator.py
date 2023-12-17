@@ -1,82 +1,68 @@
-from enum import Enum, IntEnum
+from enum import IntEnum
 import cv2
-import numpy as np
+from ImageSelector import ImageSelector
+from bbox_maker import BBoxMaker
+from class_selection import ClassSelector
 
 # from trackertoolbox.detections import Detections
-from annotation import Annotation
-from drawer import DrawBboxEngine
-from mouse_zooming import Zoomer
-from roi_drawer import ROIDrawer
+from drawer import Drawer
+from roi_drawer import ROIManager
+from text_adder import ImageTextAdder
+from zoomer import Zoomer
+from state import State, MouseState
 
 
 class ReturnMode(IntEnum):
     NEXT = 0
     PREV = 1
     STOP = 2
+    SAVE = 3
+    IGNORE = 4
 
 
 class BoundingBoxAnnotator:
-    def __init__(self, image, detections=[]):
-        self.image = image
-        self.new_annotation = None
-        self.is_button_down = False
-        self.detections = [x for x in detections if x.real_detection]
-        self.drawer = DrawBboxEngine(color_key="class_id", label_keys=["label"])
-        self.cur_image = self.image.copy()
-        self.drawing_image = self.image.copy()
-        self.dirty = True
-        self.roi_drawer = ROIDrawer()
-        self.zoomer = Zoomer(*self.image.shape[:2])
+    def __init__(
+        self,
+    ):
+        state = State()
+        self.image_selector = ImageSelector(state)
+        self.zoomer = Zoomer(state)
+        self.bbox_maker = BBoxMaker(state, self.zoomer)
+        self.drawer = Drawer(state)
+        self.class_selector = ClassSelector(state)
+        self.roi_manager = ROIManager(self.zoomer, state)
+        self.text_adder = ImageTextAdder(
+            state, [self.class_selector.get_status, self.image_selector.get_status]
+        )
+        self.state = state
 
         cv2.namedWindow("image")
         cv2.setMouseCallback("image", self.run_mouse_callbacks)
 
     def run_mouse_callbacks(self, *args):
-        self.draw_rectangle(*args)
-        self.zoomer.update_zoom(*args)
+        state = MouseState(*args[:4])
+        self.state.mouse_event.set_value(state)
 
-    def draw_rectangle(self, event, x, y, flags, param):
-        if event == cv2.EVENT_MOUSEMOVE and self.is_button_down:
-            self.cur_image = self.drawing_image.copy()
-            self.new_annotation.bbox_w = x - self.new_annotation.bbox_x
-            self.new_annotation.bbox_h = y - self.new_annotation.bbox_y
-            cv2.rectangle(
-                self.cur_image,
-                self.new_annotation.upperleft,
-                self.new_annotation.downright,
-                (0, 255, 0),
-                2,
-            )
-
-        elif event == cv2.EVENT_LBUTTONDOWN:
-            self.new_annotation = Annotation(x, y, 1, 1, 0, "obj", 0)
-            self.is_button_down = True
-
-        elif event == cv2.EVENT_LBUTTONUP:
-            # self.new_bbox_coords = [self.new_bbox_coords[0], (x, y)]
-            self.is_button_down = False
-            self.zoomer.compensate_new_annotation(self.new_annotation)
-            self.detections.append(self.new_annotation)
-            self.dirty = True
-
-    def run(self):
+    def run(self, frame_inputs, timestamp, detections):
+        self.state.timestamp._value = timestamp
+        self.drawer.initialized = False
+        self.state.detections.set_value(detections)
+        # return
+        self.state.frame_inputs.set_value(frame_inputs)
+        image_idx = 0
         while True:
-            if self.dirty or self.zoomer.dirty:
-                image_zoomed = self.zoomer.update_img(self.image)
-                if len(self.detections) > 0:
-                    detections_zoomed = self.zoomer.update_detections(self.detections)
-                    self.cur_image = self.drawer.draw(image_zoomed, detections_zoomed)
-                else:
-                    self.cur_image = image_zoomed
-                self.drawing_image = self.cur_image.copy()
-                self.dirty = False
-                self.zoomer.dirty = False
-                self.cur_image = self.roi_drawer.draw_rois(
-                    self.image, self.cur_image, self.detections
-                )
+            # image = self.roi_drawer.out_image.value
+            image = self.state.roi_image.value
+            # cv2.destroyAllWindows()
+            # if dirty:
+            cv2.imshow("image", image)
+            key = cv2.waitKey(16)
+            if key > -1:
+                key_str = chr(key)
+                self.state.keyboard_event.set_value(key_str)
+            # except:
+            # pass
 
-            cv2.imshow("image", self.cur_image)
-            key = cv2.waitKey(10)
             if key == ord("q"):
                 cv2.destroyAllWindows()
                 return ReturnMode.STOP
@@ -86,8 +72,18 @@ class BoundingBoxAnnotator:
                 return ReturnMode.PREV
 
 
-if __name__ == "__main__":
-    impath = "./mpv-shot0001.jpg"
-    image = cv2.imread(impath)
-    bounding_box_selector = BoundingBoxAnnotator(impath)
-    bounding_box_selector.run()
+# if self.dirty or self.zoomer.dirty or self.roi_drawer.dirty:
+#     imgbase = self.images[self.image_idx]
+#     image_zoomed = self.zoomer.update_img(imgbase)
+#     if len(self.detections) > 0:
+#         detections_zoomed = self.zoomer.update_detections(self.detections)
+#         self.cur_image = self.drawer.draw(image_zoomed, detections_zoomed)
+#     else:
+#         self.cur_image = image_zoomed
+#     self.drawing_image = self.cur_image.copy()
+#     self.dirty = False
+#     self.zoomer.dirty = False
+#     self.roi_drawer.dirty = False
+#     self.cur_image = self.roi_drawer.draw_rois(
+#         self.image, self.cur_image, self.detections
+#     )

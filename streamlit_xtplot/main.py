@@ -85,7 +85,7 @@ import streamlit as st
 import streamlit as st
 import streamlit.components.v1 as components
 
-path = '/diskstation/datasets/webcams_2023/video/cam0-Scene-001/'
+path = '/diskstation/mantis/Security/20230910_drone_recording/videosets/video/DJI_202309100220_001/wide_hd'
 mm = get_video_reader(path)
 if 'timestamp_idx' not in st.session_state:
     st.session_state['timestamp_idx'] = 0

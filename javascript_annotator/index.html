@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas Drawing Example</title>
+    <style>
+        canvas {
+            border: 1px solid #000;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="myCanvas" width="500" height="300"></canvas>
+
+    <script>
+        window.onload = function () {
+            var canvas = document.getElementById("myCanvas");
+            var context = canvas.getContext("2d");
+            var isDrawing = false;
+            var startCoords = { x: 0, y: 0 };
+
+            // Function to draw a rectangle based on the start and end coordinates
+            function drawRectangle(startX, startY, endX, endY) {
+                var width = endX - startX;
+                var height = endY - startY;
+                context.fillStyle = "#FF0000";
+                context.fillRect(startX, startY, width, height);
+            }
+
+            // Event listener for mouse down
+            canvas.addEventListener("mousedown", function (event) {
+                isDrawing = true;
+                startCoords = { x: event.clientX - canvas.getBoundingClientRect().left, y: event.clientY - canvas.getBoundingClientRect().top };
+            });
+
+            // Event listener for mouse move
+            canvas.addEventListener("mousemove", function (event) {
+                if (!isDrawing) return;
+
+                var currentCoords = { x: event.clientX - canvas.getBoundingClientRect().left, y: event.clientY - canvas.getBoundingClientRect().top };
+
+                // Clear the canvas and redraw the previous rectangles
+                context.clearRect(0, 0, canvas.width, canvas.height);
+
+                // Draw the rectangle from the starting coordinates to the current mouse position
+                drawRectangle(startCoords.x, startCoords.y, currentCoords.x, currentCoords.y);
+            });
+
+            // Event listener for mouse up
+            canvas.addEventListener("mouseup", function () {
+                isDrawing = false;
+            });
+        };
+    </script>
+
+</body>
+</html>

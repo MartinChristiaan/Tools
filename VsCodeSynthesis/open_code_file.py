@@ -1,10 +1,24 @@
-import shutil
-from pathlib import Path
+# %%
+# Collect all python files
 import os
+import numpy as np
+from pathlib import Path
+import matplotlib.pyplot as plt
+import cv2
+import torch
+from PIL import Image
+import os
+import sys
+import pandas as pd
+from dataclasses import dataclass
+from tqdm import tqdm
+from icecream import ic
+from loguru import logger
 
-# toolname = input("enter toolname : ")
 home = os.path.expanduser("~")
-toolbase = Path(f"{home}/git/tools/")
+gitpath = Path(f"{home}/git")
+python_files = list(gitpath.rglob("*.py"))
+# %%
 from pyfzf import FzfPrompt
 
 
@@ -30,5 +44,5 @@ class SFzfPrompt(FzfPrompt):
 
 
 prompt = SFzfPrompt()
-path_to_edit = prompt.prompt(toolbase.glob("*"), prompt_text="choose tool")[0]
-os.system(f"nvim {path_to_edit} ")
+path_to_edit = prompt.prompt(list(python_files), prompt_text="choose file")[0]
+os.system(f"code {path_to_edit}")

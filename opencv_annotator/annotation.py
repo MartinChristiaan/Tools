@@ -1,4 +1,7 @@
 from dataclasses import dataclass
+from math import sqrt
+from operator import index
+from typing import List
 
 import pandas as pd
 
@@ -30,6 +33,11 @@ class Annotation:
         dicts = df.to_dict(orient="records")
         return [Annotation(**d) for d in dicts]
 
+    @staticmethod
+    def to_pandas(annotations: List["Annotation"]):
+        # dicts = df.to_dict(orient="records"
+        return pd.DataFrame([x.__dict__ for x in annotations])
+
     @property
     def cx(self):
         return self.bbox_x + self.bbox_w / 2
@@ -44,5 +52,15 @@ class Annotation:
         if self.confidence < 0.22:
             return (0, 0, 255)
         if self.confidence < 0.35:
-            return (0, 255, 255)
+            return (0, 165, 255)
         return (0, 255, 0)
+
+    @property
+    def accepted(self):
+        return self.confidence > 0.35
+
+    def is_inside(self, x, y):
+        return (
+            self.bbox_x <= x <= self.bbox_x + self.bbox_w
+            and self.bbox_y <= y <= self.bbox_y + self.bbox_h
+        )

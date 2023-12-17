@@ -1,31 +1,25 @@
-import math
-from typing import List
+# %%
+import stat
 import cv2
-from trackertoolbox.detections import Detections
+from loguru import logger
+import numpy as np
+from state import Observable
+from state import State
 
-from annotation import Annotation
 
-
-class DrawBboxEngine:
+class Drawer:
     def __init__(
         self,
+        state: State,
         line_thickness=2,
-        color_key="track_id",
-        label_keys=["track_id"],
-        colors=[
-            (0, 0, 255),
-            (255, 255, 255),
-            (255, 0, 0),
-            (0, 255, 255),
-            (255, 0, 255),
-            (255, 255, 0),
-            (255, 255, 255),
-        ],
     ) -> None:
         self.line_thickness = line_thickness
-        self.color_key = color_key
-        self.label_keys = label_keys
-        self.colors = colors
+        self.state = state
+        self.output_image = Observable(np.zeros((1, 1, 3), dtype=np.uint8))
+        state.detections_zoomed.subscribe(self.update, True)
+        state.texted_image.subscribe(self.update, True)
+        self.prev_zoom = state.zoom.value
+        self.initialized = False
 
     def write_bbox(self, image, detection, color, label=None):
         x = int(detection.bbox_x)
@@ -57,20 +51,23 @@ class DrawBboxEngine:
 
         return new_image
 
-    def __call__(self, timestampdata, data):
-        image = data[0][0]["data"]
-        bboxs = data[1][0]["data"]
-        frame = self.draw(image, bboxs)
-        return [frame]
+    def update(self):
+        if not self.initialized:
+            self.initialized = True
+            # needed to avoid double exec
+            return
 
-    def draw(self, image, annotations: List[Annotation]):
-        bbox_image = image.copy()
-        for annotation in annotations:
-            # set color for bounding box
-            # color = self.color_id(color_id)
+        if self.state.zoom.value == self.prev_zoom:
+            # copy in case of new detection
+            # logger.debug("copying")
+            img = self.state.texted_image.value.copy()
+        else:
+            # logger.debug(f"{self.prev_zoom} {self.state.zoom.value}")
+            img = self.state.texted_image.value
+            self.prev_zoom = self.state.zoom.value
+
+        # logger.debug(f"added detection {len(self.state.detections.value)}")
+        for annotation in self.state.detections_zoomed.value:
             color = annotation.get_color()
-            # set label for bounding box
-            bbox_image = self.write_bbox(
-                bbox_image, annotation, color=color, label=annotation.label
-            )
-        return bbox_image
+            img = self.write_bbox(img, annotation, color=color, label=annotation.label)
+        self.state.detections_image.set_value(img)
