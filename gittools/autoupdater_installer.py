@@ -6,6 +6,13 @@ from loguru import logger
 import subprocess
 from datetime import datetime
 
+
+updater_file = Path(__file__).parent.absolute() / "autoupdater.py"
+# check if the updater file exists
+if not updater_file.exists():
+    logger.error(f"Updater file {updater_file} does not exist.")
+    sys.exit(1)
+
 # create the contents of the service file
 SERVICE_CONTENTS = f"""[Unit]
 Description=Auto Updater Service
@@ -17,7 +24,7 @@ Type=simple
 Restart=always
 RestartSec=1
 User={os.environ["USER"]}
-ExecStart={sys.executable} {Path(__file__).replace("installer", "")}
+ExecStart={sys.executable} {updater_file}
 WorkingDirectory={Path(__file__).parent.absolute()}
 
 [Install]
