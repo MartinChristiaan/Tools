@@ -107,13 +107,14 @@ def activate_repo(repo_path):
     if os.path.exists(CONFIG_FILE):
         with open(CONFIG_FILE, "r") as f:
             config = yaml.safe_load(f)
-        if repo_path in config["repos"]:
-            config["repos"][repo_path]["active"] = True
-            with open(CONFIG_FILE, "w") as f:
-                yaml.dump(config, f)
-        else:
-            logger.error(f"Repository {repo_path} is not registered")
-            sys.exit(1)
+        for repo in config["repos"]:
+            if repo["path"] == repo_path:
+                repo["active"] = True
+                with open(CONFIG_FILE, "w") as f:
+                    yaml.dump(config, f)
+                return
+        logger.error(f"Repository {repo_path} is not registered")
+        sys.exit(1)
     else:
         logger.error("No repositories registered")
         sys.exit(1)
@@ -144,7 +145,7 @@ def list_repos():
 
             # Check if sync is available
             repo = git.Repo(repo_path)
-            if repo.head.commit.diff is not None:
+            if repo.is_dirty(untracked_files=True) or repo.untracked_files:
                 sync_available = True
 
             def print_repo_info(repo_path, active, sync_available):
