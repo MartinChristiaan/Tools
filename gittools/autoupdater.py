@@ -2,8 +2,9 @@
 # git repos are registered in a config file. Config file is saved in the same directory as the script
 # config file is a text file contianing a list of git repos to pull from and push to.
 
+import datetime
 from time import sleep
-import loguru
+from loguru import logger
 import os
 from pathlib import Path
 import loguru
@@ -27,7 +28,7 @@ class GitUpdater:
         return git_repos
 
     def update_repo(self, path):
-        loguru.logger.info(f"updating repo at {path}")
+        logger.info(f"updating repo at {path}")
         try:
             subprocess.check_output(
                 f"cd {path} && git pull", shell=True, stderr=subprocess.STDOUT
@@ -44,7 +45,7 @@ class GitUpdater:
                 f"cd {path} && git push", shell=True, stderr=subprocess.STDOUT
             )
         except subprocess.CalledProcessError as e:
-            loguru.logger.error(
+            logger.error(
                 f"Failed to execute command in {path}. Error: {e.output.decode()}"
             )
 
@@ -52,6 +53,7 @@ class GitUpdater:
         while True:
             for repo in self.git_repos:
                 self.update_repo(repo)
+            logger.info("Updated all repos at {}".format(datetime.datetime.now()))
             sleep(INTERVAL_SECONDS)
 
 
