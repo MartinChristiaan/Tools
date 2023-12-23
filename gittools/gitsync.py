@@ -229,3 +229,5 @@ if args.remove:
     remove_repo(os.getcwd())
 if args.activate:
     activate_repo(os.getcwd())
+if args.sync:
+    sync_repos()
