@@ -1,20 +1,22 @@
 import sys
 from collections import defaultdict
 from enum import Enum, auto
-from typing import Union, List, Optional
+from typing import List, Optional, Union
 
-from PySide6.QtWidgets import QApplication
-from media_manager.core import MediaManager
-
-from guitoolbox.models.base import VideoModel, TrackModel
+from guitoolbox.models.base import TrackModel, VideoModel
 from guitoolbox.models.media_manager import MediaManagerModel
-from guitoolbox.models.tracker_toolbox import TrackerToolboxModel, DetectionsTrackerToolboxModel
+from guitoolbox.models.tracker_toolbox import (
+    DetectionsTrackerToolboxModel,
+    TrackerToolboxModel,
+)
 from guitoolbox.panel import Panel
 from guitoolbox.panels.button_bar import ButtonBarPanel
 from guitoolbox.panels.track import TrackPanel
 from guitoolbox.panels.video import VideoPanel
 from guitoolbox.panels_gui import PanelsGUI
 from guitoolbox.visualize import ColorMap
+from media_manager.core import MediaManager
+from PySide6.QtWidgets import QApplication
 from trackertoolbox.detections import Detections
 from trackertoolbox.tracks import Tracks
 
@@ -27,11 +29,14 @@ class SyncMode(Enum):
 class MainGUI:
     def __init__(
         self,
-        videos: Union[Union[VideoModel, MediaManager], List[Union[VideoModel, MediaManager]]],
-        tracks: Optional[Union[Union[TrackModel, Tracks], List[Union[TrackModel, Tracks]]]] = None,
+        videos: Union[
+            Union[VideoModel, MediaManager], List[Union[VideoModel, MediaManager]]
+        ],
+        tracks: Optional[
+            Union[Union[TrackModel, Tracks], List[Union[TrackModel, Tracks]]]
+        ] = None,
         sync_mode: SyncMode = SyncMode.VIDEO,
     ):
-
         self.video_models = self.videos_as_models(videos)
         self.track_models = [] if tracks is None else self.tracks_as_models(tracks)
         self.sync_mode = sync_mode
@@ -53,8 +58,16 @@ class MainGUI:
                 tracks_model = None
                 color_map = ColorMap(color_count=10)
 
-            video_view_panel = VideoPanel(video_model, tracks_model, color_map, name=f"VideoPanel{idx}")
-            panels_gui.add_panel(video_view_panel, row=0, col=idx, title=video_view_panel.name, row_span=6)
+            video_view_panel = VideoPanel(
+                video_model, tracks_model, color_map, name=f"VideoPanel{idx}"
+            )
+            panels_gui.add_panel(
+                video_view_panel,
+                row=0,
+                col=idx,
+                title=video_view_panel.name,
+                row_span=6,
+            )
             panels_set.append(video_view_panel)
 
             button_bar_panel = ButtonBarPanel(
@@ -62,7 +75,9 @@ class MainGUI:
                 step_size_small=video_model.seconds_per_frame,
                 step_size_large=video_model.seconds_per_frame * 100,
             )
-            panels_gui.add_panel(button_bar_panel, row=6, col=idx, title=button_bar_panel.name)
+            panels_gui.add_panel(
+                button_bar_panel, row=6, col=idx, title=button_bar_panel.name
+            )
             panels_set.append(button_bar_panel)
             panels_gui.button_bar_panel = button_bar_panel
 
@@ -74,7 +89,9 @@ class MainGUI:
                     timestamp_min=video_model.timestamps_first(),
                     timestamp_max=video_model.timestamps_last(),
                 )
-                panels_gui.add_panel(track_panel, row=7, col=idx, title=track_panel.name, row_span=6)
+                panels_gui.add_panel(
+                    track_panel, row=7, col=idx, title=track_panel.name, row_span=6
+                )
                 panels_gui.track_view = track_panel.track_view
                 panels_set.append(track_panel)
 
@@ -95,7 +112,10 @@ class MainGUI:
         sys.exit(app.exec())
 
     def videos_as_models(
-        self, videos: Union[Union[VideoModel, MediaManager], List[Union[VideoModel, MediaManager]]]
+        self,
+        videos: Union[
+            Union[VideoModel, MediaManager], List[Union[VideoModel, MediaManager]]
+        ],
     ) -> List[VideoModel]:
         if not isinstance(videos, list):
             videos = [videos]

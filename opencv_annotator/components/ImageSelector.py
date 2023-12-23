@@ -1,5 +1,5 @@
-from state import State
 from components.text_adder import TextRequest
+from state import State
 
 
 class ImageSelector:

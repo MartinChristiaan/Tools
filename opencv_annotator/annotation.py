@@ -1,6 +1,4 @@
 from dataclasses import dataclass
-from math import sqrt
-from operator import index
 from typing import List
 
 import pandas as pd

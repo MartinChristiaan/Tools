@@ -1,11 +1,10 @@
 # Installs autoupdater as a service assuming SystemD is used.
 import os
+import subprocess
 import sys
 from pathlib import Path
-from loguru import logger
-import subprocess
-from datetime import datetime
 
+from loguru import logger
 
 updater_file = Path(__file__).parent.absolute() / "autoupdater.py"
 # check if the updater file exists

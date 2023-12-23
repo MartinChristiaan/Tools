@@ -13,7 +13,7 @@ const ItemPreview = ({ item, onImageHover, onClick}) => {
           style={{ height: '100%', width: '100%', objectFit: 'cover', verticalAlign: 'middle' }}
         />
     );
-  } 
+  }
 
 const GridSelect = ({ items, onImageHover, onClick}) => {
   // console.log("tags",tags)
@@ -34,7 +34,7 @@ const GridSelect = ({ items, onImageHover, onClick}) => {
                           justifyContent: 'center',
                           border:"3px solid white", //+ tags.filter(x => item.tags.includes(x.title))[0].color ,
                           // borderRadius:"5px"
-                          }} 
+                          }}
                 onMouseOver={() => onImageHover(item)}
                 onClick={() => onClick(item)}>
                 <ItemPreview item={item} onImageHover={onImageHover} onClick={onClick}  />

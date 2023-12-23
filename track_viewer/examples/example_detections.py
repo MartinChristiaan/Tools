@@ -1,13 +1,14 @@
-from trackertoolbox.tracker import BboxTracker
-from trackertoolbox.detections import Detections
-
+from guitoolbox.app import MainGUI, SyncMode
 from media_manager.core import MediaManager
-from guitoolbox.app import SyncMode, MainGUI
+from trackertoolbox.detections import Detections
+from trackertoolbox.tracker import BboxTracker
 
 # get mediamanager object
-mm = MediaManager(r'\\diskstationii1.tsn.tno.nl\meoss\data\20180225_ijmuiden_L3\video\Visueel',
-                  result_dirpath=r'\\diskstationii1.tsn.tno.nl\meoss\data\20180225_ijmuiden_L3\results\Visueel',
-                  video_suffix='.avi')
+mm = MediaManager(
+    r"\\diskstationii1.tsn.tno.nl\meoss\data\20180225_ijmuiden_L3\video\Visueel",
+    result_dirpath=r"\\diskstationii1.tsn.tno.nl\meoss\data\20180225_ijmuiden_L3\results\Visueel",
+    video_suffix=".avi",
+)
 
 # load detections
 det = mm.load("yolov5x_mscoco.csv")

@@ -1,312 +1,312 @@
 {
-    "home": {
-        "scope": "python",
-        "prefix": "home",
-        "body": [
-            "home = os.path.expanduser('~')"
-        ],
-        "description": "home"
-    },
-    "mpl": {
-        "scope": "python",
-        "prefix": "mpl",
-        "body": [
-            "import matplotlib",
-            "matplotlib.use('GTK3Agg')"
-        ],
-        "description": "utils"
-    },
-    "setuppy": {
-        "scope": "python",
-        "prefix": "setuppy",
-        "body": [
-            "import setuptools",
-            "setuptools.setup(",
-            "name='shmcomms',",
-            "packages=setuptools.find_packages(),",
-            "install_requires=[],",
-            "python_requires='>=3.6',",
-            ")"
-        ],
-        "description": "setuppy"
-    },
-    "fread": {
-        "scope": "python",
-        "prefix": "fread",
-        "body": [
-            "with open(${1:filename},'${2:r}') as f:",
-            "    text = f.read()"
-        ],
-        "description": "fread"
-    },
-    "fwrite": {
-        "scope": "python",
-        "prefix": "fwrite",
-        "body": [
-            "with open(${1:filename},'${2:w}') as f:",
-            "    f.write(${3:text})"
-        ],
-        "description": "fwrite"
-    },
-    "VideoWriter": {
-        "scope": "python",
-        "prefix": "VideoWriter",
-        "body": [
-            "fourcc = cv2.VideoWriter_fourcc('m', 'p', '4', 'v')",
-            "writer = cv2.VideoWriter('${1:out.mp4}', fourcc, 24, (w, h))"
-        ],
-        "description": "CV2 video writer"
-    },
-    "datestr": {
-        "scope": "python",
-        "prefix": "datestr",
-        "body": [
-            "from datetime import datetime",
-            "datestr = datetime.now().strftime(\"%d%m%YT%H%M%S\")"
-        ],
-        "description": "Date Time String"
-    },
-    "folder_read": {
-        "prefix": "folder_read",
-        "scope": "python",
-        "body": [
-            "${1:folder} = \"${2:path}\"",
-            "for filename in os.listdir(${1:folder}):",
-            "    with open(f'{${1:folder}}/{filename}', 'r') as f:",
-            "        text = f.read()",
-            ""
-        ],
-        "description": "folder_read"
-    },
-    "argparse": {
-        "scope": "python",
-        "prefix": "argparse",
-        "body": [
-            "import argparse\nparser = argparse.ArgumentParser(\n\t\t\t\t\tprog = '${0:ProgramName}',\n\t\t\t\t\tdescription = '${1:Description}')\nparser.add_argument('-c','--config',type=str,default='configs/default.csv')\nargs = parser.parse_known_args()"
-        ]
-    },
-    "folderread": {
-        "prefix": "folderread",
-        "scope": "python",
-        "body": [
-            "folder read",
-            "${1:folder} = \"${2:path}\"",
-            "for filename in os.listdir(${1:folder}):",
-            "    with open(f'{${1:folder}}/{filename}', 'r') as f:",
-            "        text = f.read()"
-        ],
-        "description": "folderread"
-    },
-    "Logger": {
-        "prefix": "Logger",
-        "scope": "python",
-        "body": [
-            "Logger",
-            "import logging",
-            "logging.basicConfig(",
-            "    format='%(asctime)s %(levelname)-8s %(message)s',",
-            "    level=logging.INFO,",
-            "    datefmt='%Y-%m-%d %H:%M:%S')"
-        ],
-        "description": "Logger"
-    },
-    "videoshow": {
-        "prefix": "videoshow",
-        "scope": "python",
-        "body": [
-            "videoshow",
-            "vid = cv2.VideoCapture(${1:0})",
-            "while(True):",
-            "    ret, frame = vid.read()",
-            "    cv2.imshow('frame', frame)",
-            "    if cv2.waitKey(1) & 0xFF == ord('q'):",
-            "        break",
-            "vid.release()",
-            "cv2.destroyAllWindows()"
-        ],
-        "description": "videoshow"
-    },
-    "rdamodule": {
-        "prefix": "rdamodule",
-        "scope": "python",
-        "body": [
-            "#!/usr/bin/python3 -u",
-            "import os",
-            "import numpy as np",
-            "import rda",
-            "from rda_utils.basemodule import RDAModuleBase",
-            "from rda_utils.fifo import RDAOutputFiFo,PickleOutputFiFo",
-            "home = os.path.expanduser('~')",
-            "class v4r_${1:ModuleName}(RDAModuleBase):",
-            "\tdef __init__(self) -> None:",
-            "\t\tself.input = \"input\"",
-            "\tdef init(self, h) -> None:",
-            "\t\tself.output= PickleOutputFiFo()",
-            "\t\tself.output.create(h)",
-            "\tdef update(self, h):",
-            "\t\titem,attr = rda.getvarex(h,self.input)",
-            "\t\tself.output.put(h,[item],attr)",
-            "if __name__ == \"__main__\":",
-            "    m = v4r_${1:ModuleName}",
-            "    rda.rda_module(m.arg, m.init, m.body, m.trigger, m.cleanup)"
-        ],
-        "description": "rdamodule"
-    },
-    "engine": {
-        "prefix": "engine",
-        "scope": "python",
-        "body": [
-            "from typing import Dict, List",
-            "from engine_utils.engine_utils import AbstractEngineJsonOut,Output1DictListMixIn,AbstractEngine,Input1MixIn",
-            "import os",
-            "class ${1:EngineExample}(Input1MixIn,Output1DictListMixIn,AbstractEngine):",
-            "    def __init__(self, parameter1=0, parameter2=2.0):",
-            "        super().__init__()",
-            "        self._config[\"parameter1\"] = parameter1 "
-        ],
-        "description": "engine"
-    },
-    "int": {
-        "prefix": "int",
-        "scope": "python",
-        "body": [
-            "int",
-            "        self._config[\"parameter2\"] = parameter2 "
-        ],
-        "description": "int"
-    },
-    "float": {
-        "prefix": "float",
-        "scope": "python",
-        "body": [
-            "float",
-            "    def init_sample(self, timestampdata, data): "
-        ],
-        "description": "float"
-    },
-    "optional!!": {
-        "prefix": "optional!!",
-        "scope": "python",
-        "body": [
-            "optional!!",
-            "        self.something_to_intialize = some_fun(data[0][0][\"data\"])",
-            "        ",
-            "    def process_sample(self, timestampdata, data):",
-            "        data = data[0][0][\"data\"]",
-            "        d = 1.0",
-            "        "
-        ],
-        "description": "optional!!"
-    },
-    "whenalistofdictsisreturned,addtimestamp!!!": {
-        "prefix": "whenalistofdictsisreturned,addtimestamp!!!",
-        "scope": "python",
-        "body": [
-            "when a list of dicts is returned, add timestamp!!!",
-            "        return [[{\"timestamp\": timestampdata[\"timestamp\"], \"some_value\": d}]]"
-        ],
-        "description": "whenalistofdictsisreturned,addtimestamp!!!"
-    },
-    "bookmarks": {
-        "prefix": "bookmarks",
-        "scope": "python",
-        "body": [
-            "bookmarks",
-            "import json",
-            "bookmarks = \"/home/martin/.config/BraveSoftware/Brave-Browser/Default/Bookmarks\"",
-            "with open(bookmarks,'r') as f:",
-            "\tbookmarks = json.load(f)",
-            "top_level_items =bookmarks['roots']['bookmark_bar']['children']",
-            "for item in top_level_items:",
-            "\tif \"Spotify\" in item['name']:",
-            "\t\tfor linkitem in item['children']:",
-            "\t\t\turl = linkitem['url']",
-            "\t\t\tprint(url)"
-        ],
-        "description": "bookmarks"
-    },
-    "example": {
-        "scope": "python",
-        "prefix": "example",
-        "body": [
-            "\nhome = os.path.expanduser('~')\nsnippets_backup_folder = f\"/home/leeuwenmcv/git/tools/VsCodeSynthesis/backups\"\nos.makedirs(snippets_backup_folder,exist_ok=True)\ndatestr = datetime.now().strftime(\"%d%m%YT%H%M%S\")\nshutil.copy(snippet_path_code,f'/home/leeuwenmcv/git/tools/VsCodeSynthesis/backups/python_30072023T105242.json')\n"
-        ]
-    },
-    "from_df": {
-        "scope": "python",
-        "prefix": "from_df",
-        "body": [
-            "\t@staticmethod\n\tdef from_df(df):\n\t\treturn [${0:Classname}(**row) for i,row in df.iterrows()]"
-        ]
-    },
-    "fzfprompt": {
-        "scope": "python",
-        "prefix": "fzfprompt",
-        "body": [
-            "from pyfzf import FzfPrompt\n\nclass SFzfPrompt(FzfPrompt):\n\tdef prompt(self, choices=[],multi=False,prompt_text=None,return_idx=False):\n\t\t${0:fzf_options} = \"\"\n\t\tif multi:\n\t\t\t${0:fzf_options} += \"--multi \"\n\t\tif not prompt_text is None:\n\t\t\t${0:fzf_options} += f'--prompt \"{prompt_text}\"'\n\t\tif return_idx:\n\t\t\treturn self.prompt_index(choices,${0:fzf_options})\n\t\telse:\n\t\t\treturn super().prompt(choices, ${0:fzf_options})\n\n\tdef prompt_index(self,choices,${0:fzf_options}=\"\"):\n\t\tchoices_str = [str(x) for x in choices]\n\t\tselection =  self.prompt(choices_str,${0:fzf_options})\n\t\tindices = []\n\t\tfor x in selection:\n\t\t\tindices.append(choices_str.index(x))\n\t\treturn indices"
-        ]
-    },
-    "TemplateProgram": {
-        "scope": "python",
-        "prefix": "TemplateProgram",
-        "body": [
-            "import argparse\nfrom utils.dataframe_utils import load_config\nfrom dataclasses import dataclass\nfrom tqdm import tqdm\n\n@dataclass\nclass ${2:ExampleArgClass}:\n\tname: str\n\tage: int\n\tnumber: float\n\n\t@staticmethod\n\tdef from_df(df):\n\t\treturn [${2:ExampleArgClass}(**row) for i,row in df.iterrows()]\n\ndef ${0:action}(args:${2:ExampleArgClass}):\n\t\"\"\"\n\tRun main functionality here\n \t\"\"\"\n\tprint(args)\n\nif __name__ == \"__main__\":\n\tparser = argparse.ArgumentParser(\n\t\t\t\t\t\tprog = '${1:ExampleProgram}',\n\t\t\t\t\t\tdescription = '${3:ExampleDescription}')\n\tparser.add_argument('-c','--config',type=str,default='config/default.csv')\n\tparser.add_argument('-q','--query',type=str,default='config/query_all.py')\n\targs = parser.parse_args()\n\tupdated_df = load_config(${2:ExampleArgClass}, args.config,args.query)\n\tpersons = ${2:ExampleArgClass}.from_df(updated_df)\n\tfor person in tqdm(persons):\n\t\t${0:action}(person)"
-        ]
-    },
-    "TemplateMultiProcessing": {
-        "scope": "python",
-        "prefix": "TemplateMultiProcessing",
-        "body": [
-            "import argparse\nfrom utils.dataframe_utils import load_config, map_multiprocessed\nfrom dataclasses import dataclass\nfrom tqdm import tqdm\n\n@dataclass\nclass ${1:ExampleArgClass}:\n    name: str\n    age: int\n    number: float\n\n    @staticmethod\n    def from_df(df):\n        return [${1:ExampleArgClass}(**row) for i, row in df.iterrows()]\n\ndef ${3:action}(person):\n    print(person)\n    \n\ndef main():\n    parser = argparse.ArgumentParser(\n        prog='${2:ExampleProgram}',\n        description='${0:ExampleDescription}')\n    parser.add_argument('-c', '--config', type=str, default='config/default.csv')\n    parser.add_argument('-q', '--query', type=str, default='config/query_all.py')\n    args = parser.parse_args()\n    updated_df = load_config(${1:ExampleArgClass}, args.config, args.query)\n    persons = ${1:ExampleArgClass}.from_df(updated_df)\n    map_multiprocessed(${3:action},persons)\n\nif __name__ == \"__main__\":\n    main()"
-        ]
-    },
-    "yamlsave": {
-        "scope": "python",
-        "prefix": "yamlsave",
-        "body": [
-            "\twith open(cfg['${1:file_path}'], 'w') as yaml_file:\n\t\tyaml.dump(${0:obj}.__dict__, yaml_file)"
-        ]
-    },
-    "yamlread": {
-        "scope": "python",
-        "prefix": "yamlread",
-        "body": [
-            "import yaml\nwith open(${0:filename}) as f:\n\tymldata = yaml.load(f, yaml.SafeLoader)"
-        ]
-    },
-    "map_multiproc": {
-        "scope": "python",
-        "prefix": "map_multiproc",
-        "body": [
-            "def map_multiprocessed(func,iterable):\n    num_processes = multiprocessing.cpu_count()  # Use all available CPU cores\n    pool = multiprocessing.Pool(processes=num_processes)\n    tqdm(pool.imap(func, iterable), total=len(iterable))\n    pool.close()\n    pool.join()"
-        ]
-    },
-    "detections_test": {
-        "scope": "python",
-        "prefix": "detections_test",
-        "body": [
-            "    bbox = {f'bbox_{x}':${0:v} for x,${0:v} in zip('xywh',[20,20,200,200])}\n    bbox['class_id'] = 0\n    bbox['timestamp'] = 10\n    detections = Detections([bbox])"
-        ]
-    },
-    "randimg": {
-        "scope": "python",
-        "prefix": "randimg",
-        "body": [
-            "random_img = np.random.randint(0, 256, (512, 512), dtype=np.${0:uint8})"
-        ]
-    },
-    "imshow": {
-        "scope": "python",
-        "prefix": "imshow",
-        "body": [
-            "cv2.imshow('frame',frame)\ncv2.waitKey(0)\ncv2.destroyAllWindows()"
-        ]
-    },
-    "add_sod": {
-        "scope": "python",
-        "prefix": "add_sod",
-        "body": [
-            "def add_${0:sod}(module_container,input):\n    name ='${0:sod}'\n    module_container.add_module(\n        module='v4r_'+name,\n        name=name,\n        input=input,\n        dropframes=0\n    )\n    # output2 = detections, output1 = centerframe\n    return [f\"{name}.output1\",f\"{name}.output2\"]"
-        ]
-    }
+  "Logger": {
+    "body": [
+      "Logger",
+      "import logging",
+      "logging.basicConfig(",
+      "    format='%(asctime)s %(levelname)-8s %(message)s',",
+      "    level=logging.INFO,",
+      "    datefmt='%Y-%m-%d %H:%M:%S')"
+    ],
+    "description": "Logger",
+    "prefix": "Logger",
+    "scope": "python"
+  },
+  "TemplateMultiProcessing": {
+    "body": [
+      "import argparse\nfrom utils.dataframe_utils import load_config, map_multiprocessed\nfrom dataclasses import dataclass\nfrom tqdm import tqdm\n\n@dataclass\nclass ${1:ExampleArgClass}:\n    name: str\n    age: int\n    number: float\n\n    @staticmethod\n    def from_df(df):\n        return [${1:ExampleArgClass}(**row) for i, row in df.iterrows()]\n\ndef ${3:action}(person):\n    print(person)\n    \n\ndef main():\n    parser = argparse.ArgumentParser(\n        prog='${2:ExampleProgram}',\n        description='${0:ExampleDescription}')\n    parser.add_argument('-c', '--config', type=str, default='config/default.csv')\n    parser.add_argument('-q', '--query', type=str, default='config/query_all.py')\n    args = parser.parse_args()\n    updated_df = load_config(${1:ExampleArgClass}, args.config, args.query)\n    persons = ${1:ExampleArgClass}.from_df(updated_df)\n    map_multiprocessed(${3:action},persons)\n\nif __name__ == \"__main__\":\n    main()"
+    ],
+    "prefix": "TemplateMultiProcessing",
+    "scope": "python"
+  },
+  "TemplateProgram": {
+    "body": [
+      "import argparse\nfrom utils.dataframe_utils import load_config\nfrom dataclasses import dataclass\nfrom tqdm import tqdm\n\n@dataclass\nclass ${2:ExampleArgClass}:\n\tname: str\n\tage: int\n\tnumber: float\n\n\t@staticmethod\n\tdef from_df(df):\n\t\treturn [${2:ExampleArgClass}(**row) for i,row in df.iterrows()]\n\ndef ${0:action}(args:${2:ExampleArgClass}):\n\t\"\"\"\n\tRun main functionality here\n \t\"\"\"\n\tprint(args)\n\nif __name__ == \"__main__\":\n\tparser = argparse.ArgumentParser(\n\t\t\t\t\t\tprog = '${1:ExampleProgram}',\n\t\t\t\t\t\tdescription = '${3:ExampleDescription}')\n\tparser.add_argument('-c','--config',type=str,default='config/default.csv')\n\tparser.add_argument('-q','--query',type=str,default='config/query_all.py')\n\targs = parser.parse_args()\n\tupdated_df = load_config(${2:ExampleArgClass}, args.config,args.query)\n\tpersons = ${2:ExampleArgClass}.from_df(updated_df)\n\tfor person in tqdm(persons):\n\t\t${0:action}(person)"
+    ],
+    "prefix": "TemplateProgram",
+    "scope": "python"
+  },
+  "VideoWriter": {
+    "body": [
+      "fourcc = cv2.VideoWriter_fourcc('m', 'p', '4', 'v')",
+      "writer = cv2.VideoWriter('${1:out.mp4}', fourcc, 24, (w, h))"
+    ],
+    "description": "CV2 video writer",
+    "prefix": "VideoWriter",
+    "scope": "python"
+  },
+  "add_sod": {
+    "body": [
+      "def add_${0:sod}(module_container,input):\n    name ='${0:sod}'\n    module_container.add_module(\n        module='v4r_'+name,\n        name=name,\n        input=input,\n        dropframes=0\n    )\n    # output2 = detections, output1 = centerframe\n    return [f\"{name}.output1\",f\"{name}.output2\"]"
+    ],
+    "prefix": "add_sod",
+    "scope": "python"
+  },
+  "argparse": {
+    "body": [
+      "import argparse\nparser = argparse.ArgumentParser(\n\t\t\t\t\tprog = '${0:ProgramName}',\n\t\t\t\t\tdescription = '${1:Description}')\nparser.add_argument('-c','--config',type=str,default='configs/default.csv')\nargs = parser.parse_known_args()"
+    ],
+    "prefix": "argparse",
+    "scope": "python"
+  },
+  "bookmarks": {
+    "body": [
+      "bookmarks",
+      "import json",
+      "bookmarks = \"/home/martin/.config/BraveSoftware/Brave-Browser/Default/Bookmarks\"",
+      "with open(bookmarks,'r') as f:",
+      "\tbookmarks = json.load(f)",
+      "top_level_items =bookmarks['roots']['bookmark_bar']['children']",
+      "for item in top_level_items:",
+      "\tif \"Spotify\" in item['name']:",
+      "\t\tfor linkitem in item['children']:",
+      "\t\t\turl = linkitem['url']",
+      "\t\t\tprint(url)"
+    ],
+    "description": "bookmarks",
+    "prefix": "bookmarks",
+    "scope": "python"
+  },
+  "datestr": {
+    "body": [
+      "from datetime import datetime",
+      "datestr = datetime.now().strftime(\"%d%m%YT%H%M%S\")"
+    ],
+    "description": "Date Time String",
+    "prefix": "datestr",
+    "scope": "python"
+  },
+  "detections_test": {
+    "body": [
+      "    bbox = {f'bbox_{x}':${0:v} for x,${0:v} in zip('xywh',[20,20,200,200])}\n    bbox['class_id'] = 0\n    bbox['timestamp'] = 10\n    detections = Detections([bbox])"
+    ],
+    "prefix": "detections_test",
+    "scope": "python"
+  },
+  "engine": {
+    "body": [
+      "from typing import Dict, List",
+      "from engine_utils.engine_utils import AbstractEngineJsonOut,Output1DictListMixIn,AbstractEngine,Input1MixIn",
+      "import os",
+      "class ${1:EngineExample}(Input1MixIn,Output1DictListMixIn,AbstractEngine):",
+      "    def __init__(self, parameter1=0, parameter2=2.0):",
+      "        super().__init__()",
+      "        self._config[\"parameter1\"] = parameter1 "
+    ],
+    "description": "engine",
+    "prefix": "engine",
+    "scope": "python"
+  },
+  "example": {
+    "body": [
+      "\nhome = os.path.expanduser('~')\nsnippets_backup_folder = f\"/home/leeuwenmcv/git/tools/VsCodeSynthesis/backups\"\nos.makedirs(snippets_backup_folder,exist_ok=True)\ndatestr = datetime.now().strftime(\"%d%m%YT%H%M%S\")\nshutil.copy(snippet_path_code,f'/home/leeuwenmcv/git/tools/VsCodeSynthesis/backups/python_30072023T105242.json')\n"
+    ],
+    "prefix": "example",
+    "scope": "python"
+  },
+  "float": {
+    "body": [
+      "float",
+      "    def init_sample(self, timestampdata, data): "
+    ],
+    "description": "float",
+    "prefix": "float",
+    "scope": "python"
+  },
+  "folder_read": {
+    "body": [
+      "${1:folder} = \"${2:path}\"",
+      "for filename in os.listdir(${1:folder}):",
+      "    with open(f'{${1:folder}}/{filename}', 'r') as f:",
+      "        text = f.read()",
+      ""
+    ],
+    "description": "folder_read",
+    "prefix": "folder_read",
+    "scope": "python"
+  },
+  "folderread": {
+    "body": [
+      "folder read",
+      "${1:folder} = \"${2:path}\"",
+      "for filename in os.listdir(${1:folder}):",
+      "    with open(f'{${1:folder}}/{filename}', 'r') as f:",
+      "        text = f.read()"
+    ],
+    "description": "folderread",
+    "prefix": "folderread",
+    "scope": "python"
+  },
+  "fread": {
+    "body": [
+      "with open(${1:filename},'${2:r}') as f:",
+      "    text = f.read()"
+    ],
+    "description": "fread",
+    "prefix": "fread",
+    "scope": "python"
+  },
+  "from_df": {
+    "body": [
+      "\t@staticmethod\n\tdef from_df(df):\n\t\treturn [${0:Classname}(**row) for i,row in df.iterrows()]"
+    ],
+    "prefix": "from_df",
+    "scope": "python"
+  },
+  "fwrite": {
+    "body": [
+      "with open(${1:filename},'${2:w}') as f:",
+      "    f.write(${3:text})"
+    ],
+    "description": "fwrite",
+    "prefix": "fwrite",
+    "scope": "python"
+  },
+  "fzfprompt": {
+    "body": [
+      "from pyfzf import FzfPrompt\n\nclass SFzfPrompt(FzfPrompt):\n\tdef prompt(self, choices=[],multi=False,prompt_text=None,return_idx=False):\n\t\t${0:fzf_options} = \"\"\n\t\tif multi:\n\t\t\t${0:fzf_options} += \"--multi \"\n\t\tif not prompt_text is None:\n\t\t\t${0:fzf_options} += f'--prompt \"{prompt_text}\"'\n\t\tif return_idx:\n\t\t\treturn self.prompt_index(choices,${0:fzf_options})\n\t\telse:\n\t\t\treturn super().prompt(choices, ${0:fzf_options})\n\n\tdef prompt_index(self,choices,${0:fzf_options}=\"\"):\n\t\tchoices_str = [str(x) for x in choices]\n\t\tselection =  self.prompt(choices_str,${0:fzf_options})\n\t\tindices = []\n\t\tfor x in selection:\n\t\t\tindices.append(choices_str.index(x))\n\t\treturn indices"
+    ],
+    "prefix": "fzfprompt",
+    "scope": "python"
+  },
+  "home": {
+    "body": [
+      "home = os.path.expanduser('~')"
+    ],
+    "description": "home",
+    "prefix": "home",
+    "scope": "python"
+  },
+  "imshow": {
+    "body": [
+      "cv2.imshow('frame',frame)\ncv2.waitKey(0)\ncv2.destroyAllWindows()"
+    ],
+    "prefix": "imshow",
+    "scope": "python"
+  },
+  "int": {
+    "body": [
+      "int",
+      "        self._config[\"parameter2\"] = parameter2 "
+    ],
+    "description": "int",
+    "prefix": "int",
+    "scope": "python"
+  },
+  "map_multiproc": {
+    "body": [
+      "def map_multiprocessed(func,iterable):\n    num_processes = multiprocessing.cpu_count()  # Use all available CPU cores\n    pool = multiprocessing.Pool(processes=num_processes)\n    tqdm(pool.imap(func, iterable), total=len(iterable))\n    pool.close()\n    pool.join()"
+    ],
+    "prefix": "map_multiproc",
+    "scope": "python"
+  },
+  "mpl": {
+    "body": [
+      "import matplotlib",
+      "matplotlib.use('GTK3Agg')"
+    ],
+    "description": "utils",
+    "prefix": "mpl",
+    "scope": "python"
+  },
+  "optional!!": {
+    "body": [
+      "optional!!",
+      "        self.something_to_intialize = some_fun(data[0][0][\"data\"])",
+      "        ",
+      "    def process_sample(self, timestampdata, data):",
+      "        data = data[0][0][\"data\"]",
+      "        d = 1.0",
+      "        "
+    ],
+    "description": "optional!!",
+    "prefix": "optional!!",
+    "scope": "python"
+  },
+  "randimg": {
+    "body": [
+      "random_img = np.random.randint(0, 256, (512, 512), dtype=np.${0:uint8})"
+    ],
+    "prefix": "randimg",
+    "scope": "python"
+  },
+  "rdamodule": {
+    "body": [
+      "#!/usr/bin/python3 -u",
+      "import os",
+      "import numpy as np",
+      "import rda",
+      "from rda_utils.basemodule import RDAModuleBase",
+      "from rda_utils.fifo import RDAOutputFiFo,PickleOutputFiFo",
+      "home = os.path.expanduser('~')",
+      "class v4r_${1:ModuleName}(RDAModuleBase):",
+      "\tdef __init__(self) -> None:",
+      "\t\tself.input = \"input\"",
+      "\tdef init(self, h) -> None:",
+      "\t\tself.output= PickleOutputFiFo()",
+      "\t\tself.output.create(h)",
+      "\tdef update(self, h):",
+      "\t\titem,attr = rda.getvarex(h,self.input)",
+      "\t\tself.output.put(h,[item],attr)",
+      "if __name__ == \"__main__\":",
+      "    m = v4r_${1:ModuleName}",
+      "    rda.rda_module(m.arg, m.init, m.body, m.trigger, m.cleanup)"
+    ],
+    "description": "rdamodule",
+    "prefix": "rdamodule",
+    "scope": "python"
+  },
+  "setuppy": {
+    "body": [
+      "import setuptools",
+      "setuptools.setup(",
+      "name='shmcomms',",
+      "packages=setuptools.find_packages(),",
+      "install_requires=[],",
+      "python_requires='>=3.6',",
+      ")"
+    ],
+    "description": "setuppy",
+    "prefix": "setuppy",
+    "scope": "python"
+  },
+  "videoshow": {
+    "body": [
+      "videoshow",
+      "vid = cv2.VideoCapture(${1:0})",
+      "while(True):",
+      "    ret, frame = vid.read()",
+      "    cv2.imshow('frame', frame)",
+      "    if cv2.waitKey(1) & 0xFF == ord('q'):",
+      "        break",
+      "vid.release()",
+      "cv2.destroyAllWindows()"
+    ],
+    "description": "videoshow",
+    "prefix": "videoshow",
+    "scope": "python"
+  },
+  "whenalistofdictsisreturned,addtimestamp!!!": {
+    "body": [
+      "when a list of dicts is returned, add timestamp!!!",
+      "        return [[{\"timestamp\": timestampdata[\"timestamp\"], \"some_value\": d}]]"
+    ],
+    "description": "whenalistofdictsisreturned,addtimestamp!!!",
+    "prefix": "whenalistofdictsisreturned,addtimestamp!!!",
+    "scope": "python"
+  },
+  "yamlread": {
+    "body": [
+      "import yaml\nwith open(${0:filename}) as f:\n\tymldata = yaml.load(f, yaml.SafeLoader)"
+    ],
+    "prefix": "yamlread",
+    "scope": "python"
+  },
+  "yamlsave": {
+    "body": [
+      "\twith open(cfg['${1:file_path}'], 'w') as yaml_file:\n\t\tyaml.dump(${0:obj}.__dict__, yaml_file)"
+    ],
+    "prefix": "yamlsave",
+    "scope": "python"
+  }
 }

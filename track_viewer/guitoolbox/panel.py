@@ -3,9 +3,11 @@ Panel widget, which can be used as a base class.
 The update_panel function has t0 be reimplemented in order to process received data
 """
 
+from PySide6.QtCore import QObject, Signal
+
 # Imports
 from PySide6.QtWidgets import QWidget
-from PySide6.QtCore import QObject, Signal
+
 
 class Communicate(QObject):
     def __init__(self) -> None:
@@ -18,6 +20,7 @@ class Communicate(QObject):
     @property
     def signal(self) -> Signal:
         return self._signal
+
 
 class Panel(QWidget):
     def __init__(self, name: str) -> None:
@@ -33,7 +36,7 @@ class Panel(QWidget):
         -------
         None
         """
-        
+
         # Init widget
         QWidget.__init__(self)
 
@@ -46,7 +49,7 @@ class Panel(QWidget):
     @property
     def name(self) -> str:
         return self._name
-        
+
     @property
     def signal(self) -> Signal:
         return self._signal
@@ -70,7 +73,7 @@ class Panel(QWidget):
 
         raise NotImplementedError
 
-    def publish(self, data: dict, dest_name: str = '') -> None:
+    def publish(self, data: dict, dest_name: str = "") -> None:
         """
         Publishes the data. When no panel name is supplied, all the
         panels will be updated, else only the panel with the given name.

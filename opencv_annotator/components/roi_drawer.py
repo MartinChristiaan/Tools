@@ -1,13 +1,10 @@
-import stat
-from typing import List
 import cv2
 import numpy as np
-
 from annotation import Annotation
-from state import Observable, MouseState, State
 
 # from state import ImageEditor
 from components.zoomer import Zoomer
+from state import MouseState, Observable, State
 
 
 def split_list(input_list, n):

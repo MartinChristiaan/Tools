@@ -6,16 +6,15 @@
 # app class for app things
 # data management class for loading data (serve tracks to rate, save annotations?)
 
-import streamlit as st
-
 # %%
-import enum
+
 import cv2
+import dlutils_ii as du
 import numpy as np
+import streamlit as st
 from AnnotationWriter import AnnotationWriter
 from config import get_example_dataset_configs
 from detection_provider import DetectionProvider
-import dlutils_ii as du
 
 st.set_page_config("Track Annotator", layout="wide")
 NUM_COLS = 4

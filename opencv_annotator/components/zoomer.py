@@ -1,12 +1,11 @@
 from copy import deepcopy
-from typing import List
+
 import cv2
+import numpy as np
+from annotation import Annotation
 from loguru import logger
 from numpy import ndarray
-from annotation import Annotation
-from state import Observable
-from state import State
-import numpy as np
+from state import Observable, State
 
 # Always execute worstcase = best? Zoom -> draw overlay  -> Draw detections, never copy
 

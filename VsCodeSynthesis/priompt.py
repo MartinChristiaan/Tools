@@ -1,9 +1,11 @@
 from pyfzf import FzfPrompt
 
+
 def select_option_with_prompt(choices, prompt_text):
     fzf = FzfPrompt()
-    selected_option = fzf.prompt(choices, f"--prompt \"{prompt_text}\"")
+    selected_option = fzf.prompt(choices, f'--prompt "{prompt_text}"')
     return selected_option
+
 
 # Example usage
 if __name__ == "__main__":

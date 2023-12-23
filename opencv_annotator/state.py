@@ -1,15 +1,13 @@
-from copy import deepcopy
-
-from loguru import logger
-from annotation import Annotation
-import numpy as np
-
 from typing import TypeVar
+
+import numpy as np
+from annotation import Annotation
+from loguru import logger
 
 T = TypeVar("T")
 
 from dataclasses import dataclass
-from typing import Callable, Generic, List
+from typing import Callable, Generic
 
 
 class FuncStack:

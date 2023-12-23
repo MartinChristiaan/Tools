@@ -1,5 +1,6 @@
 VIDEOSETS_BASEDIR = "/diskstation"
 from videosets_ii.videosets_ii import VideosetsII
+
 videosets = VideosetsII(basedirpath=VIDEOSETS_BASEDIR)
 
 
@@ -10,7 +11,7 @@ videosets = VideosetsII(basedirpath=VIDEOSETS_BASEDIR)
 # datasets = list(ymldata.keys())
 # for key in datasets:
 
-videoset = videosets['virat_external']
+videoset = videosets["virat_external"]
 for cam in videoset.cameras:
-	mm = videoset.get_mediamanager(camera=cam)
-	print(mm.load_annotations())
+    mm = videoset.get_mediamanager(camera=cam)
+    print(mm.load_annotations())

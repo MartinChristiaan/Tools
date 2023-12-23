@@ -4,14 +4,15 @@ GUI containing all the panels ordered on a grid.
 
 # Imports
 from typing import List, Optional
-from PySide6.QtWidgets import QGroupBox, QGridLayout, QWidget
-from PySide6.QtGui import QKeyEvent
-from PySide6.QtCore import Qt
 
 # GUI toolbox imports
 from guitoolbox.panel import Panel
 from guitoolbox.panels.button_bar import ButtonBarPanel
 from guitoolbox.panels.track import TrackPanel
+from PySide6.QtCore import Qt
+from PySide6.QtGui import QKeyEvent
+from PySide6.QtWidgets import QGridLayout, QGroupBox, QWidget
+
 
 class PanelsGUI(QWidget):
     def __init__(self, width: int = 800, height: int = 600, title: str = "Panels GUI"):
@@ -29,7 +30,7 @@ class PanelsGUI(QWidget):
         -------
         None
         """
-        
+
         # Init widget
         QWidget.__init__(self)
         self._panels: List[Panel] = []
@@ -49,7 +50,7 @@ class PanelsGUI(QWidget):
         # Show GUI
         self.show()
 
-    def _update_panels(self, data: dict, source_name: str, dest_name: str = '') -> None:
+    def _update_panels(self, data: dict, source_name: str, dest_name: str = "") -> None:
         """
         Updates the panels in the GUI. When no panel name is supplied, all the
         panels will be updated, else only the panel with the given name.
@@ -74,14 +75,14 @@ class PanelsGUI(QWidget):
                 panel.update_panel(source_name, data)
 
     def add_panel(
-            self,
-            panel: Panel,
-            row: int,
-            col: int,
-            row_span: int = 1,
-            col_span: int = 1,
-            title: Optional[str] = None
-        ) -> None:
+        self,
+        panel: Panel,
+        row: int,
+        col: int,
+        row_span: int = 1,
+        col_span: int = 1,
+        title: Optional[str] = None,
+    ) -> None:
         """
         Parameters
         ----------
@@ -102,11 +103,11 @@ class PanelsGUI(QWidget):
         -------
         None
         """
-        
+
         # Add panel to list of panels and connect update function to signal
         self._panels.append(panel)
         panel.signal.connect(self._update_panels)
-        
+
         # Create a group box
         groupbox = QGroupBox()
         # Add panel widget to the groupbox
@@ -124,18 +125,22 @@ class PanelsGUI(QWidget):
 
         key = event.key()
         if self.button_bar_panel is None:
-            self.button_bar_panel = [x for x in self._panels if isinstance(x,ButtonBarPanel)][0]
-            self.track_view = [x for x in self._panels if isinstance(x,TrackPanel)][0].track_view
+            self.button_bar_panel = [
+                x for x in self._panels if isinstance(x, ButtonBarPanel)
+            ][0]
+            self.track_view = [x for x in self._panels if isinstance(x, TrackPanel)][
+                0
+            ].track_view
         button_bar = self.button_bar_panel
         action_lut = {
-            Qt.Key.Key_H:button_bar.decrease_large,
-            Qt.Key.Key_J:button_bar.decrease_small,
-            Qt.Key.Key_K:button_bar.increase_small,
-            Qt.Key.Key_L:button_bar.increase_large,
-            Qt.Key.Key_Q:self.close,
-            Qt.Key.Key_A:self.track_view.zoom_out,
-            Qt.Key.Key_S:self.track_view.zoom_in,
-            Qt.Key.Key_Y:self.track_view.toggle_ylabel,
+            Qt.Key.Key_H: button_bar.decrease_large,
+            Qt.Key.Key_J: button_bar.decrease_small,
+            Qt.Key.Key_K: button_bar.increase_small,
+            Qt.Key.Key_L: button_bar.increase_large,
+            Qt.Key.Key_Q: self.close,
+            Qt.Key.Key_A: self.track_view.zoom_out,
+            Qt.Key.Key_S: self.track_view.zoom_in,
+            Qt.Key.Key_Y: self.track_view.toggle_ylabel,
         }
         if key in action_lut:
             action_lut[key]()

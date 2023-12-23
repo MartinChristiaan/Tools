@@ -1,10 +1,10 @@
-import enum
 from typing import List
+
 import cv2
-from loguru import logger
 import numpy as np
-from state import Observable, State
 from components.text_adder import TextRequest
+from loguru import logger
+from state import Observable, State
 
 
 class ClassSelector:

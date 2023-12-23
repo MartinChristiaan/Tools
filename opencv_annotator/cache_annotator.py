@@ -1,18 +1,16 @@
 # %%
 from copy import deepcopy
-from curses.ascii import isdigit
-import sys
 from typing import List
+
 import cv2
-from loguru import logger
+import dlutils_ii as du
 import numpy as np
 import pandas as pd
 from annotation import Annotation
-from dlutils_ii.annotation_cache.writer_annotations import vizualize_objects
-import dlutils_ii as du
-
-from state import Observable, State
 from components.text_adder import TextRequest
+from dlutils_ii.annotation_cache.writer_annotations import vizualize_objects
+from loguru import logger
+from state import Observable, State
 
 # %%
 
@@ -195,7 +193,7 @@ class IOManager:
             )
             # multi_tracker.add(, frame0, bbox)
             tracker = cv2.TrackerKCF_create()
-            ret = tracker.init(frame0, bboxi)
+            tracker.init(frame0, bboxi)
             success, bbox = tracker.update(frame0)
             success, bbox = tracker.update(frame1)
             if success:

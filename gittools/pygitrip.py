@@ -1,6 +1,5 @@
 # %%
 import subprocess
-import os
 
 
 # Execute gitrip and get output

@@ -2,13 +2,10 @@
 # git repos are registered in a config file. Config file is saved in the same directory as the script
 # config file is a text file contianing a list of git repos to pull from and push to.
 
-import datetime
-from time import sleep
 import os
-from pathlib import Path
-import os
-from pathlib import Path
 import subprocess
+from pathlib import Path
+from time import sleep
 
 INTERVAL_SECONDS = 60 * 10  # 10 minutes
 
@@ -46,7 +43,13 @@ class GitUpdater:
                 f"cd {path} && git add .", shell=True, stderr=subprocess.STDOUT
             )
             subprocess.check_output(
-                f'cd {path} && git commit -m "auto commit"',
+                f'cd {path} && git commit -am "auto commit"',
+                shell=True,
+                stderr=subprocess.STDOUT,
+            )
+
+            subprocess.check_output(
+                f'cd {path} && git commit -am "auto commit"',
                 shell=True,
                 stderr=subprocess.STDOUT,
             )

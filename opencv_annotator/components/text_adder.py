@@ -1,7 +1,8 @@
 # %%
-import cv2
 from dataclasses import dataclass
-from typing import List, Callable
+from typing import Callable, List
+
+import cv2
 from state import State
 
 

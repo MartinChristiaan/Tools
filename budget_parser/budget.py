@@ -1,11 +1,12 @@
 import argparse
+from dataclasses import dataclass
 from pathlib import Path
 
 import numpy as np
-from utils.dataframe_utils import load_config
-from dataclasses import dataclass
-from tqdm import tqdm
 import pandas as pd
+from tqdm import tqdm
+
+from utils.dataframe_utils import load_config
 
 
 @dataclass

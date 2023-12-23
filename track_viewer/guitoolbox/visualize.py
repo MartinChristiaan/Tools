@@ -1,4 +1,4 @@
-from typing import Optional, Dict
+from typing import Dict, Optional
 
 import seaborn as sns
 from matplotlib.patches import Rectangle

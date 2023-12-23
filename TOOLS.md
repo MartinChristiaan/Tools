@@ -44,13 +44,13 @@ image{
   "id": int,
   "frame_id": int,
   "video_id": int,
-  "width": int, 
-  "height": int, 
+  "width": int,
+  "height": int,
   "file_name": str,
 }
 
 annotation{
-  "id": int, 
+  "id": int,
   "image_id": int,
   "video_id": int,
   "category_id": int,
@@ -60,8 +60,8 @@ annotation{
 }
 
 category{
-  "id": int, 
-  "name": str, 
+  "id": int,
+  "name": str,
   "supercategory": str,
 }
 ```

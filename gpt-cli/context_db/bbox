@@ -1,4 +1,4 @@
-Bbox: 
+Bbox:
 	Bbox class with bbox and anchor
 	Args:
 		bbox: numpy array of N x (x,y,w,h) -> Nx4

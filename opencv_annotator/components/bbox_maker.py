@@ -1,14 +1,9 @@
-from typing import List
-
-from loguru import logger
+import cv2
 import numpy as np
 from annotation import Annotation
-from state import Observable
-from state import State
 from components.zoomer import Zoomer
-
-
-import cv2
+from loguru import logger
+from state import Observable, State
 
 
 class BBoxMaker:

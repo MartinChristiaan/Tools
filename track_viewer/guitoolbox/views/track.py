@@ -2,16 +2,15 @@ from typing import Callable
 
 import pandas as pd
 import seaborn as sns
-from PySide6.QtCore import Qt
-from PySide6.QtGui import QAction
-from PySide6.QtWidgets import QMenu
+from guitoolbox.models.base import TrackModel
+from guitoolbox.visualize import ColorMap
 from matplotlib.backend_bases import PickEvent
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg
 from matplotlib.figure import Figure
 from matplotlib.lines import Line2D
-
-from guitoolbox.models.base import TrackModel
-from guitoolbox.visualize import ColorMap
+from PySide6.QtCore import Qt
+from PySide6.QtGui import QAction
+from PySide6.QtWidgets import QMenu
 
 pd.set_option("display.max_columns", 500)
 pd.set_option("display.width", 1000)
@@ -69,14 +68,13 @@ class TrackView(FigureCanvasQTAgg):
         self.plot_xt_efficiently(picker=True, pickradius=1)
 
     def toggle_ylabel(self):
-        if self.label_y == 'center_x':
+        if self.label_y == "center_x":
             self.label_y = "center_y"
         else:
-            self.label_y = 'center_y'
+            self.label_y = "center_y"
         print("changed ylabel")
         self.plot_xt_efficiently(picker=True, pickradius=1)
         self.render()
-    
 
     def on_pick(self, event: PickEvent):
         if event.mouseevent.button == 1 and isinstance(event.artist, Line2D):
@@ -132,9 +130,7 @@ class TrackView(FigureCanvasQTAgg):
             *lines_xy,
             **kwargs,
         )
-        p = self.axes.scatter(
-            points_x, points_y, c=points_color
-        )
+        p = self.axes.scatter(points_x, points_y, c=points_color)
         for line, c in zip(l, line_colors):
             line.set_color(c)
         self.axes.set_xlabel(self.label_x)
@@ -143,7 +139,6 @@ class TrackView(FigureCanvasQTAgg):
         # TODO do for "p" (pathcollection) the same as is done here for "l".
         for track_id, x in zip(track_ids, l):
             x.track_id = track_id
-
 
     def axes_clear(self):
         self.axes.cla()
@@ -210,8 +205,12 @@ class TrackView(FigureCanvasQTAgg):
             / self.zoom
         )
 
-        x0_timestamp = max(self.timestamp_min, self.timestamp - a) - self.view_window_margin
-        x1_timestamp = min(self.timestamp_max, self.timestamp + a) + self.view_window_margin
+        x0_timestamp = (
+            max(self.timestamp_min, self.timestamp - a) - self.view_window_margin
+        )
+        x1_timestamp = (
+            min(self.timestamp_max, self.timestamp + a) + self.view_window_margin
+        )
 
         self.axes.set_xlim([x0_timestamp, x1_timestamp])
 

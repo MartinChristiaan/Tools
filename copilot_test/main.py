@@ -1,32 +1,29 @@
 # Create an image annotation tool for labeling images for training a object detection network
 
-import os
 import sys
+
 import cv2
 import numpy as np
-import xml.etree.ElementTree as ET
-from PyQt5.QtGui import *
+from PyQt5 import QtCore
 from PyQt5.QtCore import *
+from PyQt5.QtCore import Qt, pyqtSlot
+from PyQt5.QtGui import *
+from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtWidgets import *
 from PyQt5.QtWidgets import (
-    QMainWindow,
-    QApplication,
-    QWidget,
-    QPushButton,
     QAction,
-    QLineEdit,
-    QMessageBox,
+    QApplication,
     QFileDialog,
-    QLabel,
-    QSlider,
     QHBoxLayout,
+    QLabel,
+    QLineEdit,
+    QMainWindow,
+    QMessageBox,
+    QPushButton,
+    QSlider,
     QVBoxLayout,
+    QWidget,
 )
-from PyQt5.QtGui import QIcon, QPixmap
-from PyQt5.QtCore import pyqtSlot
-from PyQt5 import QtCore
-from PyQt5.QtCore import Qt
-
 
 # Start with a quick example of how to use the PyQt5 library
 

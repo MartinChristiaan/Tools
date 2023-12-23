@@ -1,4 +1,4 @@
-from typing import Sequence, Optional
+from typing import Optional, Sequence
 
 import numpy as np
 import pandas as pd
@@ -14,7 +14,9 @@ class VideoModel:
 
     def __getitem__(self, timestamp: float):
         if not isinstance(timestamp, float):
-            raise TypeError(f"timestamp: {timestamp} should be a float, but is {type(timestamp)}")
+            raise TypeError(
+                f"timestamp: {timestamp} should be a float, but is {type(timestamp)}"
+            )
 
     def timestamps_first(self):
         return self._timestamps[0]
@@ -41,7 +43,9 @@ class TrackModel:
 
     def detections_by_timestamp(self, timestamp: float) -> Optional[pd.DataFrame]:
         try:
-            detections = self._tracks_by_timestamp.get_group(timestamp)  # self._tracks_by_timestamp.groups
+            detections = self._tracks_by_timestamp.get_group(
+                timestamp
+            )  # self._tracks_by_timestamp.groups
         except KeyError:
             detections = None
         return detections
@@ -54,4 +58,3 @@ class TrackModel:
 
     def __contains__(self, timestamp: float):
         return self._timestamps
-

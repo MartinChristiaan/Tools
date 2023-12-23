@@ -1,9 +1,8 @@
+from typing import List
+
 import dlutils_ii as du
 from dlutils_ii.dataset_cache.writer import LabelConfig
 from dlutils_ii.dataset_config import DatasetConfig
-
-
-from typing import List
 
 
 class PreAnnotationWriter(du.Writer):

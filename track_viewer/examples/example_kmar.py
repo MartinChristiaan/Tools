@@ -1,8 +1,7 @@
 """Experimental file testing functionality if everything is a Panel"""
 
+from guitoolbox.app import MainGUI, SyncMode
 from media_manager.core import MediaManager
-
-from guitoolbox.app import SyncMode, MainGUI
 
 if __name__ == "__main__":
     media_manager_0 = MediaManager(

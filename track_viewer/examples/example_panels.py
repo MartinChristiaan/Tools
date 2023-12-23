@@ -4,21 +4,24 @@ Example for use with panels, both created by code or designed with Qt designer, 
 
 # Imports
 import sys
-from PySide6.QtWidgets import QApplication, QHBoxLayout, QLabel, QPushButton
+
+from guitoolbox.panel import Panel
 
 # GUI toolbox imports
 from guitoolbox.panels_gui import PanelsGUI
-from guitoolbox.panel import Panel
 from guitoolbox.ui.example import Ui_Form
+from PySide6.QtWidgets import QApplication, QHBoxLayout, QLabel, QPushButton
 
 """
 Panel with labels
 """
+
+
 class Panel1(Panel):
     def __init__(self) -> None:
         # Call super class function
         super().__init__("panel_1")
-        
+
         # Create layout with labels
         self.hbox_layout = QHBoxLayout()
         self.label1 = QLabel("Test 1")
@@ -26,7 +29,7 @@ class Panel1(Panel):
         self.hbox_layout.addWidget(self.label1)
         self.hbox_layout.addWidget(self.label2)
         self.setLayout(self.hbox_layout)
-    
+
     # Override
     def update_panel(self, source_name: str, data: dict):
         # Print data
@@ -39,9 +42,12 @@ class Panel1(Panel):
         # Call super class function
         return super().update_panel(source_name, data)
 
+
 """
 Panel with buttons
 """
+
+
 class Panel2(Panel):
     def __init__(self) -> None:
         # Call super class function
@@ -64,23 +70,26 @@ class Panel2(Panel):
         print(f"name: {self.name}, source: {source_name} data: {data}")
 
         # Set button text
-        if source_name == 'panel_3' and 'combobox' in data:
-            self.button2.setText(data['combobox'])
+        if source_name == "panel_3" and "combobox" in data:
+            self.button2.setText(data["combobox"])
 
         # Call super class function
         return super().update_panel(source_name, data)
 
     def button1_clicked(self):
         # Send data to panel 1
-        self.publish({'name':self.name,'button':1}, 'panel_1')
+        self.publish({"name": self.name, "button": 1}, "panel_1")
 
     def button2_clicked(self):
         # Send data to all panels
-        self.publish({'name':self.name,'button':2})
+        self.publish({"name": self.name, "button": 2})
+
 
 """
 Panel based on UI file generated with the Qt designer
 """
+
+
 class Panel3(Panel, Ui_Form):
     def __init__(self):
         super(Panel3, self).__init__("panel_3")
@@ -98,19 +107,22 @@ class Panel3(Panel, Ui_Form):
 
         # Call super class function
         return super().update_panel(source_name, data)
-        
+
     def checkbox_clicked(self):
         # Send data to all panels
-        self.publish({'name':self.name,'checkbox':self.checkbox.isChecked()})
+        self.publish({"name": self.name, "checkbox": self.checkbox.isChecked()})
 
     def combobox_changed(self):
         # Send data to to panel 2
-        self.publish({'name':self.name,'combobox':self.combobox.currentText()}, 'panel_2')
+        self.publish(
+            {"name": self.name, "combobox": self.combobox.currentText()}, "panel_2"
+        )
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     # Init application
     app = QApplication(sys.argv)
-    
+
     # Create panels GUI
     panels_gui = PanelsGUI()
 
@@ -125,6 +137,6 @@ if __name__ == '__main__':
     # Add example widget 2
     panel_3 = Panel3()
     panels_gui.add_panel(panel_3, 0, 2, title="Panel 3")
-    
+
     # Run application
     sys.exit(app.exec())

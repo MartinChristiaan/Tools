@@ -1,13 +1,13 @@
 # %%
 %load_ext autoreload
 %autoreload 2
+import vscode_commands as v
 from add_vim_keybindings import (
     add_keybindings,
-    vscodeCommand,
-    terminalCommand,
     keybinding,
+    terminalCommand,
+    vscodeCommand,
 )
-import vscode_commands as v
 
 c = vscodeCommand
 

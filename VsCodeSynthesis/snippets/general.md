@@ -72,7 +72,7 @@ class ${1:EngineExample}(Input1MixIn,Output1DictListMixIn,AbstractEngine):
 
     def init_sample(self, timestampdata, data): # optional!!
         self.something_to_intialize = some_fun(data[0][0]["data"])
-        
+
     def process_sample(self, timestampdata, data):
         data = data[0][0]["data"]
         d = 1.0

@@ -1,12 +1,11 @@
 from typing import Optional, Sequence
 
 import numpy as np
-from PySide6.QtWidgets import QVBoxLayout
-
-from guitoolbox.visualize import ColorMap
-from guitoolbox.views.video import VideoView
-from guitoolbox.models.base import VideoModel, TrackModel
+from guitoolbox.models.base import TrackModel, VideoModel
 from guitoolbox.panel import Panel
+from guitoolbox.views.video import VideoView
+from guitoolbox.visualize import ColorMap
+from PySide6.QtWidgets import QVBoxLayout
 
 
 class VideoPanel(Panel):
@@ -46,7 +45,7 @@ class VideoPanel(Panel):
             self.set_timestamp(timestamp, source_name)
 
     def set_timestamp(self, timestamp: float, source: str):
-        if abs(timestamp - self.timestamp) <= .00001:
+        if abs(timestamp - self.timestamp) <= 0.00001:
             return  # Prevents recursion
         self.timestamp = self.video_view.set_timestamp(timestamp)
 

@@ -1,10 +1,6 @@
 # %%
-from add_vim_keybindings import (
-    add_keybindings,
-    vscodeCommand,
-    keybinding,
-)
 import vscode_commands as v
+from add_vim_keybindings import add_keybindings, keybinding, vscodeCommand
 
 c = vscodeCommand
 

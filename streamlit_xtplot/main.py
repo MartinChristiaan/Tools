@@ -1,123 +1,122 @@
+# %%
 
-
-#%%
-import pandas as pd
-import glob
-import streamlit as st
-import os
-import yaml
 import numpy as np
 import pandas as pd
 import plotly.express as px
 import plotly.io as pio
+import streamlit as st
+import yaml
 
 
 @st.cache_resource()
-def xt_plot(sequence, tracktype,fps):
+def xt_plot(sequence, tracktype, fps):
+    datas = []
+    name, tracks_per_frame = sequence
+    t_array = np.arange(len(tracks_per_frame)) * 1 / fps
 
-	datas = []
-	name, tracks_per_frame = sequence
-	t_array = np.arange(len(tracks_per_frame)) * 1 / fps
+    # print(tracks_per_frame)
+    for t, tracks in zip(t_array, tracks_per_frame):
+        for track in tracks:
+            datadict = {
+                "x1": track.bounding_box[0],
+                "y1": track.bounding_box[1],
+                "x2": track.bounding_box[2],
+                "y2": track.bounding_box[3],
+                "x": (track.bounding_box[2] + track.bounding_box[0]) // 2,
+                "t": t,
+                "vavg": track.v_avg,
+                # "log": track.log,
+                "mature": track.mature,
+                "id": track.id,
+                "source": name,
+            }
+            datas += [datadict]
 
-	# print(tracks_per_frame)
-	for t, tracks in zip(t_array, tracks_per_frame):
-		for track in tracks:
-			datadict = {
-				"x1": track.bounding_box[0],
-				"y1": track.bounding_box[1],
-				"x2": track.bounding_box[2],
-				"y2": track.bounding_box[3],
-				"x": (track.bounding_box[2] + track.bounding_box[0]) // 2,
-				"t": t,
-				"vavg": track.v_avg,
-				# "log": track.log,
-				"mature": track.mature,
-				"id": track.id,
-				"source": name,
-			}
-			datas += [datadict]
+    # }
+    df = pd.DataFrame(datas)
+    pio.templates.default = "plotly"
 
-	# }
-	df = pd.DataFrame(datas)
-	pio.templates.default = "plotly"
+    return px.line(
+        df,
+        x="t",
+        y="x",
+        color="id",
+        hover_data=list(datadict.keys()),
+        facet_col="source",
+        markers=True,
+        color_discrete_sequence=[
+            "#0068c9",
+            "#83c9ff",
+            "#ff2b2b",
+            "#ffabab",
+            "#29b09d",
+            "#7defa1",
+            "#ff8700",
+            "#ffd16a",
+            "#6d3fc0",
+            "#d5dae5",
+        ],
+        title=tracktype,
+    )
 
-	return px.line(
-		df,
-		x="t",
-		y="x",
-		color="id",
-		hover_data=list(datadict.keys()),
-		facet_col="source",
-		markers=True,
-		color_discrete_sequence=[
-		"#0068c9",
-		"#83c9ff",
-		"#ff2b2b",
-		"#ffabab",
-		"#29b09d",
-		"#7defa1",
-		"#ff8700",
-		"#ffd16a",
-		"#6d3fc0",
-		"#d5dae5",
-		],
-		title=tracktype,
-	)
 
 import cv2
 
-@st.cache_resource()#(hash_funcs={cv2.VideoCapture: lambda x:x})
+
+@st.cache_resource()  # (hash_funcs={cv2.VideoCapture: lambda x:x})
 def get_video_reader(path):
-
-	mm = MediaManager(path,video_suffix='.mp4')
-	return mm
-
-def get_frame(reader,index):
-	reader.set(cv2.CAP_PROP_POS_FRAMES, index)
-	ret,frame = reader.read()
-	if ret:
-		frame = cv2.cvtColor(frame,cv2.COLOR_RGB2BGR)
-	return frame
+    mm = MediaManager(path, video_suffix=".mp4")
+    return mm
 
 
-from media_manager.core import MediaManager
-import streamlit as st
+def get_frame(reader, index):
+    reader.set(cv2.CAP_PROP_POS_FRAMES, index)
+    ret, frame = reader.read()
+    if ret:
+        frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
+    return frame
+
+
 import streamlit as st
 import streamlit.components.v1 as components
+from media_manager.core import MediaManager
 
-path = '/diskstation/mantis/Security/20230910_drone_recording/videosets/video/DJI_202309100220_001/wide_hd'
+path = "/diskstation/mantis/Security/20230910_drone_recording/videosets/video/DJI_202309100220_001/wide_hd"
 mm = get_video_reader(path)
-if 'timestamp_idx' not in st.session_state:
-    st.session_state['timestamp_idx'] = 0
+if "timestamp_idx" not in st.session_state:
+    st.session_state["timestamp_idx"] = 0
 
 timestamps = mm.timestamps
 
+
 def left_callback():
-	global timestamp_idx
-	st.session_state['timestamp_idx']-=1
-	print('updated')
+    global timestamp_idx
+    st.session_state["timestamp_idx"] -= 1
+    print("updated")
+
 
 def right_callback():
-	global timestamp_idx
-	st.session_state['timestamp_idx']+=1
-	print('updated',timestamp_idx)
+    global timestamp_idx
+    st.session_state["timestamp_idx"] += 1
+    print("updated", timestamp_idx)
 
-timestamp_idx = st.session_state['timestamp_idx']
+
+timestamp_idx = st.session_state["timestamp_idx"]
 
 frame = mm.get_frame(timestamps[timestamp_idx])
-st.image(frame,str(timestamps[timestamp_idx]))
+st.image(frame, str(timestamps[timestamp_idx]))
 left_col, right_col, _ = st.columns([1, 1, 3])
 
 st.text(timestamp_idx)
 
 with left_col:
-	st.button('PREV', on_click=left_callback)
+    st.button("PREV", on_click=left_callback)
 
 with right_col:
-	st.button('NEXT', on_click=right_callback)
+    st.button("NEXT", on_click=right_callback)
 
 components.html(
-	"""
+    """
 <script>
 const doc = window.parent.document;
 buttons = Array.from(doc.querySelectorAll('button'));
@@ -135,21 +134,11 @@ doc.addEventListener('keydown', function(e) {
 });
 </script>
 """,
-	height=0,
-	width=0,
+    height=0,
+    width=0,
 )
 
-# 
-
-
-
-
-
-
-
-	
-
-
+#
 
 
 # st.set_page_config(layout="wide")
@@ -212,7 +201,7 @@ doc.addEventListener('keydown', function(e) {
 # 	fig = xt_plot((config,tracks),track_type,fps)
 
 # 	selected_points = plotly_events(fig, click_event=True,override_height=400)
-	
+
 # 	if len(selected_points):
 # 		with open('tmp_points.json','w') as f:
 # 			json.dump(selected_points,f)
@@ -223,7 +212,7 @@ doc.addEventListener('keydown', function(e) {
 # 	# tracks_per_frame = load_pickle(tracks_path)
 # 	cropper = Cropper(Config.from_yaml(BASE_CONFIG),data_path)
 # 	# reader_cropped = get_video_reader(video_path_cropped)
-# 	frame_index = 0 
+# 	frame_index = 0
 
 # 	with open('tmp_points.json','r') as f:
 # 		selected_points = json.load(f)

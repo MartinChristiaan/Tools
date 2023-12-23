@@ -1,6 +1,5 @@
-import shutil
-from pathlib import Path
 import os
+from pathlib import Path
 
 # toolname = input("enter toolname : ")
 home = os.path.expanduser("~")

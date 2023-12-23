@@ -1,24 +1,20 @@
 # %%
 # %load_ext autoreload
 # %autoreload 2
-from math import inf
-from typing import List
-
-import dlutils_ii as du
-import streamlit as st
-import numpy as np
-from pathlib import Path
-import matplotlib.pyplot as plt
-import cv2
-import torch
-from PIL import Image
-import os
-import sys
 from dataclasses import dataclass
-from tqdm import tqdm
+from math import inf
+
+import cv2
+import dlutils_ii as du
+import matplotlib.pyplot as plt
+import numpy as np
+import streamlit as st
+import torch
+from albumentations import LongestMaxSize, PadIfNeeded
 from icecream import ic
 from loguru import logger
-from albumentations import LongestMaxSize, PadIfNeeded
+from PIL import Image
+from tqdm import tqdm
 
 
 @dataclass

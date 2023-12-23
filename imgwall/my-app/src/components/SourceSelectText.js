@@ -9,9 +9,9 @@ const SourceSelectText = ({ sources, onImageHover, onClick}) => {
     <h3>SourceSelect</h3>
     <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
       {sources.map((source) =>
-        <div 
-          style={{ border: '1px solid black', padding: '10px',width:"100%"}} 
-          onMouseOver={() => onImageHover(source)} 
+        <div
+          style={{ border: '1px solid black', padding: '10px',width:"100%"}}
+          onMouseOver={() => onImageHover(source)}
           onClick={() => onClick(source)}
         >
           <h5>{source.title}</h5>

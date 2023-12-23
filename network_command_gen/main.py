@@ -1,9 +1,10 @@
 import os
+
 import yaml
 
 with open("hosts.yml", "r") as file:
     hosts = yaml.safe_load(file)
-os.makedirs("../cmds",exist_ok=True)
+os.makedirs("../cmds", exist_ok=True)
 os.system("../cmds/*.sh")
 for hostname, data in hosts.items():
     # Create the Bash script filename
@@ -27,7 +28,7 @@ cd /mnt && find . -maxdepth 1 -type d -empty -delete
 
 mkdir -p /mnt/{hostname}/
 sshfs -o allow_other -o identityfile=/home/leeuwenmcv/.ssh/id_rsa -o ServerAliveInterval=1 -o reconnect -p {port} {user}@{host}:/ /mnt/{hostname}/
-	
+
 	"""
 
     ssh_copy_key_contents = f"""
@@ -41,8 +42,18 @@ sshfs -o allow_other -o identityfile=/home/leeuwenmcv/.ssh/id_rsa -o ServerAlive
     script_copy_key_contents = f"{hostname}-keycopy.sh"
 
     for contents, filename in zip(
-        [script_contents, script_contents_mount, script_contents_rsync,ssh_copy_key_contents],
-        [script_ssh_filename, script_mount_filename, script_rsync_filename,script_copy_key_contents],
+        [
+            script_contents,
+            script_contents_mount,
+            script_contents_rsync,
+            ssh_copy_key_contents,
+        ],
+        [
+            script_ssh_filename,
+            script_mount_filename,
+            script_rsync_filename,
+            script_copy_key_contents,
+        ],
     ):
-        with open(f'../cmds/{filename}', "w") as f:
+        with open(f"../cmds/{filename}", "w") as f:
             f.write(contents)

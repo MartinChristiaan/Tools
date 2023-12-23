@@ -56,7 +56,7 @@ function Columns() {
 	image_grid = (<GridSelect items={currentlyVisibleItems} onImageHover={handleHover} onClick={handlePreviewClick} />)
 	let control_panel = null
 	// if (controlVisible){
-	// 	control_panel = 
+	// 	control_panel =
 	// 			<Col md={1}>
 	// 				<ControlPanel tags={tags} onWeightChange={handleWeightChange} />
 	// 			</Col>

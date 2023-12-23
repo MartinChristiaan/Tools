@@ -11,7 +11,3 @@ bboxes will be a list of dictionaries with as keys
 bbox_x,bbox_y,bbox_w,bbox_y
 
 use opencv
-
-	
-	
-

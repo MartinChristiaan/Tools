@@ -1,7 +1,8 @@
+from datetime import datetime
+
 from guitoolbox.models.base import TrackModel
 from trackertoolbox.detections import Detections
 from trackertoolbox.tracks import Tracks
-from datetime import datetime
 
 
 class TrackerToolboxModel(TrackModel):
@@ -9,7 +10,7 @@ class TrackerToolboxModel(TrackModel):
         tracks = tracks.to_pandas()
         tracks["center_y"] = tracks["bbox_y"]
         tracks["center_x"] = tracks["bbox_x"] + (tracks["bbox_w"] / 2)
-        tracks["datetime"] = [datetime.utcfromtimestamp(x) for x in tracks['timestamp']]
+        tracks["datetime"] = [datetime.utcfromtimestamp(x) for x in tracks["timestamp"]]
         super().__init__(tracks)
 
 

@@ -1,17 +1,16 @@
 # %%
+import json
+import os
+from dataclasses import dataclass
+from typing import List
+
 from black import NewLine
 from icecream import ic
+from loguru import logger
 
 # goal easily add keybindings using python file
 # read current settings vscode
 # for keybinding, check if exists, if not, add it...
-
-from dataclasses import dataclass
-import json
-import os
-from typing import List
-
-from loguru import logger
 
 
 class BaseCommand:

@@ -1,19 +1,19 @@
+import argparse
+import os
+import subprocess
+import sys
+
+import click
 import git
+import yaml
+from loguru import logger
+from termcolor import colored
 
 # GIt cli tool to sync local and remote repositories. Git repositories can be registered in a yaml conifg file using the commandline tool.
 # Using another command, all registered repositories can be pulled, commits can be made and pushed to the remote repository.
 # The config file is located in the home directory of the user and is named .gitsync.yml
 # The yaml file should specify the path to the local repository and wether it is active or not. It can be activated using the cli tool.
 
-import os
-import click
-import yaml
-import subprocess
-import argparse
-import sys
-from loguru import logger
-from termcolor import colored
-import git
 
 HOME = os.path.expanduser("~")
 CONFIG_FILE = os.path.join(HOME, ".gitsync.yml")

@@ -1,6 +1,7 @@
 # %%
 from pathlib import Path
 from typing import List
+
 import dlutils_ii as du
 from tqdm import tqdm
 
@@ -76,10 +77,10 @@ def get_webcams_2023() -> List[du.DatasetConfig]:
 
 if __name__ == "__main__":
     webcams = get_webcams_2023()
-    from yolo_plugins.processing import Sequence, MMProcessSequence
-    from yolo_plugins.defaults.inference import get_default_tyolo_processor
-    from scripts.pre_annotation_writer import PreAnnotationWriter
     from dlutils_ii.dataset_cache.fo_vizualize import open_fiftyone
+    from scripts.pre_annotation_writer import PreAnnotationWriter
+    from yolo_plugins.defaults.inference import get_default_tyolo_processor
+    from yolo_plugins.processing import MMProcessSequence, Sequence
 
     proc = get_default_tyolo_processor()
     for sequence in tqdm(webcams):

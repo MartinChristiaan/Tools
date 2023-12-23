@@ -1,19 +1,17 @@
 # %%
 # Collect all python files
 import os
-import numpy as np
 from pathlib import Path
-import matplotlib.pyplot as plt
+
 import cv2
-import torch
-from PIL import Image
-import os
-import sys
+import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
-from dataclasses import dataclass
-from tqdm import tqdm
+import torch
 from icecream import ic
 from loguru import logger
+from PIL import Image
+from tqdm import tqdm
 
 home = os.path.expanduser("~")
 gitpath = Path(f"{home}/git")

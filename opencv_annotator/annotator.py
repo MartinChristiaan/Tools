@@ -1,16 +1,17 @@
 from enum import IntEnum
+
 import cv2
-from components.ImageSelector import ImageSelector
-from components.bbox_maker import BBoxMaker
 from cache_annotator import IOManager
+from components.bbox_maker import BBoxMaker
 from components.class_selection import ClassSelector
 
 # from trackertoolbox.detections import Detections
 from components.drawer import Drawer
+from components.ImageSelector import ImageSelector
 from components.roi_drawer import ROIManager
 from components.text_adder import ImageTextAdder
 from components.zoomer import Zoomer
-from state import State, MouseState
+from state import MouseState, State
 
 
 class ReturnMode(IntEnum):

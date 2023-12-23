@@ -1,10 +1,9 @@
 # %%
-import stat
+
 import cv2
-from loguru import logger
 import numpy as np
-from state import Observable
-from state import State
+from loguru import logger
+from state import Observable, State
 
 
 class Drawer:

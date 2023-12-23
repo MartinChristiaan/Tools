@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+
 import cv2
 
 
@@ -44,7 +45,7 @@ def generate_videoset(input_path: Path, datasetdir: Path):
     for v in videos:
         camera_video_dir = videodir / v.stem
         camera_video_dir.mkdir(exist_ok=True, parents=True)
-        camera_results_dir = resultsdir / v.stem
+        resultsdir / v.stem
 
         timestamps_string = generate_timestamps(v)
         with open(camera_video_dir / (v.stem + ".log"), "w") as f:

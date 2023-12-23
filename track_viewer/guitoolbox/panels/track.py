@@ -1,12 +1,11 @@
 import functools
 from typing import Sequence
 
-from PySide6.QtWidgets import QVBoxLayout, QLabel
-
-from guitoolbox.visualize import ColorMap
-from guitoolbox.views import track
 from guitoolbox.models.base import TrackModel
 from guitoolbox.panel import Panel
+from guitoolbox.views import track
+from guitoolbox.visualize import ColorMap
+from PySide6.QtWidgets import QLabel, QVBoxLayout
 
 
 class TrackPanel(Panel):
@@ -27,14 +26,18 @@ class TrackPanel(Panel):
 
         # Create layout with labels
         self.hbox_layout = QVBoxLayout()
-        self.label1 = QLabel(self.name)  # NOTE leave this line here! deleting it seems to break app...
+        self.label1 = QLabel(
+            self.name
+        )  # NOTE leave this line here! deleting it seems to break app...
         # NOTE: use "track.TrackView" instead of TrackView. This allows monkey patching, see "example_annotation.py"
         self.track_view = track.TrackView(
             timestamp_min,
             timestamp_max,
             self.tracks_model,
             color_map,
-            on_timestamp_changed=functools.partial(self.set_timestamp, source=self.name),
+            on_timestamp_changed=functools.partial(
+                self.set_timestamp, source=self.name
+            ),
         )  # NOTE leave this line here! moving it seems to break app...
         self.hbox_layout.addWidget(self.track_view)
         self.setLayout(self.hbox_layout)

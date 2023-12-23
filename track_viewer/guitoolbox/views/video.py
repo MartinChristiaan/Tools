@@ -2,13 +2,12 @@ from typing import Optional
 
 import numpy as np
 import pandas as pd
+from guitoolbox.models.base import TrackModel, VideoModel
+from guitoolbox.visualize import ColorMap, DetectionRectangle
 from matplotlib import pyplot as plt
 from matplotlib.axes import Axes
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg
 from matplotlib.figure import Figure
-
-from guitoolbox.visualize import ColorMap, DetectionRectangle
-from guitoolbox.models.base import VideoModel, TrackModel
 
 
 class VideoView(FigureCanvasQTAgg):
@@ -23,7 +22,9 @@ class VideoView(FigureCanvasQTAgg):
     ):
         fig = Figure(figsize=(width, height), dpi=dpi)
         fig.tight_layout(pad=0)
-        self.axes = fig.add_subplot(111)  # Use these self.axes to interact with the plot
+        self.axes = fig.add_subplot(
+            111
+        )  # Use these self.axes to interact with the plot
         super(VideoView, self).__init__(fig)
 
         self.video_model = video_model

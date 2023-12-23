@@ -1,0 +1,49 @@
+# Checks on code formatting and large file addition
+repos:
+  - repo: https://github.com/MarcoGorelli/absolufy-imports
+    rev: v0.3.1
+    hooks:
+      - id: absolufy-imports
+
+  - repo: https://github.com/pycqa/isort
+    rev: 5.12.0
+    hooks:
+      - id: isort
+        args: ["--profile", "black"]
+
+  # - repo: https://github.com/psf/black
+  #   rev: 23.3.0
+  #   hooks:
+  #     - id: black
+
+  # - repo: https://github.com/asottile/blacken-docs
+  #   rev: 1.13.0
+  #   hooks:
+  #     - id: blacken-docs
+  #       additional_dependencies: [black==23.3.0]
+
+  - repo: https://github.com/PyCQA/autoflake
+    rev: v2.1.1
+    hooks:
+      - id: autoflake
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      # - id: check-ast
+      - id: check-case-conflict
+      #- id: check-json
+      - id: check-merge-conflict
+      - id: check-symlinks
+      - id: check-yaml
+      # - id: debug-statements
+      - id: destroyed-symlinks
+      - id: fix-byte-order-marker
+      - id: detect-private-key
+      - id: end-of-file-fixer
+      - id: pretty-format-json
+        args: [--autofix]
+      - id: check-added-large-files
+      - id: mixed-line-ending
+      - id: trailing-whitespace
+        args: [--markdown-linebreak-ext=md]

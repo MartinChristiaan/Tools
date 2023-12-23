@@ -1,14 +1,13 @@
 # %%
+# from symbol import term
+import vscode_commands as v
 from add_vim_keybindings import (
     add_bashrc,
     add_keybindings,
-    vscodeCommand,
-    terminalCommand,
     keybinding,
+    terminalCommand,
+    vscodeCommand,
 )
-
-# from symbol import term
-import vscode_commands as v
 
 c = terminalCommand
 

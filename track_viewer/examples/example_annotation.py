@@ -1,12 +1,11 @@
 """Shows how to quickly (and dirty) get an annotation tool from the track viewer"""
 import os
 
+from guitoolbox.app import MainGUI, SyncMode
+from guitoolbox.views import track
 from matplotlib.backend_bases import PickEvent
 from matplotlib.lines import Line2D
 from media_manager.core import MediaManager
-
-from guitoolbox.app import MainGUI, SyncMode
-from guitoolbox.views import track
 from trackertoolbox.detections import Detections
 from trackertoolbox.tracks import Tracks
 
@@ -25,7 +24,9 @@ class AnnotationTrackView(track.TrackView):
                 os.environ["ANNOTATION_TRACK_ID"] = str(track_id)
             else:
                 track_id0 = os.environ["ANNOTATION_TRACK_ID"]
-                print(f"Matched track_id={track_id0} with track_id={track_id}")  # TODO do something, e.g. write to file
+                print(
+                    f"Matched track_id={track_id0} with track_id={track_id}"
+                )  # TODO do something, e.g. write to file
                 del os.environ["ANNOTATION_TRACK_ID"]  # Reset
 
         elif not isinstance(event.artist, Line2D):
@@ -51,7 +52,9 @@ mm1 = MediaManager(
 )
 
 tracks = Tracks.load(os.path.join(dirname, r"results\tracks\tracks_EO_live.csv"))
-detections = Detections.load(os.path.join(dirname, r"results\detections\detections_EO_live.csv"))
+detections = Detections.load(
+    os.path.join(dirname, r"results\detections\detections_EO_live.csv")
+)
 
 # GUI
 gui = MainGUI(

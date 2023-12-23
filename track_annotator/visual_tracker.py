@@ -1,14 +1,13 @@
+import glob
 import os
-import shutil
+from multiprocessing import pool
+
 import cv2
 import numpy as np
-from tqdm import tqdm
 import pandas as pd
-from tqdm import tqdm
 from media_manager.core import MediaManager
 from skimage.transform import resize
-import glob
-from multiprocessing import pool
+from tqdm import tqdm
 
 basedir = r"/diskstation/v2119/data/20221011_VustCo_tharde/2022101"
 videodirs = glob.glob(f"{basedir}*/video/EO_lq/")
@@ -35,7 +34,7 @@ def process(args):
     annotations = [x for x in annotations if x.endswith(".csv")]
     annotations.sort()
     annotation_file = annotations[-1]
-    name = videodir.split("/")[-1] + f"{i}"
+    videodir.split("/")[-1] + f"{i}"
     mm = MediaManager(videodir, result_dirpath="", video_suffix=".mp4")
     # print(annotation_file)
     annotations_df = pd.read_csv(annotation_file)
@@ -66,7 +65,6 @@ def process(args):
                     trackerlist.append(tracker)
                 except Exception as e:
                     print(f"failed {bbox}, {e}")
-                    pass
 
         for is_bwd, trackerlist in enumerate([trackers_fwd, trackers_bwd]):
             for t_index, delta_t in enumerate(range(60)):

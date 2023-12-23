@@ -1,16 +1,9 @@
-from motiontoolbox.warping import warp_image
-from motiontoolbox.motionvectors import CalcMotionVectorsOpticalFlowOpenCV
-from motiontoolbox.warping import warp_image
+import dlutils_ii as du
+from engine_utils.engine_utils import AbstractEngine
 from motiontoolbox.estimators import ransac
 from motiontoolbox.motionmodels import MotionModel, MotionModels
-from motiontoolbox.motionmodels import MotionModels, MotionModel
-import dlutils_ii as du
-
-from typing import Dict, List
-from engine_utils.engine_utils import (
-    AbstractEngine,
-)
-import os
+from motiontoolbox.motionvectors import CalcMotionVectorsOpticalFlowOpenCV
+from motiontoolbox.warping import warp_image
 
 
 class MotionModelComputer(AbstractEngine):
@@ -27,4 +20,4 @@ def compute_motion_model(t0, t1, frame, frame_target, max_iters=250):
 
 
 def process_sequence(pf: du.Pathfinder):
-    mm = pf.media_manager
+    pf.media_manager
