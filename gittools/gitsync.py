@@ -204,9 +204,17 @@ def sync_repos():
                     subprocess.run(["git", "status"])
                     click.echo("Do you want to add all changes? (y/n)")
                     user_input = click.getchar()
+
+                    click.echo("Do you want to change the commit message? (y/n)")
+                    commit_message = (
+                        input("Add commit message : ")
+                        if click.getchar() == "y"
+                        else "Sync"
+                    )
+
                     if user_input.lower() == "y":
                         subprocess.run(["git", "add", "."])
-                        subprocess.run(["git", "commit", "-m", "'Sync'"])
+                        subprocess.run(["git", "commit", "-m", f"{commit_message}"])
                         subprocess.run(["git", "push"])
                     else:
                         logger.info("Skipping git add")
