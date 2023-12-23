@@ -1,8 +1,7 @@
 # %%
-%load_ext autoreload
-%autoreload 2
+# %load_ext autoreload
+# %autoreload 2
 
-import multiprocessing
 
 import dlutils_ii as du
 from annotator import BoundingBoxAnnotator
