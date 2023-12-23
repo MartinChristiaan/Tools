@@ -47,6 +47,10 @@ subprocess.check_output(
     "systemctl start autoupdater", shell=True, stderr=subprocess.STDOUT
 )
 
+# start the service
+subprocess.check_output(
+    "sudo systemctl daemon-reload", shell=True, stderr=subprocess.STDOUT
+)
 
 # check the status of the service
 status = subprocess.check_output(

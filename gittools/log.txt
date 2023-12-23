@@ -1,3 +1,8 @@
 2023-12-23T14:32:41.877437+0100 INFO updating repo at $HOME/git/tools
 2023-12-23T14:32:43.090016+0100 INFO Succesfully updated all repos
 2023-12-23T14:33:55.819605+0100 INFO updating repo at $HOME/git/tools
+2023-12-23T14:33:57.171412+0100 INFO Succesfully updated all repos
+2023-12-23T14:37:58.075681+0100 INFO updating repo at $HOME/git/tools
+2023-12-23T14:37:58.144450+0100 ERROR Failed to execute command in $HOME/git/tools. Error: fatal: unable to access 'https://github.com/MartinChristiaan/Tools.git/': Could not resolve host: github.com
+
+2023-12-23T14:37:58.144658+0100 INFO Succesfully updated all repos

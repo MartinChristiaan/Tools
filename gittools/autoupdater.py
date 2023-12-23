@@ -16,7 +16,7 @@ from loguru import logger
 
 # add file handler for logger
 logger.add(
-    Path(__file__).parent.absolute() / "log.txt",
+    f"{os.path.expanduser('~')}/tool_updater_log.txt",
     rotation="1 week",
     retention="10 days",
     level="INFO",
@@ -72,5 +72,6 @@ class GitUpdater:
             sleep(INTERVAL_SECONDS)
 
 
+sleep(5)
 if __name__ == "__main__":
     GitUpdater()()
