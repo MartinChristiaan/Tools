@@ -75,8 +75,10 @@ class ROIManager:
             xidx = (x - im_width) // self.roi_size
             yidx = y // self.roi_size
             if event == cv2.EVENT_LBUTTONDOWN:
-                self.annotation_lut[xidx][yidx].confidence = 1
-                self.annotation_lut[xidx][yidx].label = state.current_class.value
+                selected_annotation = self.annotation_lut[xidx][yidx]
+                selected_annotation.confidence = 1
+                selected_annotation.label = state.current_class.value
+                selected_annotation.real_detection = True
                 state.detections.set_value(state.detections.value)
 
             if event == cv2.EVENT_RBUTTONDOWN:
