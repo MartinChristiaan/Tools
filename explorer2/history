@@ -1,7 +1,3 @@
-/mnt/startlight4
-/mnt/startlight4/home
-/mnt/startlight4/home/leeuwenmcv
-/mnt/startlight4/home/leeuwenmcv/git
 /mnt/startlight4/home/leeuwenmcv/git/schiphol_reid
 /mnt/startlight4/home/leeuwenmcv/git/schiphol_reid/schiphol_reid
 /mnt/startlight4/home/leeuwenmcv/Videos
@@ -99,3 +95,7 @@
 /home/leeuwenmcv/.config/nvim
 /home/leeuwenmcv/git
 /mnt/dl-41/data/leeuwenmcv/general/ships_ssdd
+/mnt/linux-pc
+/mnt/linux-pc/home
+/mnt/linux-pc/home/martin
+/mnt/linux-pc/home/martin/git-work
