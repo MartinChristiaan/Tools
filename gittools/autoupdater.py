@@ -4,15 +4,24 @@
 
 import datetime
 from time import sleep
-from loguru import logger
 import os
 from pathlib import Path
-import loguru
 import os
 from pathlib import Path
 import subprocess
 
 INTERVAL_SECONDS = 60 * 10  # 10 minutes
+
+from loguru import logger
+
+# add file handler for logger
+logger.add(
+    Path(__file__).parent.absolute() / "log.txt",
+    rotation="1 week",
+    retention="10 days",
+    level="INFO",
+    format="{time} {level} {message}",
+)
 
 
 class GitUpdater:
@@ -51,9 +60,15 @@ class GitUpdater:
 
     def __call__(self):
         while True:
+            had_error = False
             for repo in self.git_repos:
-                self.update_repo(repo)
-            logger.info("Updated all repos at {}".format(datetime.datetime.now()))
+                error = self.update_repo(repo)
+                if error:
+                    had_error = True
+            if not had_error:
+                logger.info("Succesfully updated all repos")
+            else:
+                logger.info("Failed to  update")
             sleep(INTERVAL_SECONDS)
 
 
