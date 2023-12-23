@@ -1,14 +1,15 @@
 from enum import IntEnum
 import cv2
-from ImageSelector import ImageSelector
-from bbox_maker import BBoxMaker
-from class_selection import ClassSelector
+from components.ImageSelector import ImageSelector
+from components.bbox_maker import BBoxMaker
+from cache_annotator import IOManager
+from components.class_selection import ClassSelector
 
 # from trackertoolbox.detections import Detections
-from drawer import Drawer
-from roi_drawer import ROIManager
-from text_adder import ImageTextAdder
-from zoomer import Zoomer
+from components.drawer import Drawer
+from components.roi_drawer import ROIManager
+from components.text_adder import ImageTextAdder
+from components.zoomer import Zoomer
 from state import State, MouseState
 
 
@@ -20,11 +21,13 @@ class ReturnMode(IntEnum):
     IGNORE = 4
 
 
+import dlutils_ii as du
+
+
 class BoundingBoxAnnotator:
-    def __init__(
-        self,
-    ):
+    def __init__(self, dataset_config: du.DatasetConfig):
         state = State()
+        self.io_manager = IOManager(dataset_config, state)
         self.image_selector = ImageSelector(state)
         self.zoomer = Zoomer(state)
         self.bbox_maker = BBoxMaker(state, self.zoomer)
@@ -32,58 +35,39 @@ class BoundingBoxAnnotator:
         self.class_selector = ClassSelector(state)
         self.roi_manager = ROIManager(self.zoomer, state)
         self.text_adder = ImageTextAdder(
-            state, [self.class_selector.get_status, self.image_selector.get_status]
+            state,
+            [
+                self.io_manager.get_status,
+                self.class_selector.get_status,
+                self.image_selector.get_status,
+            ],
         )
         self.state = state
 
-        cv2.namedWindow("image")
+        # cv2.namedWindow("image", flags=cv2.WINDOW_GUI_NORMAL)
+        cv2.namedWindow(
+            "image",
+            flags=cv2.WINDOW_AUTOSIZE | cv2.WINDOW_KEEPRATIO | cv2.WINDOW_GUI_NORMAL,
+        )
+        # cv2.setWindowProperty("image", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
         cv2.setMouseCallback("image", self.run_mouse_callbacks)
 
     def run_mouse_callbacks(self, *args):
         state = MouseState(*args[:4])
         self.state.mouse_event.set_value(state)
 
-    def run(self, frame_inputs, timestamp, detections):
-        self.state.timestamp._value = timestamp
-        self.drawer.initialized = False
-        self.state.detections.set_value(detections)
-        # return
-        self.state.frame_inputs.set_value(frame_inputs)
-        image_idx = 0
+    def run(self):
+        self.drawer.initialized = True
+        self.state.frame_index.set_value(self.io_manager.frame_index)
         while True:
-            # image = self.roi_drawer.out_image.value
             image = self.state.roi_image.value
-            # cv2.destroyAllWindows()
-            # if dirty:
             cv2.imshow("image", image)
             key = cv2.waitKey(16)
             if key > -1:
                 key_str = chr(key)
+                print(key_str)
                 self.state.keyboard_event.set_value(key_str)
-            # except:
-            # pass
 
             if key == ord("q"):
                 cv2.destroyAllWindows()
-                return ReturnMode.STOP
-            elif key == ord("d"):
-                return ReturnMode.NEXT
-            elif key == ord("a"):
-                return ReturnMode.PREV
-
-
-# if self.dirty or self.zoomer.dirty or self.roi_drawer.dirty:
-#     imgbase = self.images[self.image_idx]
-#     image_zoomed = self.zoomer.update_img(imgbase)
-#     if len(self.detections) > 0:
-#         detections_zoomed = self.zoomer.update_detections(self.detections)
-#         self.cur_image = self.drawer.draw(image_zoomed, detections_zoomed)
-#     else:
-#         self.cur_image = image_zoomed
-#     self.drawing_image = self.cur_image.copy()
-#     self.dirty = False
-#     self.zoomer.dirty = False
-#     self.roi_drawer.dirty = False
-#     self.cur_image = self.roi_drawer.draw_rois(
-#         self.image, self.cur_image, self.detections
-#     )
+                return

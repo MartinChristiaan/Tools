@@ -4,8 +4,8 @@
 
 
 import os
-from cache_annotator import CacheAnnotator
-from dataset_config import get_mantis
+from cache_annotator import IOManager
+from scripts.dataset_config import get_mantis
 
 
-CacheAnnotator(get_mantis()).run()
+IOManager(get_mantis()).run()

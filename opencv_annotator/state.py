@@ -57,7 +57,7 @@ class Observable(Generic[T]):
         self._value = new_value
         self.run()
         # if self.log:
-        #     logger.debug(f"set {self.name} with {len(self.subscribers)} subs")
+        # logger.debug(f"set {self.name} with {len(self.subscribers)} subs")
         # [x() for x in self.subscribers]
 
     def run(self):
@@ -87,6 +87,8 @@ class MouseState:
 
 class State:
     def __init__(self):
+        self.timestamps = Observable([], "timestamps")
+        self.frame_index = Observable(0, "frame_index")
         self.detections = Observable([], name="detections")
         self.detections_zoomed = Observable([], name="detections_zoomed")
         self.zoom = Observable(1.0, name="zoom")
@@ -94,6 +96,7 @@ class State:
         self.mouse_event = Observable(
             MouseState(0, 0, 0, 0), name="mouse_event", log=False
         )
+        self.keyboard_mode = Observable("normal", "keyboard_mode")
         self.current_class = Observable("object", name="current_class")
         self.frame_inputs = Observable([], name="base_images")
         self.base_image = Observable([], name="base_image")

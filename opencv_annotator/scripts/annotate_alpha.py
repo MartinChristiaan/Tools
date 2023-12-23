@@ -2,12 +2,13 @@
 %load_ext autoreload
 %autoreload 2
 
+import os
 from annotator import BoundingBoxAnnotator
 from cache_annotator import IOManager
-from scripts.dataset_config import get_mantis
-mantis = get_mantis()
+from scripts.dataset_config import get_mantis,get_webcams_2023
+alpha = get_webcams_2023()[0]
 import dlutils_ii as du
-annotator = BoundingBoxAnnotator(mantis)
+annotator = BoundingBoxAnnotator(alpha)
 annotator.run()
 
 
