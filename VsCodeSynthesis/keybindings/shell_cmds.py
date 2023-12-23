@@ -53,6 +53,24 @@ keys = [
             )
         ],
     ),
+    keybinding(
+        "<leader>+g+s+f",  # git search file
+        [
+            c(
+                "cd ~/git/tools/VsCodeSynthesis && bash filesearch.sh",
+                focus=True,
+            )
+        ],
+    ),
+    keybinding(
+        "<leader>+g+s+s",  # git search symbol
+        [
+            c(
+                "cd ~/git/tools/VsCodeSynthesis && bash git_search_symbol.sh",
+                focus=True,
+            )
+        ],
+    ),
 ]
 add_keybindings(keys)
 add_bashrc(keys)

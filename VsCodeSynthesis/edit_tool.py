@@ -31,4 +31,4 @@ class SFzfPrompt(FzfPrompt):
 
 prompt = SFzfPrompt()
 path_to_edit = prompt.prompt(toolbase.glob("*"), prompt_text="choose tool")[0]
-os.system(f"nvim {path_to_edit} ")
+os.system(f"code {path_to_edit} ")
