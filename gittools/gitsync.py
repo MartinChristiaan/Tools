@@ -12,6 +12,8 @@ import subprocess
 import argparse
 import sys
 from loguru import logger
+from termcolor import colored
+import git
 
 HOME = os.path.expanduser("~")
 CONFIG_FILE = os.path.join(HOME, ".gitsync.yml")
@@ -26,6 +28,13 @@ parser.add_argument(
     dest="add",
     action="store_true",
     help="Add a repository to the config file",
+)
+parser.add_argument(
+    "-ac",
+    "--activate",
+    dest="activate",
+    action="store_true",
+    help="Activate a repository in the config file",
 )
 parser.add_argument(
     "-l",
@@ -79,15 +88,35 @@ def add_repo(repo_path):
     if os.path.exists(CONFIG_FILE):
         with open(CONFIG_FILE, "r") as f:
             config = yaml.safe_load(f)
-        config["repos"].append({"path": repo_path, "active": False})
+        config["repos"].append({"path": repo_path, "active": True})
         with open(CONFIG_FILE, "w") as f:
             yaml.dump(config, f)
     else:
         config = {}
         config["repos"] = []
-        config["repos"].append({"path": repo_path, "active": False})
+        config["repos"].append({"path": repo_path, "active": True})
         with open(CONFIG_FILE, "w") as f:
             yaml.dump(config, f)
+
+
+# implementation of the activate command
+
+
+def activate_repo(repo_path):
+    logger.info(f"Activating repository {repo_path}")
+    if os.path.exists(CONFIG_FILE):
+        with open(CONFIG_FILE, "r") as f:
+            config = yaml.safe_load(f)
+        if repo_path in config["repos"]:
+            config["repos"][repo_path]["active"] = True
+            with open(CONFIG_FILE, "w") as f:
+                yaml.dump(config, f)
+        else:
+            logger.error(f"Repository {repo_path} is not registered")
+            sys.exit(1)
+    else:
+        logger.error("No repositories registered")
+        sys.exit(1)
 
 
 # implementation of the list command
@@ -101,8 +130,7 @@ def list_repos():
         for repo in config["repos"]:
             repo_path = repo["path"]
             active = repo["active"]
-            dirty = False
-            updates_available = False
+            sync_available = False
 
             # Check if the path exists
             if not os.path.exists(repo_path):
@@ -114,26 +142,26 @@ def list_repos():
                 logger.error(f"Path {repo_path} is not a git repository")
                 sys.exit(1)
 
-            # Check if there are local changes
+            # Check if sync is available
             repo = git.Repo(repo_path)
-            if repo.is_dirty():
-                print("Local changes found")
+            if repo.head.commit.diff is not None:
+                sync_available = True
 
-                # Commit and push changes
-                repo.git.add(".")
-                repo.git.commit("-m", "Auto-commit")
-                repo.git.push()
+            def print_repo_info(repo_path, active, sync_available):
+                path_color = "white" if os.path.exists(repo_path) else "red"
+                active_color = "green" if active else "red"
+                updates_color = "yellow" if sync_available else "green"
 
-            # Check if there are new changes to pull
-            remote_branch = repo.active_branch.tracking_branch()
-            if remote_branch is not None:
-                remote_diff = repo.git.diff(remote_branch.name)
-                if remote_diff:
-                    updates_available = True
+                path_text = colored(f"Path: {repo_path}", path_color)
+                active_text = colored(f"Active: {active}", active_color)
+                updates_text = colored(
+                    f"Sync available: {sync_available}", updates_color
+                )
 
-            print(
-                f"Path: {repo_path}, Active: {active}, Dirty: {dirty}, Updates available: {updates_available}"
-            )
+                print(f"{path_text}, {active_text}, {updates_text}")
+
+            # Usage:
+            print_repo_info(repo_path, active, sync_available)
 
     else:
         logger.error("No repositories registered")
@@ -196,3 +224,7 @@ if args.add:
     add_repo(os.getcwd())
 if args.list:
     list_repos()
+if args.remove:
+    remove_repo(os.getcwd())
+if args.activate:
+    activate_repo(os.getcwd())
