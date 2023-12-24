@@ -25,7 +25,7 @@ logger.add(
 class GitUpdater:
     def __init__(self) -> None:
         self.git_repos_auto = self.read_config()
-        self.git_repos_pull_only = Path(home).glob("*")
+        self.git_repos_pull_only = (Path(home) / "git").glob("*")
 
     def read_config(self):
         git_repos = []
