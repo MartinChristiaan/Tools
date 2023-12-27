@@ -17,16 +17,21 @@ from state import Observable, State
 
 def apply_ignore_areas(annotations: List[Annotation]):
     ignore_areas = [x for x in annotations if x.label == "ignore_area"]
+    if len(ignore_areas) == 0:
+        return annotations
     other_annotations = [x for x in annotations if x.label != "ignore_area"]
     filtered_annotations = []
     for a in other_annotations:
+        ignored = False
         for ignore_area in ignore_areas:
-            print(a.cx, a.cy, ignore_area.is_inside(a.cx, a.cy))
-            if not ignore_area.is_inside(a.cx, a.cy)
-                filtered_annotations.append(a)
+            if ignore_area.is_inside(a.cx, a.cy):
+                ignored = True
+        if not ignored:
+            filtered_annotations.append(a)
+
     num_filtered_annotations = len(annotations) - len(filtered_annotations)
     logger.debug(f"filtered {num_filtered_annotations} annotations")
-    return filtered_annotations
+    return filtered_annotations + ignore_areas
 
 
 class IOManager:

@@ -1,6 +1,8 @@
+
 import cv2
 import numpy as np
 from annotation import Annotation
+from cache_annotator import apply_ignore_areas
 from components.zoomer import Zoomer
 from loguru import logger
 from state import Observable, State
@@ -72,14 +74,6 @@ class BBoxMaker:
             )
             new_detections = detections.value + [self.new_annotation]
 
-            if self.state.current_class.value == "ignore_area":
-                # remove all detections inside ignore area
-                new_detections = [
-                    a
-                    for a in new_detections
-                    if not a.is_inside(self.new_annotation.cx, self.new_annotation.cy)
-                ]
-
             detections.set_value(new_detections)
             self.is_button_down = True
             # if inside annotation -> confirm
@@ -94,8 +88,12 @@ class BBoxMaker:
             if self.new_annotation.bbox_h < 0:
                 self.new_annotation.bbox_y += self.new_annotation.bbox_h
                 self.new_annotation.bbox_h *= -1
+            new_detections = detections.value
+            # print("new_detections", new_detections)
+            if self.state.current_class.value == "ignore_area":
+                new_detections = apply_ignore_areas(new_detections)
             self.is_button_down = False
-            detections.set_value(detections.value)
+            detections.set_value(new_detections)
 
     def keyboard_callback(self):
         state = self.state
