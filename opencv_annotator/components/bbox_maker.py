@@ -70,8 +70,17 @@ class BBoxMaker:
                 self.state.current_class.value,
                 self.state.timestamp.value,
             )
+            new_detections = detections.value + [self.new_annotation]
 
-            detections.set_value(detections.value + [self.new_annotation])
+            if self.state.current_class.value == "ignore_area":
+                # remove all detections inside ignore area
+                new_detections = [
+                    a
+                    for a in new_detections
+                    if not a.is_inside(self.new_annotation.cx, self.new_annotation.cy)
+                ]
+
+            detections.set_value(new_detections)
             self.is_button_down = True
             # if inside annotation -> confirm
 
