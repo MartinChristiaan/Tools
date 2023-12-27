@@ -3,7 +3,6 @@
 # config file is a text file contianing a list of git repos to pull from and push to.
 
 import os
-import subprocess
 from pathlib import Path
 from time import sleep
 
@@ -35,31 +34,10 @@ class GitUpdater:
 
     def update_repo(self, path):
         logger.info(f"updating repo at {path}")
-        try:
-            subprocess.check_output(
-                f"cd {path} && git pull", shell=True, stderr=subprocess.STDOUT
-            )
-            subprocess.check_output(
-                f"cd {path} && git add .", shell=True, stderr=subprocess.STDOUT
-            )
-            subprocess.check_output(
-                f'cd {path} && git commit -am "auto commit"',
-                shell=True,
-                stderr=subprocess.STDOUT,
-            )
-
-            subprocess.check_output(
-                f'cd {path} && git commit -am "auto commit"',
-                shell=True,
-                stderr=subprocess.STDOUT,
-            )
-            subprocess.check_output(
-                f"cd {path} && git push", shell=True, stderr=subprocess.STDOUT
-            )
-        except subprocess.CalledProcessError as e:
-            logger.error(
-                f"Failed to execute command in {path}. Error: {e.output.decode()}"
-            )
+        os.system(f"cd {path} && git pull")
+        os.system(f"cd {path} && git add .")
+        os.system(f'cd {path} && git commit -am "auto commit"')
+        os.system(f"cd {path} && git push")
 
     def __call__(self):
         while True:
