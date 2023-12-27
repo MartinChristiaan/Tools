@@ -30,7 +30,6 @@ class IOManager:
         self.state.timestamps.set_value(self.timestamps)
         self.frame_index = self.get_first_frame_index()
         self.tracked_annotations = []
-
         self.go_value = ""
 
         state.frame_index.subscribe(self.load_frame)
@@ -130,7 +129,9 @@ class IOManager:
         self.current_annotations.to_csv(self.tmp_annotation_path, index=False)
         self.tracked_annotations = []
         if self.should_track():
-            trackables = [x for x in annotations if x.track_id == 99]
+            trackables = [
+                x for x in annotations if x.track_id == 99 and x.label != "ignore_frame"
+            ]
             self.tracked_annotations = self.track(trackables)
 
     # def stop(self):

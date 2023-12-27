@@ -97,3 +97,7 @@ class BBoxMaker:
             )
 
             state.keyboard_event.set_value("d")
+        elif key == "r":
+            state.detections.set_value(
+                [x for x in state.detections.value if x.real_detection]
+            )

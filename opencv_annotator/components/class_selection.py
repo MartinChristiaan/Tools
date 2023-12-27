@@ -17,6 +17,8 @@ class ClassSelector:
             "drone",
             "ignore_area",
             "ignore_frame",
+            "boat",
+            "bycicle",
         ]
         # self.image = image
         state.current_class.subscribe(state.zoom.run)

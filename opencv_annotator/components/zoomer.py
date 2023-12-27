@@ -20,7 +20,7 @@ class Zoomer:
         self.x_offset = 0
         self.y_offset = 0
         self.min_zoom = 1
-        self.max_zoom = 4
+        self.max_zoom = 8
         self.new_height = 1080
         self.new_width = 1920
         self.scale = 1
@@ -65,12 +65,12 @@ class Zoomer:
         mouse_state = state.mouse_event.value
         x = mouse_state.x
         y = mouse_state.y
-        if key in "+-":
-            if key == "+":
-                zoom *= 1.1
+        if key in "ws":
+            if key == "w":
+                zoom *= 2
                 zoom = min(zoom, self.max_zoom)
             else:
-                zoom /= 1.1
+                zoom /= 2
                 zoom = max(zoom, self.min_zoom)
 
             self.new_width = round(self.w / zoom)

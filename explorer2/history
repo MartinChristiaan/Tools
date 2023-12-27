@@ -1,11 +1,3 @@
-/mnt/startlight4/home/leeuwenmcv/git/schiphol_reid
-/mnt/startlight4/home/leeuwenmcv/git/schiphol_reid/schiphol_reid
-/mnt/startlight4/home/leeuwenmcv/Videos
-/mnt/startlight4/home/leeuwenmcv/Videos/video
-/mnt/startlight4/data
-/mnt/startlight4/data/leeuwenmcv
-/mnt/startlight4/data/leeuwenmcv/schiphol_reid
-/mnt/startlight4/data/leeuwenmcv/schiphol_reid/wildtracks
 /mnt/startlight4/data/leeuwenmcv/schiphol_reid/wildtracks/results_full
 /mnt/startlight4/data/leeuwenmcv/schiphol_reid/wildtracks/results_full/cam6
 /mnt/startlight4/data/leeuwenmcv/schiphol_reid/wildtracks/results_full/cam6/cam6
@@ -99,3 +91,11 @@
 /mnt/linux-pc/home
 /mnt/linux-pc/home/martin
 /mnt/linux-pc/home/martin/git-work
+
+/media
+/media/martin
+/media/martin/DeepLearning
+/media/martin/DeepLearning/mantis_drone_2023
+/media/martin/DeepLearning/mantis_drone_2023/raw
+/media/martin/DeepLearning/mantis_drone_2023/raw/mantis_drone_2023
+/media/martin/DeepLearning/mantis_drone_2023/raw/mantis_drone_2023/DJI_202309100220_001_wide_hd
