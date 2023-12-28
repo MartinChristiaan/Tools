@@ -12,8 +12,10 @@ if not updater_file.exists():
     logger.error(f"Updater file {updater_file} does not exist.")
     sys.exit(1)
 
-print(os.environ["USER"])  # == 'root':
-
+if os.environ["USER"]:  # == 'root':
+    user = "leeuwenmcv"
+else:
+    user = os.environ["USER"]
 
 # create the contents of the service file
 SERVICE_CONTENTS = f"""[Unit]
@@ -25,7 +27,7 @@ StartLimitIntervalSec=0
 Type=simple
 Restart=always
 RestartSec=1
-User={os.environ["USER"]}
+User={user}
 ExecStart={sys.executable} {updater_file}
 WorkingDirectory={Path(__file__).parent.absolute()}
 
