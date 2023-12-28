@@ -43,7 +43,7 @@ subprocess.check_output(
 
 # start the service
 subprocess.check_output(
-    "systemctl start autoupdater", shell=True, stderr=subprocess.STDOUT
+    "systemctl restart autoupdater", shell=True, stderr=subprocess.STDOUT
 )
 
 # start the service

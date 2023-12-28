@@ -59,6 +59,5 @@ class GitUpdater:
             sleep(INTERVAL_SECONDS)
 
 
-sleep(5)
 if __name__ == "__main__":
     GitUpdater()()
