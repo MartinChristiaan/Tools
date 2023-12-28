@@ -1,6 +1,6 @@
 # %%
-# %load_ext autoreload
-# %autoreload 2
+%load_ext autoreload
+%autoreload 2
 
 
 import dlutils_ii as du
