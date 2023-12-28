@@ -11,4 +11,4 @@ from torch import mul
 from tqdm import tqdm
 
 mantis = get_mantis()
-BoundingBoxAnnotator(mantis[4]).run()
+BoundingBoxAnnotator(mantis[5]).run()

@@ -15,6 +15,25 @@ from state import Observable, State
 # %%
 
 
+def apply_ignore_areas(annotations: List[Annotation]):
+    ignore_areas = [x for x in annotations if x.label == "ignore_area"]
+    if len(ignore_areas) == 0:
+        return annotations
+    other_annotations = [x for x in annotations if x.label != "ignore_area"]
+    filtered_annotations = []
+    for a in other_annotations:
+        ignored = False
+        for ignore_area in ignore_areas:
+            if ignore_area.is_inside(a.cx, a.cy):
+                ignored = True
+        if not ignored:
+            filtered_annotations.append(a)
+
+    num_filtered_annotations = len(annotations) - len(filtered_annotations)
+    logger.debug(f"filtered {num_filtered_annotations} annotations")
+    return filtered_annotations + ignore_areas
+
+
 class IOManager:
     def __init__(self, dataset_config: du.DatasetConfig, state: State) -> None:
         self.state = state
@@ -152,6 +171,7 @@ class IOManager:
                 ]
             )
         detections += self.tracked_annotations
+        detections = apply_ignore_areas(detections)
         frames = [
             cv2.imread(self.dataset_config.pathfinder.frame_filename(o, timestamp))
             for o in [0, -15, 15]
