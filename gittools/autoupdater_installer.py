@@ -12,6 +12,9 @@ if not updater_file.exists():
     logger.error(f"Updater file {updater_file} does not exist.")
     sys.exit(1)
 
+print(os.environ["USER"])  # == 'root':
+
+
 # create the contents of the service file
 SERVICE_CONTENTS = f"""[Unit]
 Description=Auto Updater Service
