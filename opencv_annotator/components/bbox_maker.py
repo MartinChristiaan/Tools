@@ -1,4 +1,3 @@
-
 import cv2
 import numpy as np
 from annotation import Annotation
@@ -52,6 +51,7 @@ class BBoxMaker:
                 if a.is_inside(x, y):
                     detections.value.remove(a)
                     detections.set_value(detections.value)
+                    self.state.zoom.set_value(self.state.zoom.value)
                     return
 
         elif m.event == cv2.EVENT_LBUTTONDOWN:
