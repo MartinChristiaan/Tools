@@ -1,1 +1,2 @@
 $HOME/git/tools
+/mnt/c/Users/leeuwenmcv/git/notes

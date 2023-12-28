@@ -1,3 +1,0 @@
-* GYM
-* Hardlopen
-* Drukte

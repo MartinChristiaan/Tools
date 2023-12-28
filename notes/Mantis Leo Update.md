@@ -1,3 +1,0 @@
-* Changed vizualizer + UI
-* 
-* *
