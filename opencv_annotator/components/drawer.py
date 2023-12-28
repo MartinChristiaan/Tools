@@ -19,6 +19,8 @@ class Drawer:
         state.texted_image.subscribe(self.update, True)
         self.prev_zoom = state.zoom.value
         self.initialized = False
+        self.draw_labels = True
+        self.state.keyboard_event.subscribe(self.keyboard_callback)
 
     def write_bbox(self, image, detection, color, label=None):
         x = int(detection.bbox_x)
@@ -30,7 +32,7 @@ class Drawer:
 
         new_image = cv2.rectangle(image, (x, y), (x2, y2), color, self.line_thickness)
 
-        if label is not None:
+        if label is not None and self.draw_labels:
             tf = max(self.line_thickness - 1, 1)  # font thickness
             t_size = cv2.getTextSize(
                 label, 0, fontScale=self.line_thickness / 3, thickness=tf
@@ -71,3 +73,10 @@ class Drawer:
             color = annotation.get_color()
             img = self.write_bbox(img, annotation, color=color, label=annotation.label)
         self.state.detections_image.set_value(img)
+
+    def keyboard_callback(self):
+        self.state
+        key = self.state.keyboard_event.value
+        if key == "l":
+            self.draw_labels = not self.draw_labels
+            self.update()
