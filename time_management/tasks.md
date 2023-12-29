@@ -1,71 +1,67 @@
-# Task Lists:
-- My Tasks (MTY5MTg3Njg2ODU2MDkxNzUwNjc6MDow)
-Tasks:
-  - Shortcuts through vscode (aEZOR3VFejdGV0R1Tkd5eg)
-  - Calendar templates (aE5wajhRUXV0YzJ2WHhyTQ)
-  - Agenda maker (a2Y4Z29WQ2FRR21FX3lIVA)
-  - Include hour admin for work (OVJTU0NRSnNKX2o5RHZGbQ)
-  - Template calendar script (MHNoX19VNEtMeGJYRUJGUA)
-  - Cadeaus inpakken (RHQwaElRaWtRWkljcGNTVg)
-  - Write time (QVRGTC16N1RDb0U3dnpaNQ)
-  - Organizeren Homebase (TXA3ci1KZmFJdVNjdk9vOA)
-  - Record self while programming  (VHg5OWJVTzNtM3BKMmprbA)
-  - Set save history on every command (OERHUnNpSlVYV3lGOWdlcA)
-  - Get faster at choosing completions (NjUtUTJocjNxNHVneVM1Qw)
-  - Nails (UGhQLVNSS2FrOTYyekJ1VQ)
-  - Leo polsen drenkelingen (TzkyRTNhTS1rdzZDSHV0WA)
-  - Papierhouder (NWJrZUNRYmZMNF9HbXhVSA)
-  - Nachtkastje (MjhLV0dGcEcteXNzZzhjQw)
-  - More task driven planning (bHBvNEk3VUNhVUszZzN5Qw)
-  - Build knowledge database for ai queries (Z0FSaldhWWx1eTd6WnJmQw)
-  - automated thermo (T0pueFJfYmJhcjlxRHZLZQ)
-  - efficient research (RGRER1lzQkdmRGl5UG5vNg)
-  - finger excercises (UncyREVYaEtDRmdqeHlsLQ)
-- Panoptes (SFE2TGdCbFhRWGNRdXJEOA)
-Tasks:
-  - Create Media manager Converted script (TVNHYUFYS2RLOFVTdG5SUg)
-  - Create evaluation script (Ask Richard if it exists) (UTQzaEc4MTJOTGtUV1BaRQ)
-  - Train with varying frame offsets (T3pvSUNOc1U1c2E4ZTg4ZA)
-  - Train S model (M3Z1b2lPMTVUUUhkcm93eQ)
-- Mantis (UzB1dmFGRUNvU0dfQXBlag)
-Tasks:
-  - test if it works with T2 (LXR1Yk1xd25MeTZ6U0EwTg)
-  - Test docker with new rda +  Try to find bug (TXZud01mOTR4YXhWVFZuOA)
-  - Inform leo about vacancy (NkYtLXd4dXlBcnZNX1AyeQ)
-  - Fix CICD and merge branch (RE9kNXllTVYwY0lienpEXw)
-  - Check UI (akRtTFRMY2RGRWxrbktQQQ)
-  - Analyze bounding boxes to review motion (S0hCdXd6SjlZWjBfb3FUSQ)
-- V2119 (QjFtbUFtRU1pcmRNZDU2cQ)
-Tasks:
-  - Jetson root login message (eHRaN0pQbUxnWEs3RWdidA)
-  - Setup docker roots on Xaviers (OTlWVDF6TUozUG9WQmdYcw)
-  - Setup data folder on SSD (UkFCZnVVZUNFXzNPcjhZZQ)
-  - Triton merge (Ul9JZmFxci1QZVlnU2ZvTA)
-  - Experiment with quality/Latency/bandwidth/CPU usage/platform/codecs(VP9/h264/JPG) For Gstreamer (angwTnNTZTBnVmY0M2Rmcg)
-  - Update Jetpack Version (TTFUcGJVRmNxQTNRVW4wOQ)
-  - Automatic User Creation (QzBWcC1FenNyanZOaGZSTw)
-  - Remote Desktop on Jetson (bExmbFRtUkFqdVpnR1FSRQ)
-- Teamsroom (WjlNakpfeTB4c1ZaaXVlOA)
-Tasks:
-  - Testing!! (RG50R2tidF9kS2VFdnpmbg)
-- Spear (MkdiWDM5MUlob2pIU2EzVQ)
-Tasks:
-  - Improve logging (clF4MER1cjRQTWtyMnFfcQ)
-  - Work on IR/EO switching (dnJjbGZGY3UwZ3YwVUt3Yw)
-  - Refactoring (YVVhR21BQVRHZ21LTjdRVw)
-  - Add Comments (UWVmR0g5MlcweTQ5Um5WZQ)
-  - Talk with Jan about offline processing (WkxmODRsdFV1RTVZSFUxMw)
-  -  (OFhKMFpGUFJVbGxjMzg4Tw)
-  - Learn about debugging in vscode (SG1lR2dYWUNwNS00OENhMg)
-- KCP (S2V6d3FFYkxrZDlGNWtUMA)
-Tasks:
-  - Jaarplan issues oplossen (WWZUZXpQc2ZhcDZWOE80Mw)
-  - Terug koppelen over privacy (OXVnY0ZUelhqamxVX3J1Rg)
-  - QSHE Jaarplan opzet maken (Mmp4YnpyR0lUSUFBQnBDbw)
-  - Henri Contacten over privacy (NUJxZDcxcVQ5WmRld05adQ)
-- V2119 (eldHWDRRdUZtUzRzcXhxRg)
-No tasks found.
-- Cleaning (RDNwSTJhMzVHTWVtVVZLUw)
-No tasks found.
-- Mission Control (QndfczRtc25UZ2ZjUE45MQ)
-No tasks found.
+**My Tasks**
+ - [ ]Shortcuts through vscode
+ - [ ]Calendar templates
+ - [ ]Agenda maker
+ - [ ]Include hour admin for work
+ - [ ]Template calendar script
+ - [ ]Cadeaus inpakken
+ - [ ]Write time
+ - [ ]Organizeren Homebase
+ - [ ]Record self while programming
+ - [ ]Set save history on every command
+ - [ ]Get faster at choosing completions
+ - [ ]Nails
+ - [ ]Leo polsen drenkelingen
+ - [ ]Papierhouder
+ - [ ]Nachtkastje
+ - [ ]More task driven planning
+ - [ ]Build knowledge database for ai queries
+ - [ ]automated thermo
+ - [ ]efficient research
+ - [ ]finger excercises
+**Panoptes**
+ - [x]Create Media manager Converted script
+ - [x]Create evaluation script (Ask Richard if it exists)
+ - [ ]Train with varying frame offsets
+ - [ ]Train S model
+**Mantis**
+ - [ ]test if it works with T2
+ - [ ]Test docker with new rda +  Try to find bug
+ - [ ]Inform leo about vacancy
+ - [x]Fix CICD and merge branch
+ - [x]Check UI
+ - [x]Analyze bounding boxes to review motion
+**V2119**
+ - [x]Jetson root login message
+ - [x]Setup docker roots on Xaviers
+ - [x]Setup data folder on SSD
+ - [ ]Triton merge
+ - [ ]Experiment with quality/Latency/bandwidth/CPU usage/platform/codecs(VP9/h264/JPG) For Gstreamer
+ - [x]Update Jetpack Version
+ - [x]Automatic User Creation
+ - [ ]Remote Desktop on Jetson
+**Teamsroom**
+ - [ ]Testing!!
+**Spear**
+ - [ ]Improve logging
+ - [ ]Work on IR/EO switching
+ - [x]Refactoring
+ - [x]Add Comments
+ - [x]Talk with Jan about offline processing
+ - [x]
+ - [ ]Learn about debugging in vscode
+**KCP**
+ - [ ]Jaarplan issues oplossen
+ - [ ]Terug koppelen over privacy
+ - [x]QSHE Jaarplan opzet maken
+ - [x]Henri Contacten over privacy
+**Cleaning**
+
+**Mission Control**
+
+**Old Ideas**
+ - [ ]Small obj simulation
+ - [ ]Whisper text insert idea
+ - [ ]Reward restriction application idea
+ - [ ]prevent out of sync docker containers somehow
+ - [ ]New Photo Acquisition
