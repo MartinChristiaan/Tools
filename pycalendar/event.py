@@ -2,6 +2,8 @@
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 
+from plot_schedule import plot_schedule
+
 
 @dataclass
 class Event:
@@ -64,28 +66,4 @@ schedule = [
 for event in schedule:
     print(str(event))
 
-# Create a plot of the schedule using matplotlib
-
-
-def barplot(events):
-    import matplotlib.pyplot as plt
-    import numpy as np
-
-    fig, ax = plt.subplots(figsize=(10, 5))
-    # ax.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M"))
-    # ax.yaxis.set_major_locator(mdates.HourLocator(interval=1))
-    x = np.arange(len(events))
-    width = [event.duration for event in events]
-    left = [event.start_time.minute + event.start_time.hour * 60 for event in events]
-    ax.barh(
-        x,
-        width,
-        left=left,
-        # [event.title for event in events],
-    )
-    ax.set_title("Schedule")
-    fig.autofmt_xdate()
-    plt.show()
-
-
-barplot(schedule)
+plot_schedule(schedule)
