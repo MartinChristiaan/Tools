@@ -50,6 +50,15 @@ def planning(date: datetime, hour=10, minute=0):
     return Event("Planning", set_time(date, hour, minute), 30, "Planning")
 
 
+def software_development(date: datetime, hour=10, minute=30, duration=120):
+    return Event(
+        "Software Development",
+        set_time(date, hour, minute),
+        duration,
+        "Software Development",
+    )
+
+
 def meeting(meetingname, date: datetime):
     base_time = set_time(date, 10, 0)
     return Event(meetingname, base_time, 90, "Meeting")
@@ -63,6 +72,7 @@ schedule = [
     planning(today),
     meeting("Meeting 1", today),
 ]
+
 for event in schedule:
     print(str(event))
 
