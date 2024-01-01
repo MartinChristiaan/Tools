@@ -1,4 +1,7 @@
 # %%
+
+
+# Needs to change -> Generate types for project -> Set start and end ranges.
 import os
 
 import matplotlib.pyplot as plt
@@ -6,12 +9,12 @@ import numpy as np
 import pandas as pd
 from tqdm import tqdm
 
-ourplan = pd.read_csv("./ourplan_june.csv")
+ourplan = pd.read_csv("./ourplan_januari_2024.csv")
+
 print(ourplan.columns)
 
-
-plan_columns = [c for c in ourplan.columns if c.startswith("Plan") and "2022" in c]
-real_columns = [c for c in ourplan.columns if c.startswith("Real") and "2022" in c]
+plan_columns = [c for c in ourplan.columns if c.startswith("Plan")]
+real_columns = [c for c in ourplan.columns if c.startswith("Real")]
 
 for i, row in ourplan.iterrows():
     total_planned = sum(row[c] for c in plan_columns)
@@ -34,16 +37,15 @@ for i, row in tqdm(list(ourplan.iterrows())):
     if total_planned + total_real > 0:
         if str(row["WBS name"]) == "nan":
             planned = np.cumsum([row[c] for c in plan_columns])
-
             real = np.cumsum([row[c] for c in real_columns])
-            labels = [c.split(" ")[2].replace("*", "") for c in plan_columns]
+            labels = [c.replace("*", "") for c in plan_columns]
             plt.figure(figsize=(25, 9))
             plt.plot(real)
             plt.plot(planned, "--")
-            plt.xticks(np.arange(len(labels)), labels)
+            plt.xticks(np.arange(len(labels)), labels, rotation=45)
             plt.title(f"Hours {row['Project name']}")
             plt.xlabel("Week")
             plt.ylabel("Hours")
             plt.grid(1)
             plt.legend(["real", "planned"])
-            plt.savefig(f'project_plots/{row["Project name"]}.png')
+            plt.savefig(f'project_plots/{row["Project name"].replace("/","")}.png')
