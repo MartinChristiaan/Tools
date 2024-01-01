@@ -9,4 +9,4 @@ from cache_annotator import IOManager
 from scripts.dataset_config import get_mantis
 
 mantis = get_mantis()
-BoundingBoxAnnotator(mantis[5]).run()
+BoundingBoxAnnotator(mantis[7]).run()
