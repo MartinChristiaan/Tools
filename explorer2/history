@@ -1,6 +1,3 @@
-/mnt/startlight4/data/leeuwenmcv/schiphol_reid/wildtracks/results_full
-/mnt/startlight4/data/leeuwenmcv/schiphol_reid/wildtracks/results_full/cam6
-/mnt/startlight4/data/leeuwenmcv/schiphol_reid/wildtracks/results_full/cam6/cam6
 /mnt/startlight4/data/leeuwenmcv/schiphol_reid/wildtracks/results_full/cam6/cam6/detections_pytorch.csv
 /mnt/startlight4/data/leeuwenmcv/schiphol_reid/wildtracks/results_full/cam5
 /mnt/startlight4/data/leeuwenmcv/schiphol_reid/wildtracks/results_full/cam5/cam5
@@ -99,3 +96,6 @@
 /media/martin/DeepLearning/mantis_drone_2023/raw
 /media/martin/DeepLearning/mantis_drone_2023/raw/mantis_drone_2023
 /media/martin/DeepLearning/mantis_drone_2023/raw/mantis_drone_2023/DJI_202309100220_001_wide_hd
+
+/mnt/dl-41/data/leeuwenmcv/general/sod_cache
+/mnt/dl-41/data/leeuwenmcv/general/sod_cache/raw
