@@ -14,7 +14,6 @@ videosets = VideosetsII(basedirpath=basedirpath)  # basedirpath)
 vset = videosets["mantis_drone_2023"]
 new_annotations = [str(x) for x in Path(".").glob("*.csv")]
 print(new_annotations)
-# %%
 for cam in vset.cameras:
     new_annot = None
     for x in new_annotations:
