@@ -22,9 +22,23 @@ for cam in vset.cameras:
             new_annot = x
     if new_annot is None:
         continue
-    print(new_annot)
 
     mm = vset.get_mediamanager(cam)
-    annotations = mm.load_annotations("smallObjectsCorrected")
-    if annotations is None:
-        annotations = mm.load_annotations("static")
+    annotations_old = mm.load_annotations("smallObjectsCorrected")
+    if annotations_old is None:
+        annotations_old = mm.load_annotations("static")
+    annotations_new = pd.read_csv(new_annot)
+    annotations_new = annotations_new[annotations_new.label != "ignore_frame"]
+    if not annotations_old is None:
+        t_new = annotations_new.timestamp
+        t_old = [x for x in annotations_old.timestamp if not x in t_new]
+        annotations_new = pd.concat(
+            [annotations_new, annotations_old[annotations_old.timestamp.isin(t_old)]]
+        )
+        logger.info(
+            f"updated annotations, old len {len(annotations_old)}, new len {len(annotations_new)} {cam}"
+        )
+    else:
+        logger.info(f"{len(annotations_new)} new annotations for {cam}")
+    if len(annotations_new) > 0:
+        mm.save_annotations(annotations_new, "smallObjectsCorrected", True)
