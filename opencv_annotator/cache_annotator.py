@@ -131,15 +131,15 @@ class IOManager:
             self.current_annotations = self.current_annotations[
                 ~(self.current_annotations.timestamp == self.state.timestamp.value)
             ]
-
-        next_detections = self.detections[self.frame_index + 1]
-        for x in annotations:
-            if x.track_id == 99:
-                continue
-            next_item = [a for a in next_detections if a.track_id == x.track_id]
-            if len(next_item) == 0:
-                continue
-            next_item[0].label = x.label
+        if self.frame_index + 1 < len(self.detections):
+            next_detections = self.detections[self.frame_index + 1]
+            for x in annotations:
+                if x.track_id == 99:
+                    continue
+                next_item = [a for a in next_detections if a.track_id == x.track_id]
+                if len(next_item) == 0:
+                    continue
+                next_item[0].label = x.label
             # next_items.label = [x.label] * len(next_items)
 
         self.current_annotations = pd.concat(
@@ -172,9 +172,10 @@ class IOManager:
             )
         detections += self.tracked_annotations
         detections = apply_ignore_areas(detections)
+        offset = self.dataset_config.options.offset_scales[0]
         frames = [
             cv2.imread(self.dataset_config.pathfinder.frame_filename(o, timestamp))
-            for o in [0, -15, 15]
+            for o in [0, int(-15 * offset), int(15 * offset)]
         ]
         vizframe = vizualize_objects(frames)
         self.frame_inputs = {
