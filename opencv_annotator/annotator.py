@@ -51,7 +51,7 @@ class BoundingBoxAnnotator:
         #     flags=cv2.WINDOW_FULLSCREEN | cv2.WINDOW_GUI_NORMAL,
         # )
         cv2.namedWindow("image", cv2.WND_PROP_FULLSCREEN | cv2.WINDOW_GUI_NORMAL)
-        cv2.setWindowProperty("image", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
+        # cv2.setWindowProperty("image", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
         # cv2.setWindowProperty("image", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
         cv2.setMouseCallback("image", self.run_mouse_callbacks)
 

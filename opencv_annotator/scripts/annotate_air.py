@@ -1,7 +1,4 @@
 # %%
-%load_ext autoreload
-%autoreload 2
-
 
 from typing import List
 import dlutils_ii as du
@@ -26,7 +23,10 @@ pf = du.Pathfinder(
 )
 
 o = du.TrainOptions(
-    False, [1], max_samples=100, annotations_suffix="ignore"#, motion_models="compute"
+    False,
+    [1],
+    max_samples=100,
+    annotations_suffix="ignore",  # , motion_models="compute"
 )
 tharde = du.DatasetConfig(pf, o)
 annotator = BoundingBoxAnnotator(tharde).run()

@@ -92,10 +92,10 @@ def tno_tower(output_dir):
 
 
 datasets = singapore('/data/sod_cache')
-# BoundingBoxAnnotator(singapore[35]).run()
-for x in datasets:
-    # annotator = BoundingBoxAnnotator(x)
-    tmp_path = x.pathfinder.annotations_path.with_suffix('.tmp.csv')
-    annotations = pd.read_csv(tmp_path)
-    x.pathfinder.media_manager.save_annotations(annotations,'smallObjectsCorrected',True)
-    logger.info(f'saved {tmp_path}')
+BoundingBoxAnnotator(datasets[35]).run()
+# for x in datasets:
+#     # annotator = BoundingBoxAnnotator(x)
+#     tmp_path = x.pathfinder.annotations_path.with_suffix('.tmp.csv')
+#     annotations = pd.read_csv(tmp_path)
+#     x.pathfinder.media_manager.save_annotations(annotations,'smallObjectsCorrected',True)
+#     logger.info(f'saved {tmp_path}')
