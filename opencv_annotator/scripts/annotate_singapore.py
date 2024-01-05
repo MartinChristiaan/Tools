@@ -97,4 +97,5 @@ for x in datasets:
     # annotator = BoundingBoxAnnotator(x)
     tmp_path = x.pathfinder.annotations_path.with_suffix('.tmp.csv')
     annotations = pd.read_csv(tmp_path)
-    x.pathfinder.media_manager.save_annotations(annotations,'smallObjectsCorrected')
+    x.pathfinder.media_manager.save_annotations(annotations,'smallObjectsCorrected',True)
+    logger.info(f'saved {tmp_path}')
