@@ -25,7 +25,7 @@ pf = du.Pathfinder(
 o = du.TrainOptions(
     False,
     [1],
-    max_samples=100,
+    max_samples=120,
     annotations_suffix="ignore",  # , motion_models="compute"
 )
 tharde = du.DatasetConfig(pf, o)
