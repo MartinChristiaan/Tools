@@ -91,4 +91,5 @@ def tno_tower(output_dir):
 
 
 singapore = singapore('/data/sod_cache')
-BoundingBoxAnnotator(singapore[23]).run()
+print(len(singapore))
+BoundingBoxAnnotator(singapore[31]).run()
