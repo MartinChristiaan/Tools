@@ -3,6 +3,7 @@
 %autoreload 2
 
 
+from typing import List
 import dlutils_ii as du
 from annotator import BoundingBoxAnnotator
 from scripts.dataset_config import get_mantis
@@ -36,7 +37,7 @@ def wereld_havendagen(output_dir):
     return [config]
 
 
-def singapore(output_dir):
+def singapore(output_dir) -> List[du.DatasetConfig]:
     vset = videosets["singapore"]
     configs = []
     for camera in vset.cameras:
@@ -90,6 +91,10 @@ def tno_tower(output_dir):
 
 
 
-singapore = singapore('/data/sod_cache')
-print(len(singapore))
-BoundingBoxAnnotator(singapore[31]).run()
+datasets = singapore('/data/sod_cache')
+# BoundingBoxAnnotator(singapore[35]).run()
+for x in datasets:
+    # annotator = BoundingBoxAnnotator(x)
+    tmp_path = x.pathfinder.annotations_path.with_suffix('.tmp.csv')
+    annotations = pd.read_csv(tmp_path)
+    x.pathfinder.media_manager.save_annotations(annotations,'smallObjectsCorrected')
