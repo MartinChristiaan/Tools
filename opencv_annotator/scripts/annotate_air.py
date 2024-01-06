@@ -19,7 +19,7 @@ basedirpath = Path(r"/diskstation")
 videosets = VideosetsII(basedirpath=basedirpath)  # basedirpath)
 
 pf = du.Pathfinder(
-    "v2119_campaign1_flight01", camera="EO", quality="_hq", cache_dir="/data/sod_cache"
+    "v2119_campaign1_flight02", camera="EO", quality="_hq", cache_dir="/data/sod_cache"
 )
 
 o = du.TrainOptions(
