@@ -22,7 +22,8 @@ sequences = []
 #
 
 # get videoset and mediamanager
-mm = MediaManager(root / "alpha-Scene-001", video_suffix=".mp4")
+# for cam in cams:
+mm = MediaManager(cams[5], video_suffix=".mp4")
 # load tracks tyolo
 tracks_tyolo = Detections(mm.load("tyolov8/detections_finetuned.csv"))
 # GUI
