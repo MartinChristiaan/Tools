@@ -19,11 +19,10 @@ cams = list(root.glob("*"))
 cams.sort()
 print(cams)
 sequences = []
-#
 
 # get videoset and mediamanager
 # for cam in cams:
-mm = MediaManager(cams[5], video_suffix=".mp4")
+mm = MediaManager(cams[7], video_suffix=".mp4")
 # load tracks tyolo
 tracks_tyolo = Detections(mm.load("tyolov8/detections_finetuned.csv"))
 # GUI
