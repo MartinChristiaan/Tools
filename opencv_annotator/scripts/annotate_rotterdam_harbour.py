@@ -31,5 +31,5 @@ def rotterdam_harbour(output_dir):
 
 
 datasets = rotterdam_harbour("/data/sod_cache")
-du.Writer(datasets[0], [0, -15, 15]).write()
+# du.Writer(datasets[0], [0, -15, 15]).write()
 BoundingBoxAnnotator(datasets[0]).run()
