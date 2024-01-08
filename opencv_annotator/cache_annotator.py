@@ -205,6 +205,7 @@ class IOManager:
         # multi_tracker = cv2.MultiTracker_create()
         tracked = []
         logger.debug(f"tracking {len(annotations)} annotations")
+        tracking = False
 
         for annotation in annotations:
             bboxi = (
@@ -214,10 +215,14 @@ class IOManager:
                 int(annotation.bbox_h),
             )
             # multi_tracker.add(, frame0, bbox)
-            tracker = cv2.TrackerKCF_create()
-            tracker.init(frame0, bboxi)
-            success, bbox = tracker.update(frame0)
-            success, bbox = tracker.update(frame1)
+            if tracking:
+                tracker = cv2.TrackerKCF_create()
+                tracker.init(frame0, bboxi)
+                success, bbox = tracker.update(frame0)
+                success, bbox = tracker.update(frame1)
+            else:
+                success = True
+                bbox = bboxi
             if success:
                 new_annot = deepcopy(annotation)
                 new_annot.timestamp = next_t

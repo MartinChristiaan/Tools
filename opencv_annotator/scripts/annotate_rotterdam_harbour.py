@@ -23,7 +23,11 @@ def rotterdam_harbour(output_dir):
         videoset="rotterdam_harbour_20210308", camera="jai20000", cache_dir=output_dir
     )
     train_options = du.TrainOptions(
-        val=True, offset_scales=[3], max_samples=200, annotations_suffix="panoptes_exp"
+        val=True,
+        offset_scales=[3],
+        max_samples=100,
+        annotations_suffix="panoptes_exp",
+        crop=[633, 1058, 1656, 974],
     )
     config = du.DatasetConfig(pathfinder, train_options)
     configs.append(config)
@@ -31,5 +35,5 @@ def rotterdam_harbour(output_dir):
 
 
 datasets = rotterdam_harbour("/data/sod_cache")
-# du.Writer(datasets[0], [0, -15, 15]).write()
+du.Writer(datasets[0], [0, -15, 15]).write()
 BoundingBoxAnnotator(datasets[0]).run()
