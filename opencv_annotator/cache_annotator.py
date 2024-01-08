@@ -149,7 +149,11 @@ class IOManager:
         self.tracked_annotations = []
         if self.should_track():
             trackables = [
-                x for x in annotations if x.track_id == 99 and x.label != "ignore_frame"
+                x
+                for x in annotations
+                if x.track_id == 99
+                and x.label != "ignore_frame"
+                and x.label != "object"
             ]
             self.tracked_annotations = self.track(trackables)
 
