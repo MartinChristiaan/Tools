@@ -20,6 +20,7 @@ class ClassSelector:
             "boat",
             "bycicle",
             "animal",
+            "ignore_area_seq",
         ]
         # self.image = image
         state.current_class.subscribe(state.zoom.run)
