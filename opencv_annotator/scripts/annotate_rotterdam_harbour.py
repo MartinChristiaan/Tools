@@ -1,12 +1,12 @@
+# %%
+# %load_ext autoreload
+# %autoreload 2
 from typing import List
 import dlutils_ii as du
-from annotator import BoundingBoxAnnotator
+from opencv_annotator.annotator import BoundingBoxAnnotator
 from scripts.dataset_config import get_mantis
-
 import dlutils_ii as du
-
 from pathlib import Path
-from loguru import logger
 
 from videosets_ii.videosets_ii import VideosetsII
 from trackertoolbox.detections import Detections
@@ -35,5 +35,5 @@ def rotterdam_harbour(output_dir):
 
 
 datasets = rotterdam_harbour("/data/sod_cache")
-du.Writer(datasets[0], [0, -15, 15]).write()
+# du.Writer(datasets[0], [0, -15, 15]).write()
 BoundingBoxAnnotator(datasets[0]).run()

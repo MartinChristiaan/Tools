@@ -2,7 +2,8 @@ from enum import IntEnum
 
 import cv2
 from opencv_annotator.cache_annotator import IOManager
-from opencv_annotator.components.bbox_maker import BBoxMaker, PostprocessingHandler
+from opencv_annotator.components.PostprocessingHandler import PostprocessingHandler
+from opencv_annotator.components.bbox_maker import BBoxMaker
 from opencv_annotator.components.class_selection import ClassSelector
 
 # from trackertoolbox.detections import Detections
@@ -35,15 +36,16 @@ class BoundingBoxAnnotator:
         self.drawer = Drawer(state)
         self.class_selector = ClassSelector(state)
         self.roi_manager = ROIManager(self.zoomer, state)
+        self.postproc_handler = PostprocessingHandler(state)
         self.text_adder = ImageTextAdder(
             state,
             [
                 self.io_manager.get_status,
                 self.class_selector.get_status,
                 self.image_selector.get_status,
+                self.postproc_handler.get_status,
             ],
         )
-        self.postproc_handler = PostprocessingHandler(state)
         self.state = state
 
         # cv2.namedWindow("image", flags=cv2.WINDOW_GUI_NORMAL)
@@ -65,6 +67,7 @@ class BoundingBoxAnnotator:
         self.state.frame_index.set_value(self.io_manager.frame_index)
         while True:
             image = self.state.roi_image.value
+            print(image.shape)
             cv2.imshow("image", image)
             key = cv2.waitKey(16)
             if key > -1:
