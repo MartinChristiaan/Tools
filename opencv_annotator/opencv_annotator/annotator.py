@@ -2,7 +2,7 @@ from enum import IntEnum
 
 import cv2
 from opencv_annotator.cache_annotator import IOManager
-from opencv_annotator.components.bbox_maker import BBoxMaker
+from opencv_annotator.components.bbox_maker import BBoxMaker, PostprocessingHandler
 from opencv_annotator.components.class_selection import ClassSelector
 
 # from trackertoolbox.detections import Detections
@@ -43,6 +43,7 @@ class BoundingBoxAnnotator:
                 self.image_selector.get_status,
             ],
         )
+        self.postproc_handler = PostprocessingHandler(state)
         self.state = state
 
         # cv2.namedWindow("image", flags=cv2.WINDOW_GUI_NORMAL)

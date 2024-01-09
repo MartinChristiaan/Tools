@@ -104,6 +104,7 @@ class State:
         self.detections_image = Observable(np.array([]), name="detections_image")
         self.timestamp = Observable(0.0, name="timestamp")
         self.image_index = Observable(1, "image_index")
+        self.postproc_index = Observable(0, "postproc_index")
 
     def get_runcounts(self):
         for k, v in self.__dict__.items():

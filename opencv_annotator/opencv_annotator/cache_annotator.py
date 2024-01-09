@@ -6,7 +6,7 @@ import cv2
 import dlutils_ii as du
 import numpy as np
 import pandas as pd
-from opencv_annotator.annotation import Annotation
+from opencv_annotator.annotation import Annotation, AnnotationPostproc
 from opencv_annotator.components.text_adder import TextRequest
 from dlutils_ii.annotation_cache.writer_annotations import vizualize_objects
 from loguru import logger
@@ -148,17 +148,8 @@ class IOManager:
         self.current_annotations.to_csv(self.tmp_annotation_path, index=False)
         self.tracked_annotations = []
         if self.should_track():
-            trackables = [
-                x
-                for x in annotations
-                if x.track_id == 99
-                and x.label != "ignore_frame"
-                and x.label != "object"
-            ]
+            trackables = [x for x in annotations if x.track_id == 99 and x.postproc > 0]
             self.tracked_annotations = self.track(trackables)
-
-    # def stop(self):
-    #     return True
 
     def load_frame(self):
         self.frame_index = self.state.frame_index.value
@@ -209,7 +200,6 @@ class IOManager:
         # multi_tracker = cv2.MultiTracker_create()
         tracked = []
         logger.debug(f"tracking {len(annotations)} annotations")
-        tracking = False
 
         for annotation in annotations:
             bboxi = (
@@ -219,7 +209,7 @@ class IOManager:
                 int(annotation.bbox_h),
             )
             # multi_tracker.add(, frame0, bbox)
-            if tracking:
+            if annotation.postproc == AnnotationPostproc.TRACK:
                 tracker = cv2.TrackerKCF_create()
                 tracker.init(frame0, bboxi)
                 success, bbox = tracker.update(frame0)
