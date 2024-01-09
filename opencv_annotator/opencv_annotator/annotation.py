@@ -1,7 +1,14 @@
 from dataclasses import dataclass
 from typing import List
+from enum import Enum
 
 import pandas as pd
+
+
+class AnnotationPostproc(Enum):
+    NONE = 0
+    STATIC = 1
+    TRACK = 2
 
 
 @dataclass
@@ -17,6 +24,7 @@ class Annotation:
     real_detection: float = 1
     track_id: int = 99
     n: int = 1
+    postproc: AnnotationPostproc = AnnotationPostproc.NONE
 
     @property
     def upperleft(self):
