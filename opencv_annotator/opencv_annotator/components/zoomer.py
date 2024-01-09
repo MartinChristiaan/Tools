@@ -2,10 +2,10 @@ from copy import deepcopy
 
 import cv2
 import numpy as np
-from annotation import Annotation
+from opencv_annotator.annotation import Annotation
 from loguru import logger
 from numpy import ndarray
-from state import Observable, State
+from opencv_annotator.state import Observable, State
 
 # Always execute worstcase = best? Zoom -> draw overlay  -> Draw detections, never copy
 

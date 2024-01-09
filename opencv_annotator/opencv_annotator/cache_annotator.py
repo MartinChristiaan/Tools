@@ -6,11 +6,11 @@ import cv2
 import dlutils_ii as du
 import numpy as np
 import pandas as pd
-from annotation import Annotation
+from opencv_annotator.annotation import Annotation
 from opencv_annotator.components.text_adder import TextRequest
 from dlutils_ii.annotation_cache.writer_annotations import vizualize_objects
 from loguru import logger
-from state import Observable, State
+from opencv_annotator.state import Observable, State
 
 # %%
 

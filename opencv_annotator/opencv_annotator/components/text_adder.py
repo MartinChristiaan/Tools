@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from typing import Callable, List
 
 import cv2
-from state import State
+from opencv_annotator.state import State
 
 
 @dataclass

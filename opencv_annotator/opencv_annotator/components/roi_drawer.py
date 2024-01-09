@@ -1,10 +1,10 @@
 import cv2
 import numpy as np
-from annotation import Annotation
+from opencv_annotator.annotation import Annotation
 
-# from state import ImageEditor
+# from opencv_annotator.state import ImageEditor
 from opencv_annotator.components.zoomer import Zoomer
-from state import MouseState, Observable, State
+from opencv_annotator.state import MouseState, Observable, State
 
 
 def split_list(input_list, n):

@@ -2,7 +2,7 @@
 from math import inf
 
 import cv2
-from annotation import Annotation
+from opencv_annotator.annotation import Annotation
 from annotator import BoundingBoxAnnotator, ReturnMode
 from media_manager.core import MediaManager
 from trackertoolbox.detections import Detections

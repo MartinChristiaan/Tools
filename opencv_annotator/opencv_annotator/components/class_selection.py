@@ -4,7 +4,7 @@ import cv2
 import numpy as np
 from opencv_annotator.components.text_adder import TextRequest
 from loguru import logger
-from state import Observable, State
+from opencv_annotator.state import Observable, State
 
 
 class ClassSelector:

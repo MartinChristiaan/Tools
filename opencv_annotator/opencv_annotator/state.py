@@ -1,7 +1,7 @@
 from typing import TypeVar
 
 import numpy as np
-from annotation import Annotation
+from opencv_annotator.annotation import Annotation
 from loguru import logger
 
 T = TypeVar("T")

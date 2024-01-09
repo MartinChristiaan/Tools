@@ -1,5 +1,5 @@
 from opencv_annotator.components.text_adder import TextRequest
-from state import State
+from opencv_annotator.state import State
 
 
 class ImageSelector:

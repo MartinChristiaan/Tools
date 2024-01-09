@@ -3,7 +3,7 @@
 import cv2
 import numpy as np
 from loguru import logger
-from state import Observable, State
+from opencv_annotator.state import Observable, State
 
 
 class Drawer:
