@@ -37,3 +37,7 @@ def rotterdam_harbour(output_dir):
 datasets = rotterdam_harbour("/data/sod_cache")
 # du.Writer(datasets[0], [0, -15, 15]).write()
 BoundingBoxAnnotator(datasets[0]).run()
+x = datasets[0]
+tmp_path = x.pathfinder.annotations_path.with_suffix(".tmp.csv")
+annotations = pd.read_csv(tmp_path)
+x.pathfinder.media_manager.save_annotations(annotations, "smallObjectsCorrected", True)
