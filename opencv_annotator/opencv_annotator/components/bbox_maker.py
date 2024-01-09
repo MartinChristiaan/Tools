@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 from annotation import Annotation
 from cache_annotator import apply_ignore_areas
-from components.zoomer import Zoomer
+from opencv_annotator.components.zoomer import Zoomer
 from loguru import logger
 from state import Observable, State
 

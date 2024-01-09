@@ -2,7 +2,7 @@ from typing import List
 
 import cv2
 import numpy as np
-from components.text_adder import TextRequest
+from opencv_annotator.components.text_adder import TextRequest
 from loguru import logger
 from state import Observable, State
 

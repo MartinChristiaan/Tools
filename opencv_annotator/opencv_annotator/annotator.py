@@ -2,15 +2,15 @@ from enum import IntEnum
 
 import cv2
 from cache_annotator import IOManager
-from components.bbox_maker import BBoxMaker
-from components.class_selection import ClassSelector
+from opencv_annotator.components.bbox_maker import BBoxMaker
+from opencv_annotator.components.class_selection import ClassSelector
 
 # from trackertoolbox.detections import Detections
-from components.drawer import Drawer
-from components.ImageSelector import ImageSelector
-from components.roi_drawer import ROIManager
-from components.text_adder import ImageTextAdder
-from components.zoomer import Zoomer
+from opencv_annotator.components.drawer import Drawer
+from opencv_annotator.components.ImageSelector import ImageSelector
+from opencv_annotator.components.roi_drawer import ROIManager
+from opencv_annotator.components.text_adder import ImageTextAdder
+from opencv_annotator.components.zoomer import Zoomer
 from state import MouseState, State
 
 

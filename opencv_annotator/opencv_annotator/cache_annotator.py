@@ -7,7 +7,7 @@ import dlutils_ii as du
 import numpy as np
 import pandas as pd
 from annotation import Annotation
-from components.text_adder import TextRequest
+from opencv_annotator.components.text_adder import TextRequest
 from dlutils_ii.annotation_cache.writer_annotations import vizualize_objects
 from loguru import logger
 from state import Observable, State

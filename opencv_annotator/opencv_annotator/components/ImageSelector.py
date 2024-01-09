@@ -1,4 +1,4 @@
-from components.text_adder import TextRequest
+from opencv_annotator.components.text_adder import TextRequest
 from state import State
 
 

@@ -3,7 +3,7 @@ import numpy as np
 from annotation import Annotation
 
 # from state import ImageEditor
-from components.zoomer import Zoomer
+from opencv_annotator.components.zoomer import Zoomer
 from state import MouseState, Observable, State
 
 
