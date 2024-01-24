@@ -153,6 +153,7 @@ class IOManager:
                 for x in annotations
                 if x.track_id == 99 and x.postproc != AnnotationPostproc.NONE
             ]
+            print([x.postproc for x in trackables])
             print(f"{len(trackables)} trackables")
             self.tracked_annotations = self.track(trackables)
 
