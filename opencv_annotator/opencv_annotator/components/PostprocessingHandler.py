@@ -21,10 +21,8 @@ class PostprocessingHandler:
     def keyboard_event(self):
         key = self.state.keyboard_event.value
         if key == "p":
-            print("updating!")
             postproc = self.state.postproc_index.value
             newvalue = index_to_postproc(postproc_to_index(postproc) + 1)
-            print(newvalue)
             self.state.postproc_index.set_value(newvalue)
 
     def get_status(self) -> List[TextRequest]:
