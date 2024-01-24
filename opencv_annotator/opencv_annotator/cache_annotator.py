@@ -148,7 +148,11 @@ class IOManager:
         self.current_annotations.to_csv(self.tmp_annotation_path, index=False)
         self.tracked_annotations = []
         if self.should_track():
-            trackables = [x for x in annotations if x.track_id == 99 and x.postproc > 0]
+            trackables = [
+                x
+                for x in annotations
+                if x.track_id == 99 and x.postproc != AnnotationPostproc.NONE
+            ]
             self.tracked_annotations = self.track(trackables)
 
     def load_frame(self):
@@ -217,7 +221,7 @@ class IOManager:
             else:
                 success = True
                 bbox = bboxi
-            if success:
+            if success and not annotation.postproc == AnnotationPostproc.NONE:
                 new_annot = deepcopy(annotation)
                 new_annot.timestamp = next_t
                 new_annot.bbox_x = bbox[0]
