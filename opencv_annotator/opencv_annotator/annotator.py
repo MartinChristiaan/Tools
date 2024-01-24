@@ -67,7 +67,6 @@ class BoundingBoxAnnotator:
         self.state.frame_index.set_value(self.io_manager.frame_index)
         while True:
             image = self.state.roi_image.value
-            print(image.shape)
             cv2.imshow("image", image)
             key = cv2.waitKey(16)
             if key > -1:
