@@ -11,15 +11,24 @@ class AnnotationPostproc(Enum):
     TRACK = 2
 
 
-def get_postproc(index):
-    if index == 0:
-        return AnnotationPostproc.NONE
-
+def index_to_postproc(index):
     if index == 1:
         return AnnotationPostproc.STATIC
 
     if index == 2:
         return AnnotationPostproc.TRACK
+    return AnnotationPostproc.NONE
+
+
+def postproc_to_index(postproc):
+    if postproc == AnnotationPostproc.NONE:
+        return 0
+
+    if postproc == AnnotationPostproc.STATIC:
+        return 1
+
+    if postproc == AnnotationPostproc.TRACK:
+        return 2
 
 
 @dataclass

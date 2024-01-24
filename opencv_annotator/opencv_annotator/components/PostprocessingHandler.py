@@ -1,6 +1,6 @@
 from opencv_annotator.components.text_adder import TextRequest
 from opencv_annotator.state import State
-from opencv_annotator.annotation import get_postproc
+from opencv_annotator.annotation import index_to_postproc, postproc_to_index
 
 from typing import List
 
@@ -21,19 +21,21 @@ class PostprocessingHandler:
     def keyboard_event(self):
         key = self.state.keyboard_event.value
         if key == "p":
-            postproc_index = self.state.postproc_index.value
-            newvalue = get_next_postproc(postproc_index)
+            print("updating!")
+            postproc = self.state.postproc_index.value
+            newvalue = index_to_postproc(postproc_to_index(postproc) + 1)
+            print(newvalue)
             self.state.postproc_index.set_value(newvalue)
 
     def get_status(self) -> List[TextRequest]:
-        lines = [TextRequest("Postproc selection", (255, 255, 255), True)]
+        lines = [TextRequest("Postproc selection (p)", (255, 255, 255), True)]
         if self.state.keyboard_mode.value == "normal":
             for i, c in enumerate(self.available_postproc):
                 lines.append(
                     TextRequest(
                         f"{i} : {c}",
                         (255, 255, 255),
-                        c == self.state.current_class.value,
+                        i == postproc_to_index(self.state.postproc_index.value),
                     )
                 )
         return lines
