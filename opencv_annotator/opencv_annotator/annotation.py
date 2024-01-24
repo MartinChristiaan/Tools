@@ -11,6 +11,17 @@ class AnnotationPostproc(Enum):
     TRACK = 2
 
 
+def get_postproc(index):
+    if index == 0:
+        return AnnotationPostproc.NONE
+
+    if index == 1:
+        return AnnotationPostproc.STATIC
+
+    if index == 2:
+        return AnnotationPostproc.TRACK
+
+
 @dataclass
 class Annotation:
     bbox_x: float
