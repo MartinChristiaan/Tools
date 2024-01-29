@@ -63,30 +63,15 @@ class BudgetCategory:
 
 budget_categories = [
     BudgetCategory("groceries", 400, ["jumbo", "hoogvliet", "albert", "samara"], []),
+    BudgetCategory("rent", 800, ["vastgoed"], []),
+    BudgetCategory("health", 800, [], []),
+    BudgetCategory("bike", 800, ["swapfiets"], []),
+    BudgetCategory("gym", 800, ["basic-fit"], []),
+    BudgetCategory("health", 800, ["med"], []),
+    BudgetCategory("gifts", 800, [], []),
+    BudgetCategory("clothing", 800, [], []),
+    BudgetCategory("internet", 800, [], []),
+    BudgetCategory("guy activities", 800, [], []),
+    BudgetCategory("haircut", 800, [], []),
     BudgetCategory("other", 0, [], []),
 ]
-
-
-def assign_category(statement: Statement, budget_categories: list[BudgetCategory]):
-    category = None
-    for cat in budget_categories:
-        for keyword in cat.keywords:
-            if keyword in statement.description.lower():
-                if not category is None:
-                    raise Exception(
-                        f"{statement.description} is in multiple categories"
-                    )
-                cat.statements.append(statement)
-                category = cat
-                break
-    if category is None:
-        budget_categories[-1].statements.append(statement)
-
-
-for statement in statements:
-    assign_category(statement, budget_categories)
-
-for cat in budget_categories:
-    print(cat)
-
-# %%
