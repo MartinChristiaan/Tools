@@ -1,5 +1,6 @@
 import argparse
 from dataclasses import dataclass
+import os
 from pathlib import Path
 
 import numpy as np
@@ -70,7 +71,8 @@ if __name__ == "__main__":
     updated_df = load_config(BudgetCat, args.config, args.query)
     budgetcat = BudgetCat.from_df(updated_df)
     cats = np.unique([x.cat for x in budgetcat])
-    df = pd.read_excel("2023_2.xls")
+    home = os.path.expanduser("~")
+    df = pd.read_excel(f"{home}/budget_2024.xls")
     df["maand"] = df["Transactiedatum"].apply(lambda x: int(str(x)[4:6]))
     for cat in cats:
         str_contained = [x.name for x in budgetcat if x.cat == cat]
