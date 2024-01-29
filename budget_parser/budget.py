@@ -78,6 +78,7 @@ if __name__ == "__main__":
         str_contained = [x.name for x in budgetcat if x.cat == cat]
         print(str_contained, cat)
         calc_per_maand(df, str_contained, cat)
+
     # resterende_uitgaven = df[df.Transactiebedrag<0].sum()/8
     # print(f"all_avg : {resterende_uitgaven}" )
     # for person in tqdm(persons):
