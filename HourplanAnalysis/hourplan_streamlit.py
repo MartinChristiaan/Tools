@@ -37,7 +37,6 @@ os.makedirs("project_plots", exist_ok=True)
 st.title("Project planner")
 project = st.selectbox("Project", ourplan["Project name"].unique())
 
-
 row = ourplan[ourplan["Project name"] == project].iloc[0]
 
 planned = np.cumsum([row[c] for c in plan_columns[start_date:end_date]])

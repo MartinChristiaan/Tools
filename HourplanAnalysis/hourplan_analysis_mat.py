@@ -1,5 +1,6 @@
 # %%
 import numpy as np
+import plotly.graph_objects as go
 from scipy.io import loadmat
 import os
 
@@ -55,16 +56,15 @@ project = st.selectbox("Project", active_projects_labels)
 project_index = projects.index(project)
 
 planned = np.cumsum(planned_hours[:, project_index])
-real = np.cumsum(active_projects[:, project_index])
+real = np.cumsum(realised_hours[:, project_index])
 
 fig = go.Figure()
 fig.add_trace(
-    go.Scatter(
-        x=planned_dates[start_date:end_date], y=planned, mode="lines", name="Planned"
-    )
+    go.Scatter(x=np.arange(len(planned)), y=planned, mode="lines", name="Planned")
 )
-fig.add_trace(
-    go.Scatter(x=real_dates[start_date:end_date], y=real, mode="lines", name="Real")
-)
+fig.add_trace(go.Scatter(x=np.arange(len(planned)), y=real, mode="lines", name="Real"))
 fig.update_layout(title="Planned vs Real", xaxis_title="Date", yaxis_title="Hours")
 st.plotly_chart(fig, use_container_width=True)
+
+# TODO add hours remaining in total
+# TODO add ahead or behind planning
