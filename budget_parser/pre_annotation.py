@@ -4,32 +4,28 @@ import os
 
 home = os.path.expanduser("~")
 df = pd.read_excel(f"{home}/2023_to_20240130.xls")
-df["category"] = ["other"] * len(df)
+df["category"] = ["fun"] * len(df)
 description = df["Omschrijving"]
 df = df[df["Transactiebedrag"] < 0]
 
 keyword_to_cat = {
     "rent": ["vastgoed"],
-    "groceries": ["hoogvliet", "jumbo", "albert", "heijn"],
+    "groceries": ["hoogvliet", "jumbo", "albert", "heijn", "samara"],
     "misc": ["bol.com"],
-    "ov": ["ov-chipkaart"],
+    "ov": ["ov-chipkaart", "ns-", "ret"],
     "bike": ["swapfiets"],
     "insurance": ["fbto"],
     "healthcare": ["infomedics"],
-    "bank": ["betaalpas"],
-    "fitness": ["basic fit", "bodyfit"],
-    "fun": [
-        "boulder",
-        "salsa",
-        "mcdonalds",
-        "betaalverzoek",
-    ],
+    "bank": ["betaalpas", "abn amro"],
+    "fitness": ["basic fit", "body fit", "leiden", "basicfit"],
+    "fun": ["boulder", "salsa", "mcdonalds", "tikkie", "eversport", "tno", "musicon"],
     "clothes": ["h&m", "zalando"],
     "phone": ["kpn"],
-    "tax": ["belastingdienst"],
+    "tax": ["belastingdienst", "gemeente", "belasting"],
     "electricity": ["greenchoice"],
     "water": ["dunea"],
     "vacation": [
+        "grc",
         "odigeo",
         "booking.com",
         "airbnb",
@@ -45,6 +41,10 @@ keyword_to_cat = {
         "aut",
         "hiperdino",
         "supermercado",
+        "international card services",
+        "betaalverzoek",
+        "wiebetaaltwat",
+        "int card services",
     ],
     "household": ["hema", "ikea", "jysk", "action"],
     "entertainment": ["netflix", "spotify", "steam"],
@@ -53,9 +53,10 @@ keyword_to_cat = {
         "kruidvat",
     ],
     "car": ["greenwheels"],
-    "loan": ["duo"],
+    "loan": ["duo", "dienst uitvoering onderwijs"],
     "internet": ["youfone"],
-    "invest": ["degiro"],
+    "invest": ["degiro", "flatex"],
+    "haircut": ["hizi hair"],
 }
 for keyword, cats in keyword_to_cat.items():
     for i, row in df.iterrows():
