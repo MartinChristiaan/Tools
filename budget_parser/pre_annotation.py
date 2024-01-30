@@ -86,21 +86,27 @@ for i, row in dfsorted.iterrows():
 
 print(df.groupby("category")["Transactiebedrag"].sum())
 
-category = input("Enter a category: ")
+# category = input("Enter a category: ")
 
-dfsorted = df[df["category"] == category].sort_values(
-    by=["Transactiebedrag"], ascending=False
-)
-for i, row in dfsorted.iterrows():
-    if row["Transactiebedrag"] > 0:
-        continue
-    if row["category"] == category:
-        print(row["Omschrijving"], print(row["Transactiebedrag"]))
+# dfsorted = df[df["category"] == category].sort_values(
+#     by=["Transactiebedrag"], ascending=False
+# )
+# for i, row in dfsorted.iterrows():
+#     if row["Transactiebedrag"] > 0:
+#         continue
+#     if row["category"] == category:
+#         print(row["Omschrijving"], print(row["Transactiebedrag"]))
 
-df = pd.read_csv(f"{home}/2023_to_20240130_categorized.csv")
-# %%
 df["date"] = pd.to_datetime(df["Transactiedatum"], format="%Y%m%d")
 expense_per_category_per_month = df.groupby(
-    ["category", pd.Grouper(key="date", freq="M")]
+    [pd.Grouper(key="date", freq="M"), "category"]
 )["Transactiebedrag"].sum()
-print(expense_per_category_per_month)
+# print(expense_per_category_per_month)
+expense_per_category_per_month.to_csv(
+    f"{home}/2023_to_20240130_expense_per_category_per_month.csv"
+)
+
+
+# print(expense_per_category_per_month)
+
+# %%
