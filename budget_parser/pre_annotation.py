@@ -96,3 +96,11 @@ for i, row in dfsorted.iterrows():
         continue
     if row["category"] == category:
         print(row["Omschrijving"], print(row["Transactiebedrag"]))
+
+df = pd.read_csv(f"{home}/2023_to_20240130_categorized.csv")
+# %%
+df["date"] = pd.to_datetime(df["Transactiedatum"], format="%Y%m%d")
+expense_per_category_per_month = df.groupby(
+    ["category", pd.Grouper(key="date", freq="M")]
+)["Transactiebedrag"].sum()
+print(expense_per_category_per_month)
