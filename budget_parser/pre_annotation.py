@@ -11,14 +11,23 @@ df = df[df["Transactiebedrag"] < 0]
 keyword_to_cat = {
     "rent": ["vastgoed"],
     "groceries": ["hoogvliet", "jumbo", "albert", "heijn", "samara"],
-    "misc": ["bol.com"],
+    "bol.com": ["bol.com"],
     "ov": ["ov-chipkaart", "ns-", "ret"],
-    "bike": ["swapfiets"],
+    "bike": ["swapfiets", "thijs brand"],
     "insurance": ["fbto"],
     "healthcare": ["infomedics"],
-    "bank": ["betaalpas", "abn amro"],
+    "bank": ["abn amro"],
     "fitness": ["basic fit", "body fit", "leiden", "basicfit"],
-    "fun": ["boulder", "salsa", "mcdonalds", "tikkie", "eversport", "tno", "musicon"],
+    "fun": [
+        "boulder",
+        "salsa",
+        "mcdonalds",
+        "tikkie",
+        "eversport",
+        "tno",
+        "musicon",
+        "betaalverzoek",
+    ],
     "clothes": ["h&m", "zalando"],
     "phone": ["kpn"],
     "tax": ["belastingdienst", "gemeente", "belasting"],
@@ -42,9 +51,9 @@ keyword_to_cat = {
         "hiperdino",
         "supermercado",
         "international card services",
-        "betaalverzoek",
         "wiebetaaltwat",
         "int card services",
+        "land:",
     ],
     "household": ["hema", "ikea", "jysk", "action"],
     "entertainment": ["netflix", "spotify", "steam"],
@@ -76,3 +85,14 @@ for i, row in dfsorted.iterrows():
         print(row["Omschrijving"], print(row["Transactiebedrag"]))
 
 print(df.groupby("category")["Transactiebedrag"].sum())
+
+category = input("Enter a category: ")
+
+dfsorted = df[df["category"] == category].sort_values(
+    by=["Transactiebedrag"], ascending=False
+)
+for i, row in dfsorted.iterrows():
+    if row["Transactiebedrag"] > 0:
+        continue
+    if row["category"] == category:
+        print(row["Omschrijving"], print(row["Transactiebedrag"]))
