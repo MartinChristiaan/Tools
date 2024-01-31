@@ -96,13 +96,34 @@ print(df.groupby("category")["Transactiebedrag"].sum())
 #         continue
 #     if row["category"] == category:
 #         print(row["Omschrijving"], print(row["Transactiebedrag"]))
+import plotly.graph_objects as go
 
 df["date"] = pd.to_datetime(df["Transactiedatum"], format="%Y%m%d")
 expense_per_category_per_month = df.groupby(
     [pd.Grouper(key="date", freq="M"), "category"]
 )["Transactiebedrag"].sum()
-# print(expense_per_category_per_month)
-expense_per_category_per_month.plot(kind="bar")
+
+categories = df["category"].unique()
+
+for category in categories:
+    category_data = expense_per_category_per_month.loc[:, category]
+    fig = go.Figure(
+        data=[
+            go.Bar(
+                x=category_data.index.get_level_values("date"), y=category_data.values
+            )
+        ]
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=category_data.index.get_level_values("date"),
+            y=[category_data.mean()] * len(category_data),
+            mode="lines",
+            name="Average",
+        )
+    )
+    fig.update_layout(title=category)
+    fig.show()
 
 # print(expense_per_category_per_month)
 
