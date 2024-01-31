@@ -76,7 +76,7 @@ for keyword, cats in keyword_to_cat.items():
                 df.loc[i, "category"] = keyword
 
 df.to_csv(f"{home}/2023_to_20240130_categorized.csv")
-
+# %%
 dfsorted = df.sort_values(by=["Transactiebedrag"], ascending=False)
 for i, row in dfsorted.iterrows():
     if row["Transactiebedrag"] > 0:
@@ -102,10 +102,7 @@ expense_per_category_per_month = df.groupby(
     [pd.Grouper(key="date", freq="M"), "category"]
 )["Transactiebedrag"].sum()
 # print(expense_per_category_per_month)
-expense_per_category_per_month.to_csv(
-    f"{home}/2023_to_20240130_expense_per_category_per_month.csv"
-)
-
+expense_per_category_per_month.plot(kind="bar")
 
 # print(expense_per_category_per_month)
 
