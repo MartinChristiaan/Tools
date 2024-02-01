@@ -103,6 +103,14 @@ expense_per_category_per_month = df.groupby(
     [pd.Grouper(key="date", freq="M"), "category"]
 )["Transactiebedrag"].sum()
 
+# Reindex to include all categories and months
+categories = df["category"].unique()
+months = pd.date_range(start=df["date"].min(), end=df["date"].max(), freq="M")
+expense_per_category_per_month = expense_per_category_per_month.reindex(
+    pd.MultiIndex.from_product([months, categories], names=["date", "category"]),
+    fill_value=0
+)
+
 categories = df["category"].unique()
 
 for category in categories:
