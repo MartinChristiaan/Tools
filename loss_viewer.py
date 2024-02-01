@@ -8,7 +8,7 @@ from utils.SFzfPrompt import prompt
 # train_dir = f"/mnt/dl-41/data/leeuwenmcv/mantis/mantis-tyolov8"
 # train_dir = f"/mnt/dl-41/data/leeuwenmcv/general/ratio/yolo"
 train_dir = f"/mnt/dl-41/data/leeuwenmcv/general/tyolo"
-results = list(Path(train_dir).glob("*/*.csv"))
+results = list(Path(train_dir).glob("*/results.csv"))
 results.sort()
 names = []
 for result in results:
