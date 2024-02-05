@@ -12,11 +12,21 @@ images.sort()
 
 prs = pptx.Presentation()
 for i in range(0, len(images), 2):
-    slide = prs.slides.add_slide(prs.slide_layouts[5])
-    left = slide.shapes.add_picture(str(images[i]), 0, 0, 5000000, 5000000)
-    if i + 1 < len(images):
-        right = slide.shapes.add_picture(
-            str(images[i + 1]), 5000000, 0, 5000000, 5000000
-        )
+	slide = prs.slides.add_slide(prs.slide_layouts[5])
+	slide_width = prs.slide_width
+	slide_height = prs.slide_height
+
+	# Calculate the maximum width and height for the images
+	max_width = int(slide_width * 0.45)
+	max_height = int(slide_height * 0.8)
+
+	# Add the left image
+	left = slide.shapes.add_picture(str(images[i]), 0, 0, max_width, max_height)
+
+	if i + 1 < len(images):
+		# Add the right image
+		right = slide.shapes.add_picture(
+			str(images[i + 1]), max_width, 0, max_width, max_height
+		)
 
 prs.save("output.pptx")
