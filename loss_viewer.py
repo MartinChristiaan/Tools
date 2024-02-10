@@ -7,8 +7,15 @@ from utils.SFzfPrompt import prompt
 # train_dir = f"/mnt/dl-41/data/leeuwenmcv/mantis/tyolov8-cv90"
 # train_dir = f"/mnt/dl-41/data/leeuwenmcv/mantis/mantis-tyolov8"
 # train_dir = f"/mnt/dl-41/data/leeuwenmcv/general/ratio/yolo"
-train_dir = f"/mnt/dl-41/data/leeuwenmcv/general/tyolo"
-train_dir = f"/mnt/dl-3/data/leeuwenmcv/general/tyolo"
+train_dir = prompt(
+    [
+        f"/mnt/dl-41/data/leeuwenmcv/general/tyolo",
+        f"/mnt/dl-3/data/leeuwenmcv/general/tyolo",
+        f"/mnt/dl-41/data/leeuwenmcv/general/p2-experiment",
+    ]
+)
+
+
 results = list(Path(train_dir).glob("*/results.csv"))
 results.sort()
 names = []
