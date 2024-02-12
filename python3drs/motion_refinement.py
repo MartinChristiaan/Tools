@@ -23,17 +23,20 @@ def mvf_refine(
     num_blocks_x,
     num_blocks_y,
     block_size,
-    scale,
+    downscale_cur,
+    downscale_prev,
 ):
 
     min_sad = 9999999999999
     x_block = cuda.blockIdx.x * cuda.blockDim.x + cuda.threadIdx.x
     y_block = cuda.blockIdx.y * cuda.blockDim.y + cuda.threadIdx.y
+    scale_down = downscale_cur / downscale_prev
+
     h, w = frame_center.shape
     if not (x_block < num_blocks_x and y_block < num_blocks_y):
         return
-    mv_x = mvf_cur[0, y_block // scale, x_block // scale]
-    mv_y = mvf_cur[1, y_block // scale, x_block // scale]
+    mv_x = mvf_cur[0, y_block / scale_down, x_block / scale_down]
+    mv_y = mvf_cur[1, y_block / scale_down, x_block / scale_down]
     # mvf_cur[0, y_block, x_block] = 1
     mv_best_x = 0  # mv_x
     mv_best_y = 0  # mv_y
@@ -46,17 +49,17 @@ def mvf_refine(
         numba.uint8,
     )
 
-    x0 = block_size * x_block
-    y0 = block_size * y_block
+    x0 = block_size * x_block * downscale_cur
+    y0 = block_size * y_block * downscale_cur
     for xb in range(block_size):
         for yb in range(block_size):
-            x = xb + x0
-            y = yb + y0
+            x = xb + x0 * downscale_cur
+            y = yb + y0 * downscale_cur
             v = frame_center[y, x]
             frame_center_cache[yb, xb] = v
 
-    x0 = int(block_size * x_block + mv_x - SEARCH_SPACE)
-    y0 = int(block_size * y_block + mv_y - SEARCH_SPACE)
+    x0 = int(block_size * x_block * downscale_cur + mv_x - SEARCH_SPACE * downscale_cur)
+    y0 = int(block_size * y_block * downscale_cur + mv_y - SEARCH_SPACE * downscale_cur)
 
     for xb in range(block_size + SEARCH_SPACE * 2):
         for yb in range(block_size + SEARCH_SPACE * 2):
