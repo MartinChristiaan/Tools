@@ -93,51 +93,50 @@ def mvf_refine(
 
 
 class MotionRefiner:
-    def __init__(self, threads_per_block=8) -> None:
+    def __init__(self, grid_shape, threads_per_block=8) -> None:
+        self.y_blocks, self.x_blocks = grid_shape
         self.threads_per_block = threads_per_block
+        self.mvf_hr_cuda = cuda.device_array(
+            (2, self.y_blocks, self.x_blocks), np.float32
+        )
+        self.out_sad = cuda.device_array((self.y_blocks, self.x_blocks), np.float32)
 
     def refine(self, mvf, frame_center, frame_offset, downscale, block_size=8):
         y_blocks, x_blocks = [x * downscale for x in mvf.shape[1:]]
-        print(y_blocks, x_blocks)
         cuda_x_blocks = x_blocks // self.threads_per_block + 1
         cuda_y_blocks = y_blocks // self.threads_per_block + 1
-        mvf_cuda, frame_center_cuda, frame_offset_cuda = [
-            cuda.to_device(x) for x in [mvf, frame_center, frame_offset]
-        ]
-        mvf_hr_cuda = cuda.device_array((2, y_blocks, x_blocks), np.float32)
-        out_sad = cuda.device_array((y_blocks, x_blocks), np.float32)
 
         mvf_refine[
             (cuda_x_blocks, cuda_y_blocks),
             (self.threads_per_block, self.threads_per_block),
         ](
-            mvf_cuda,
-            mvf_hr_cuda,
+            mvf,
+            self.mvf_hr_cuda,
             out_sad,
-            frame_center_cuda,
-            frame_offset_cuda,
+            frame_center,
+            frame_offset,
             x_blocks,
             y_blocks,
             block_size,
             downscale,
         )
-        return mvf_hr_cuda.copy_to_host(), out_sad.copy_to_host()
+        return self.mvf_hr_cuda.copy_to_host(), self.out_sad.copy_to_host()
 
 
 path = "/media/martin/DeepLearning/mantis_drone_2023/raw/mantis_drone_2023/DJI_202309101443_008_wide_hd/0/1694357059368.jpg"
 if __name__ == "__main__":
-    refiner = MotionRefiner()
     frame = cv2.imread(path, 0)
     frame0 = np.zeros_like(frame)
     # frame1 = np.zeros_like(frame)
-    frame0[10:] = frame[:1070, :1920]
-    frame0 = frame1 = frame
+    delta = 3
+    frame0[delta:] = frame[: 1080 - delta]
 
     mvf = np.zeros((2, 135 // 4, 240 // 4), dtype=np.float32)
+    refiner = MotionRefiner((135, 240))
     downscale = 4
     block_size = 8
-
-    mvf, out_sad = refiner.refine(mvf, frame0, frame1, downscale, block_size)
+    for j in tqdm(range(100)):
+        mvf, out_sad = refiner.refine(mvf, frame0, frame, downscale, block_size)
     print(mvf[0, :, :].mean())
     print(mvf[1, :, :].mean())
     import matplotlib.pyplot as plt
