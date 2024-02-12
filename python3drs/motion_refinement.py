@@ -1,167 +1,131 @@
-import cv2
+# %%
+import numba
 import numpy as np
-import skimage.transform
-from cv2.ximgproc import guidedFilter, jointBilateralFilter
+from numba import cuda
+from tqdm import tqdm
+
+# updatesety = [0, 0, 0, 0, 0, 0, 0] + [0.25, 1, 3, -0.25, -1, -3
+# updateset = np.array(list(zip(updatesetx, updatesety))).astype(np.float32)
+
+BLOCK_SIZE = 8
+SEARCH_SPACE = 3
+OFFSET_CACHE_SIZE = BLOCK_SIZE + SEARCH_SPACE * 2
 
 
-def guided_filter(mvf, guide):
-    guide_gray = cv2.cvtColor(guide, cv2.COLOR_BGR2GRAY)
+@cuda.jit
+def mvf_refine(
+    mvf_cur,
+    mvf_hr,
+    frame_center,
+    frame_next,
+    num_blocks_x,
+    num_blocks_y,
+    block_size,
+    downscale,
+):
 
-    return perform_per_direction(mvf, lambda m: _guided_filter(m, guide_gray))
+    min_sad = 9999999999999
+    x_block = cuda.blockIdx.x * cuda.blockDim.x + cuda.threadIdx.x
+    y_block = cuda.blockIdx.y * cuda.blockDim.y + cuda.threadIdx.y
+    h, w = frame_center.shape
+    if not (x_block < num_blocks_x * downscale and y_block < num_blocks_y * downscale):
+        return
+    mv_x = mvf_cur[0, y_block // downscale, x_block // downscale]
+    mv_y = mvf_cur[1, y_block // downscale, x_block // downscale]
+    # mvf_cur[0, y_block, x_block] = 1
+    mv_best_x = mv_x
+    mv_best_y = mv_y
 
+    # allocate cashes
 
-def bilateral_filter(mvf, guide):
-    guide_gray = cv2.cvtColor(guide, cv2.COLOR_BGR2GRAY).astype(np.float32)
-    return perform_per_direction(mvf, lambda m: _bilateral_filter(m, guide_gray))
-
-
-def _guided_filter(mvf, guide):
-    if guide.shape[-1] == 3:
-        guide = cv2.cvtColor(guide, cv2.COLOR_BGR2GRAY).astype(np.float32)
-
-    guide_0 = cv2.resize(guide, (240, 135))  # cv2 resize uses (xres yres)
-    guided_0 = guidedFilter(guide_0, mvf, 7, 0.1)
-    mvf1 = nearest_neighbour_upscale(guided_0, (270, 480))
-    guided_1 = guidedFilter(guide, mvf1, 14, 0.1)
-    return guided_1
-
-
-def get_nearest_candidate(mvf0, cmvf1):
-    # yy,xx = np.meshgrid((np.arange(270)/2.0).astype(int),
-    #     (np.arange(480)/2.0).astype(int))
-    H, W = mvf0.shape
-    options = np.expand_dims(mvf0, 0).repeat(5, 0)
-    options[1, :, :-1] = mvf0[:, 1:]  # right
-    options[2, :, 1:] = mvf0[:, :-1]  # left
-    options[3, :-1, :] = mvf0[1:, :]  # up
-    options[4, 1:, :] = mvf0[:-1, :]  # down
-
-    distances = np.zeros((5, H, W))
-    option_upscaled = np.zeros((5, H, W))
-
-    for idx in range(5):
-        option_upscaled[idx] = nearest_neighbour_upscale(options[idx], (H, W))
-        distances[idx] = np.abs(cmvf1 - option_upscaled[idx])
-
-    choices = np.argmin(distances, axis=0)
-    final_vector = np.zeros_like(cmvf1)
-    for idx in range(5):
-        final_vector += (choices == idx) * option_upscaled[idx]
-    return final_vector
-
-
-def get_dual_direction_nearest_candidate(fwd_mvf, bwd_mvf, ret_mvf):
-    # yy,xx = np.meshgrid((np.arange(270)/2.0).astype(int),
-    #     (np.arange(480)/2.0).astype(int))
-    H, W = fwd_mvf.shape
-    options = np.expand_dims(fwd_mvf, 0).repeat(10, 0)
-    options[1, :, :-1] = fwd_mvf[:, 1:]  # right
-    options[2, :, 1:] = fwd_mvf[:, :-1]  # left
-    options[3, :-1, :] = fwd_mvf[1:, :]  # up
-    options[4, 1:, :] = fwd_mvf[:-1, :]  # down
-    options[5] = bwd_mvf  # down
-
-    options[6, :, :-1] = bwd_mvf[:, 1:]  # right
-    options[7, :, 1:] = bwd_mvf[:, :-1]  # left
-    options[8, :-1, :] = bwd_mvf[1:, :]  # up
-    options[9, 1:, :] = bwd_mvf[:-1, :]  # down
-
-    distances = np.zeros((10, H, W))
-
-    for idx in range(10):
-        distances[idx] = np.abs(ret_mvf - options[idx])
-
-    choices = np.argmin(distances, axis=0)
-    final_vector = np.zeros_like(ret_mvf)
-    for idx in range(10):
-        final_vector += (choices == idx) * options[idx]
-    return final_vector
-
-
-def _bilateral_filter(mvf, guide):
-    mvf0 = cv2.medianBlur(mvf, 3)
-    if guide.shape[-1] == 3:
-        guide = cv2.cvtColor(guide, cv2.COLOR_BGR2GRAY).astype(np.float32)
-
-    guide_0 = cv2.resize(guide, (240, 135))  # cv2 resize uses (xres yres)
-    guided_0 = jointBilateralFilter(guide_0, mvf0, 15, 30, 100)
-
-    mvf1 = get_nearest_candidate(mvf0, guided_0)
-
-    mvf1 = nearest_neighbour_upscale(mvf1, (270, 480))
-
-    mvf1 = cv2.medianBlur(mvf1, 5)
-    mvf2 = nearest_neighbour_upscale(mvf1)
-    mvf2 = cv2.medianBlur(mvf2, 5)
-    return mvf2
-
-    # return get_nearest_candidate(mvf,guided_1)
-
-
-def calc_median(inputs):
-    x = np.concatenate([np.expand_dims(x, 0) for x in inputs], axis=0)
-    x.sort(axis=0)
-    return x[1]
-
-
-def test_calc_median():
-    a = np.ones(5)
-    b = np.ones(5) * 3
-    c = np.ones(5) * 2
-    assert (calc_median([a, b, c]) - c).sum() == 0
-
-
-test_calc_median()
-
-
-def median_erosion(mvf):
-    return perform_per_direction(mvf, _median_erosion)
-
-
-def triple_median(mvf):
-    return perform_per_direction(mvf, _triple_median)
-
-
-def nearest_neighbours_upscale(mvf):
-    return perform_per_direction(
-        mvf, lambda x: cv2.resize(x, (1920, 1080), interpolation=cv2.INTER_NEAREST)
+    frame_center_cache = cuda.local.array((BLOCK_SIZE, BLOCK_SIZE), numba.uint8)
+    frame_offset_cache = cuda.local.array(
+        (OFFSET_CACHE_SIZE, OFFSET_CACHE_SIZE),
+        numba.uint8,
     )
 
+    x0 = block_size * x_block
+    y0 = block_size * y_block
+    for xb in range(block_size):
+        for yb in range(block_size):
+            x = xb + x0
+            y = yb + y0
+            v = frame_center[y, x]
+            frame_center_cache[yb, xb] = v
 
-def perform_per_direction(mvf, func):
-    return np.concatenate([np.expand_dims(func(mvf[i]), 0) for i in range(2)], axis=0)
+    x0 = int(block_size * x_block + mv_x - SEARCH_SPACE)
+    y0 = int(block_size * y_block + mv_y - SEARCH_SPACE)
+
+    for xb in range(block_size + SEARCH_SPACE * 2):
+        for yb in range(block_size + SEARCH_SPACE * 2):
+
+            x = xb + x0
+            y = yb + y0
+            if x < 0 or x >= w - 1 or y < 0 or y > h - 1:
+                frame_offset_cache[yb, xb] = 0
+            else:
+                v = frame_next[y, x]
+                frame_offset_cache[yb, xb] = v
+
+    # run convolution
+
+    for xo in range(SEARCH_SPACE * 2):
+        for yo in range(SEARCH_SPACE * 2):
+            sad = 0
+            for xc in range(block_size):
+                for yc in range(block_size):
+                    v1 = frame_center_cache[yc, xc]
+                    v2 = frame_offset_cache[yo + yc, xo + xc]
+                    if v1 > v2:
+                        sad += v1 - v2
+                    else:
+                        sad += v2 - v1
+
+            if min_sad > sad:
+                min_sad = sad
+                mv_best_x = mv_x + x0 - SEARCH_SPACE
+                mv_best_y = mv_y + y0 - SEARCH_SPACE
+    mvf_hr[0, y_block, x_block] = mv_best_x
+    mvf_hr[1, y_block, x_block] = mv_best_y
 
 
-def _median_erosion(vectorfield):
-    v0 = vectorfield[1:-1, 1:-1]
+class MotionRefiner:
+    def __init__(self, threads_per_block=16) -> None:
+        self.threads_per_block = threads_per_block
 
-    vu = vectorfield[:-2, 1:-1]
-    vl = vectorfield[1:-1, :-2]
+    def refine(self, mvf, frame_center, frame_offset, downscale, block_size=8):
+        y_blocks, x_blocks = [x * downscale for x in mvf.shape[1:]]
+        cuda_x_blocks = x_blocks // self.threads_per_block
+        cuda_y_blocks = y_blocks // self.threads_per_block + 1
+        mvf_cuda, frame_center_cuda, frame_offset_cuda = [
+            cuda.to_device(x) for x in [mvf, frame_center, frame_offset]
+        ]
+        mvf_hr_cuda = cuda.device_array((2, y_blocks, x_blocks), np.float32)
+        mvf_hr_cuda = np.zeros((2, y_blocks, x_blocks), np.float32)
 
-    vr = vectorfield[1:-1, 2:]
-    vb = vectorfield[2:, 1:-1]
-
-    ul = calc_median([v0, vu, vl])
-    ur = calc_median([v0, vu, vr])
-    bl = calc_median([v0, vb, vl])
-    br = calc_median([v0, vb, vr])
-
-    resized = nearest_neighbour_upscale(vectorfield, (270, 480))
-    resized[2:-3, 2:-3][::2, ::2] = ul
-    resized[2:-3, 3:-2][::2, ::2] = ur
-    resized[3:-2, 2:-3][::2, ::2] = bl
-    resized[3:-2, 3:-2][::2, ::2] = br
-
-    return resized
+        mvf_refine[
+            (cuda_y_blocks, cuda_x_blocks),
+            (self.threads_per_block, self.threads_per_block),
+        ](
+            mvf_cuda,
+            mvf_hr_cuda,
+            frame_center_cuda,
+            frame_offset_cuda,
+            x_blocks,
+            y_blocks,
+            block_size,
+            downscale,
+        )
 
 
-def _triple_median(vectorfield_raw):
-    vectorfield_l0 = cv2.medianBlur(vectorfield_raw, 3)
-    vectorfield_l1 = cv2.resize(
-        vectorfield_l0, (480, 270), interpolation=cv2.INTER_NEAREST
-    )
-    vectorfield_l1 = cv2.medianBlur(vectorfield_l1, 5)
-    vectorfield_l2 = cv2.resize(
-        vectorfield_l1, (1920, 1080), interpolation=cv2.INTER_NEAREST
-    )
-    return cv2.medianBlur(vectorfield_l2, 5)
+if __name__ == "__main__":
+    refiner = MotionRefiner()
+    f0 = np.zeros((1080, 1920), dtype=np.uint8)
+    f1 = np.zeros((1080, 1920), dtype=np.uint8)
+    mvf = np.zeros((2, 135 // 4, 240 // 4), dtype=np.float32)
+    downscale = 1
+    block_size = 8
+    for j in tqdm(range(100)):
+        refiner.refine(mvf, f0, f1, downscale, block_size)
+
+# %%

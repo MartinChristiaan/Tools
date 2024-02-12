@@ -1,3 +1,5 @@
+import time
+
 # %%
 # setup dataset
 # %load_ext autoreload
@@ -8,7 +10,12 @@ import streamlit as st
 from datasets import get_mantis
 from dlutils_ii import CacheReader, DatasetConfig
 from motion_estimation import MotionEstimator, OutSadComputer
-from motion_refinement import nearest_neighbours_upscale, triple_median
+from motion_refinement import mvf_refine
+from motion_upscaling import (
+    nearest_neighbours_upscale,
+    perform_per_direction,
+    triple_median,
+)
 from motion_vizualization import apply_colormap, flow_to_color, get_mixing_image
 from tqdm import tqdm
 
@@ -40,8 +47,8 @@ class MotionPipeline:
         self.estimator.downscale = st.slider("downscale", 1, 16)
         self.estimator.block_size = int(st.selectbox("block_size", [4, 8, 16], 1))
         self.estimator.actual_updates = st.slider("updates per candidate", 1, 16)
+        time.t
         mvf = self.estimator.compute(frame_center, frame_offset)
-        from motion_refinement import perform_per_direction
 
         mvf = perform_per_direction(mvf, lambda x: cv2.medianBlur(x, 5))
         mvf = perform_per_direction(mvf, lambda x: cv2.blur(x, (5, 5)))
@@ -67,10 +74,18 @@ frames = [cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY) for frame in frames]
 t = annotations.timestamp[0]
 
 forward = st.checkbox("forward")
+start_time = time.time()
+
 if forward:
     sad, mvf_image = pipelines[0].process(frames[0], frames[2], t)
 else:
     sad, mvf_image = pipelines[1].process(frames[0], frames[1], t)
+
+end_time = time.time()
+fps = 1 / (end_time - start_time)
+
+st.write(f"FPS: {fps:.2f}")
+
 sad = sad.astype(np.uint8)
 st.image(sad)
 st.image(mvf_image)
