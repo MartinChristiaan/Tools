@@ -10,7 +10,7 @@ import streamlit as st
 from datasets import get_mantis
 from dlutils_ii import CacheReader, DatasetConfig
 from motion_estimation import MotionEstimator, OutSadComputer
-from motion_refinement import MotionRefiner, mvf_refine
+from motion_refinement import MotionEstimator, mvf_refine
 from motion_upscaling import (
     nearest_neighbours_upscale,
     perform_per_direction,
@@ -33,7 +33,7 @@ class MotionPipeline:
         self.estimator = MotionEstimator()
         self.sad_computer = OutSadComputer()
         self.config = config
-        self.refiner = MotionRefiner()
+        self.refiner = MotionEstimator()
         self.write_output = write_output
 
     def write_image(self, image, name, timestamp):
