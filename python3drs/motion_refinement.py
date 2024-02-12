@@ -1,4 +1,5 @@
 # %%
+import cv2
 import numba
 import numpy as np
 from numba import cuda
@@ -16,6 +17,7 @@ OFFSET_CACHE_SIZE = BLOCK_SIZE + SEARCH_SPACE * 2
 def mvf_refine(
     mvf_cur,
     mvf_hr,
+    out_sad,
     frame_center,
     frame_next,
     num_blocks_x,
@@ -30,11 +32,11 @@ def mvf_refine(
     h, w = frame_center.shape
     if not (x_block < num_blocks_x * downscale and y_block < num_blocks_y * downscale):
         return
-    mv_x = mvf_cur[0, y_block // downscale, x_block // downscale]
-    mv_y = mvf_cur[1, y_block // downscale, x_block // downscale]
+    mv_x = 0  # mvf_cur[0, y_block // downscale, x_block // downscale]
+    mv_y = 0  # mvf_cur[1, y_block // downscale, x_block // downscale]
     # mvf_cur[0, y_block, x_block] = 1
-    mv_best_x = mv_x
-    mv_best_y = mv_y
+    mv_best_x = 0  # mv_x
+    mv_best_y = 0  # mv_y
 
     # allocate cashes
 
@@ -69,13 +71,13 @@ def mvf_refine(
 
     # run convolution
 
-    for xo in range(SEARCH_SPACE * 2):
-        for yo in range(SEARCH_SPACE * 2):
+    for x_o in range(SEARCH_SPACE * 2):
+        for y_o in range(SEARCH_SPACE * 2):
             sad = 0
             for xc in range(block_size):
                 for yc in range(block_size):
                     v1 = frame_center_cache[yc, xc]
-                    v2 = frame_offset_cache[yo + yc, xo + xc]
+                    v2 = frame_offset_cache[y_o + yc, x_o + xc]
                     if v1 > v2:
                         sad += v1 - v2
                     else:
@@ -83,31 +85,35 @@ def mvf_refine(
 
             if min_sad > sad:
                 min_sad = sad
-                mv_best_x = mv_x + x0 - SEARCH_SPACE
-                mv_best_y = mv_y + y0 - SEARCH_SPACE
+                mv_best_x = mv_x + x_o - SEARCH_SPACE
+                mv_best_y = mv_y + y_o - SEARCH_SPACE
     mvf_hr[0, y_block, x_block] = mv_best_x
     mvf_hr[1, y_block, x_block] = mv_best_y
+    out_sad[y_block, x_block] = min_sad
 
 
 class MotionRefiner:
-    def __init__(self, threads_per_block=16) -> None:
+    def __init__(self, threads_per_block=8) -> None:
         self.threads_per_block = threads_per_block
 
     def refine(self, mvf, frame_center, frame_offset, downscale, block_size=8):
         y_blocks, x_blocks = [x * downscale for x in mvf.shape[1:]]
-        cuda_x_blocks = x_blocks // self.threads_per_block
+        print(y_blocks, x_blocks)
+        cuda_x_blocks = x_blocks // self.threads_per_block + 1
         cuda_y_blocks = y_blocks // self.threads_per_block + 1
         mvf_cuda, frame_center_cuda, frame_offset_cuda = [
             cuda.to_device(x) for x in [mvf, frame_center, frame_offset]
         ]
         mvf_hr_cuda = cuda.device_array((2, y_blocks, x_blocks), np.float32)
+        out_sad = cuda.device_array((y_blocks, x_blocks), np.float32)
 
         mvf_refine[
-            (cuda_y_blocks, cuda_x_blocks),
+            (cuda_x_blocks, cuda_y_blocks),
             (self.threads_per_block, self.threads_per_block),
         ](
             mvf_cuda,
             mvf_hr_cuda,
+            out_sad,
             frame_center_cuda,
             frame_offset_cuda,
             x_blocks,
@@ -115,16 +121,33 @@ class MotionRefiner:
             block_size,
             downscale,
         )
+        return mvf_hr_cuda.copy_to_host(), out_sad.copy_to_host()
 
 
+path = "/media/martin/DeepLearning/mantis_drone_2023/raw/mantis_drone_2023/DJI_202309101443_008_wide_hd/0/1694357059368.jpg"
 if __name__ == "__main__":
     refiner = MotionRefiner()
-    f0 = np.zeros((1080, 1920), dtype=np.uint8)
-    f1 = np.zeros((1080, 1920), dtype=np.uint8)
+    frame = cv2.imread(path, 0)
+    frame0 = np.zeros_like(frame)
+    # frame1 = np.zeros_like(frame)
+    frame0[10:] = frame[:1070, :1920]
+    frame0 = frame1 = frame
+
     mvf = np.zeros((2, 135 // 4, 240 // 4), dtype=np.float32)
-    downscale = 1
+    downscale = 4
     block_size = 8
-    for j in tqdm(range(1000)):
-        refiner.refine(mvf, f0, f1, downscale, block_size)
+
+    mvf, out_sad = refiner.refine(mvf, frame0, frame1, downscale, block_size)
+    print(mvf[0, :, :].mean())
+    print(mvf[1, :, :].mean())
+    import matplotlib.pyplot as plt
+
+    plt.figure()
+    plt.imshow(mvf[1, :, :])
+
+    plt.figure()
+    plt.imshow(out_sad[:, :])
+    plt.show()
+
 
 # %%

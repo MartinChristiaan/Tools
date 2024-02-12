@@ -10,7 +10,7 @@ import streamlit as st
 from datasets import get_mantis
 from dlutils_ii import CacheReader, DatasetConfig
 from motion_estimation import MotionEstimator, OutSadComputer
-from motion_refinement import mvf_refine
+from motion_refinement import MotionRefiner, mvf_refine
 from motion_upscaling import (
     nearest_neighbours_upscale,
     perform_per_direction,
@@ -33,6 +33,7 @@ class MotionPipeline:
         self.estimator = MotionEstimator()
         self.sad_computer = OutSadComputer()
         self.config = config
+        self.refiner = MotionRefiner()
         self.write_output = write_output
 
     def write_image(self, image, name, timestamp):
@@ -47,11 +48,20 @@ class MotionPipeline:
         self.estimator.downscale = st.slider("downscale", 1, 16)
         self.estimator.block_size = int(st.selectbox("block_size", [4, 8, 16], 1))
         self.estimator.actual_updates = st.slider("updates per candidate", 1, 16)
-        time.t
-        mvf = self.estimator.compute(frame_center, frame_offset)
+        # mvf = self.estimator.compute(frame_center, frame_offset)
+        # print(mvf.shape)
 
-        mvf = perform_per_direction(mvf, lambda x: cv2.medianBlur(x, 5))
-        mvf = perform_per_direction(mvf, lambda x: cv2.blur(x, (5, 5)))
+        # mvf = perform_per_direction(mvf, lambda x: cv2.medianBlur(x, 5))
+        # mvf = perform_per_direction(mvf, lambda x: cv2.blur(x, (5, 5)))
+        mvf = np.zeros(
+            (2, 135 // self.estimator.downscale, 240 // self.estimator.downscale),
+            dtype=np.float32,
+        )
+        print(mvf.shape)
+
+        mvf = self.refiner.refine(
+            mvf, frame_center, frame_offset, self.estimator.downscale
+        )
 
         # apply_triple_median = st.checkbox("apply tiple median")
         # if apply_triple_median:
