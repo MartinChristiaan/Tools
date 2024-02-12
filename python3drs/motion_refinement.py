@@ -9,7 +9,7 @@ from tqdm import tqdm
 # updateset = np.array(list(zip(updatesetx, updatesety))).astype(np.float32)
 
 BLOCK_SIZE = 8
-SEARCH_SPACE = 8
+SEARCH_SPACE = 4
 OFFSET_CACHE_SIZE = BLOCK_SIZE + SEARCH_SPACE * 2
 
 
@@ -23,17 +23,17 @@ def mvf_refine(
     num_blocks_x,
     num_blocks_y,
     block_size,
-    downscale,
+    scale,
 ):
 
     min_sad = 9999999999999
     x_block = cuda.blockIdx.x * cuda.blockDim.x + cuda.threadIdx.x
     y_block = cuda.blockIdx.y * cuda.blockDim.y + cuda.threadIdx.y
     h, w = frame_center.shape
-    if not (x_block < num_blocks_x * downscale and y_block < num_blocks_y * downscale):
+    if not (x_block < num_blocks_x and y_block < num_blocks_y):
         return
-    mv_x = 0  # mvf_cur[0, y_block // downscale, x_block // downscale]
-    mv_y = 0  # mvf_cur[1, y_block // downscale, x_block // downscale]
+    mv_x = mvf_cur[0, y_block // scale, x_block // scale]
+    mv_y = mvf_cur[1, y_block // scale, x_block // scale]
     # mvf_cur[0, y_block, x_block] = 1
     mv_best_x = 0  # mv_x
     mv_best_y = 0  # mv_y
@@ -112,7 +112,7 @@ class MotionRefiner:
         ](
             mvf,
             self.mvf_hr_cuda,
-            out_sad,
+            self.out_sad,
             frame_center,
             frame_offset,
             x_blocks,
@@ -128,17 +128,15 @@ if __name__ == "__main__":
     frame = cv2.imread(path, 0)
     frame0 = np.zeros_like(frame)
     # frame1 = np.zeros_like(frame)
-    delta = 3
-    frame0[delta:] = frame[: 1080 - delta]
-
-    mvf = np.zeros((2, 135 // 4, 240 // 4), dtype=np.float32)
-    refiner = MotionRefiner((135, 240))
-    downscale = 4
-    block_size = 8
     for j in tqdm(range(100)):
+        delta = 3
+        frame0[delta:] = frame[: 1080 - delta]
+
+        mvf = np.zeros((2, 135 // 4, 240 // 4), dtype=np.float32)
+        refiner = MotionRefiner((135, 240))
+        downscale = 4
+        block_size = 8
         mvf, out_sad = refiner.refine(mvf, frame0, frame, downscale, block_size)
-    print(mvf[0, :, :].mean())
-    print(mvf[1, :, :].mean())
     import matplotlib.pyplot as plt
 
     plt.figure()
