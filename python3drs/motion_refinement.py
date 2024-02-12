@@ -12,7 +12,7 @@ from tqdm import tqdm
 # updateset = np.array(list(zip(updatesetx, updatesety))).astype(np.float32)
 
 BLOCK_SIZE = 8
-SEARCH_SPACE = 8
+SEARCH_SPACE = 12
 OFFSET_CACHE_SIZE = BLOCK_SIZE + SEARCH_SPACE * 2
 LEVELS = 3
 
@@ -32,7 +32,7 @@ def mvf_refine(
     min_sad = 9999999999999
     x_block = cuda.blockIdx.x * cuda.blockDim.x + cuda.threadIdx.x
     y_block = cuda.blockIdx.y * cuda.blockDim.y + cuda.threadIdx.y
-    scale_down = 2
+    scale_down = 4
 
     h, w = frame_center.shape
     if not (x_block < num_blocks_x and y_block < num_blocks_y):
@@ -138,26 +138,24 @@ class HierarchicalMotionEstimator:
     def __init__(self) -> None:
         self.estimators = []
         self.l2_estimator = MotionEstimator(downscale=4)
-        for downscale in [2, 1]:
+        for downscale in [1]:
             self.estimators.append(MotionLevelEstimator((135, 240), downscale))
 
     def estimate(self, frame_center, frame_offset):
         frame_center_cuda = cuda.to_device(frame_center)
         frame_offset_cuda = cuda.to_device(frame_offset)
-        mvf = self.l2_estimator.compute(frame_center, frame_offset)
-        mvf = cv2.medianBlur(mvf, 5)
-        # mvf = np.zeros((2, 135, 240), dtype=np.float32)
+        mvf, sad = self.l2_estimator.compute(frame_center, frame_offset, reverse=False)
+        mvf, sad = self.l2_estimator.compute(
+            frame_center,
+            frame_offset,
+            mvf / self.l2_estimator.downscale,
+            sad,
+            reverse=True,
+        )
         mvf = cuda.to_device(mvf)
+
         for i, estimator in enumerate(self.estimators):
             mvf = estimator.refine(mvf, frame_center_cuda, frame_offset_cuda)
-            # if i == 0:
-            #     mvf = mvf.copy_to_host()
-            #     plt.figure()
-            #     plt.imshow(mvf[1, :, :])
-            #     plt.show()
-            #     mvf = cv2.medianBlur(mvf, 5)
-            #     mvf = cuda.to_device(mvf)
-
         return mvf
 
 
@@ -166,7 +164,7 @@ if __name__ == "__main__":
     frame = cv2.imread(path, 0)
     frame0 = np.zeros_like(frame)
     # frame1 = np.zeros_like(frame)
-    delta = 50
+    delta = 100
     frame0[delta:] = frame[: 1080 - delta]
 
     refiner = HierarchicalMotionEstimator()

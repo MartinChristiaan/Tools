@@ -22,13 +22,19 @@ def three_drs(
     block_size,
     downscale,
     actual_updates,
+    reverse,
 ):
 
-    candidates = np.zeros((len(candidate_set) * actual_updates + 1, 2))
-    SADs = np.ones((len(candidate_set) * actual_updates + 1)) * 9999
+    candidates = np.zeros(
+        (len(candidate_set) * actual_updates + 1, 2), dtype=np.float32
+    )
+    # SADs = np.ones((len(candidate_set) * actual_updates + 1)) * 9999
     n = 1
     h, w = frame_center.shape
     for y_block in range(num_blocks_y):
+        if reverse:
+            y_block = num_blocks_y - y_block - 1
+
         for x_block in range(num_blocks_x):
             for i in range(candidate_set.shape[0]):
                 dn, dy, dx = candidate_set[i]
@@ -40,6 +46,8 @@ def three_drs(
                     and y_block + dy < num_blocks_y
                     and n - dn >= 0
                 ):
+                    if reverse:
+                        dy = -dy
                     update_candidates = np.random.randint(
                         0, updateset.shape[0], actual_updates
                     )
@@ -59,7 +67,8 @@ def three_drs(
                     candidates[i * actual_updates] = np.zeros(2)
 
             candidates[-1] = np.zeros(2)
-
+            min_sad = out_sad[y_block, x_block]
+            mv = mvf_cur[:, y_block, x_block]
             for idx in range(len(candidates)):
                 candidate = candidates[idx]
                 sad = compute_sad(
@@ -74,9 +83,13 @@ def three_drs(
                     x_block,
                     candidate,
                 )
-                SADs[idx] = sad
-            mvf_cur[:, y_block, x_block] = candidates[np.argmin(SADs)]
-            out_sad[y_block, x_block] = np.min(SADs)
+                if sad < min_sad:
+                    min_sad = sad
+                    mv = candidate
+
+            mvf_cur[0, y_block, x_block] = mv[0]
+            mvf_cur[1, y_block, x_block] = mv[1]
+            out_sad[y_block, x_block] = min_sad
 
 
 @jit(nopython=True)
@@ -154,13 +167,17 @@ class MotionEstimator:
         self.mvf_prev = None
         self.actual_updates = actual_updates
 
-    def compute(self, frame_center, frame_offset):
+    def compute(
+        self, frame_center, frame_offset, mvf_cur=None, sad=None, reverse=False
+    ):
         frame_center = convert_to_gray_if_needed(frame_center)
         frame_offset = convert_to_gray_if_needed(frame_offset)
         num_blocks_x = frame_center.shape[1] // (self.block_size * self.downscale)
         num_blocks_y = frame_center.shape[0] // (self.block_size * self.downscale)
-        mvf_cur = np.zeros((2, num_blocks_y, num_blocks_x), dtype=np.float32)
-        out_sad = np.zeros((num_blocks_y, num_blocks_x), dtype=np.float32)
+        if mvf_cur is None:
+            mvf_cur = np.zeros((2, num_blocks_y, num_blocks_x), dtype=np.float32)
+        if sad is None:
+            sad = np.ones((num_blocks_y, num_blocks_x), dtype=np.float32) * 999999
         if self.mvf_prev is None:
             mvf_prev = np.zeros((2, num_blocks_y, num_blocks_x), dtype=np.float32)
         else:
@@ -171,16 +188,17 @@ class MotionEstimator:
             mvf_prev,
             frame_center,
             frame_offset,
-            out_sad,
+            sad,
             self.alpha,
             num_blocks_x,
             num_blocks_y,
             self.block_size,
             self.downscale,
             self.actual_updates,
+            reverse,
         )
         self.mvf_prev = mvf_cur
-        return mvf_cur * self.downscale
+        return mvf_cur * self.downscale, sad
 
 
 class OutSadComputer:
