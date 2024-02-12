@@ -10,7 +10,7 @@ import streamlit as st
 from datasets import get_mantis
 from dlutils_ii import CacheReader, DatasetConfig
 from motion_estimation import MotionEstimator, OutSadComputer
-from motion_refinement import MotionEstimator, mvf_refine
+from motion_refinement import HierarchicalMotionEstimator, MotionEstimator, mvf_refine
 from motion_upscaling import (
     nearest_neighbours_upscale,
     perform_per_direction,
@@ -30,7 +30,7 @@ dataset = mantis[-1]
 class MotionPipeline:
     def __init__(self, name="fwd", config=DatasetConfig, write_output=False) -> None:
         self.name = name
-        self.estimator = MotionEstimator()
+        self.estimator = HierarchicalMotionEstimator()
         self.sad_computer = OutSadComputer()
         self.config = config
         self.refiner = MotionEstimator()
@@ -45,29 +45,15 @@ class MotionPipeline:
 
     def process(self, frame_center, frame_offset, timestamp):
         sad = None
-        self.estimator.downscale = st.slider("downscale", 1, 16)
-        self.estimator.block_size = int(st.selectbox("block_size", [4, 8, 16], 1))
-        self.estimator.actual_updates = st.slider("updates per candidate", 1, 16)
-        # mvf = self.estimator.compute(frame_center, frame_offset)
-        # print(mvf.shape)
 
-        # mvf = perform_per_direction(mvf, lambda x: cv2.medianBlur(x, 5))
-        # mvf = perform_per_direction(mvf, lambda x: cv2.blur(x, (5, 5)))
-        mvf = np.zeros(
-            (2, 135 // self.estimator.downscale, 240 // self.estimator.downscale),
-            dtype=np.float32,
+        mvf, sad = self.estimator.estimate(
+            frame_center, frame_offset, refine=st.checkbox("refine")
         )
-        print(mvf.shape)
-
-        mvf = self.refiner.refine(
-            mvf, frame_center, frame_offset, self.estimator.downscale
-        )
-
-        # apply_triple_median = st.checkbox("apply tiple median")
-        # if apply_triple_median:
-        #     mvf_hr = triple_median(mvf)
-        # else:
-        mvf_hr = nearest_neighbours_upscale(mvf)
+        apply_triple_median = st.checkbox("apply tiple median")
+        if apply_triple_median:
+            mvf_hr = triple_median(mvf)
+        else:
+            mvf_hr = nearest_neighbours_upscale(mvf)
         sad = self.sad_computer.compute_out_sad(mvf_hr, frame_center, frame_offset)
         mvf_image = get_mixing_image(frame_center, flow_to_color(mvf_hr))
         self.write_image(mvf_image, "mvf", timestamp)

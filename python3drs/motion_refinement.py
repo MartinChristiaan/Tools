@@ -128,7 +128,7 @@ class MotionLevelEstimator:
             y_blocks,
             self.downscale,
         )
-        return mvf_hr_cuda
+        return mvf_hr_cuda, out_sad
 
 
 from motion_estimation import MotionEstimator
@@ -141,7 +141,7 @@ class HierarchicalMotionEstimator:
         for downscale in [1]:
             self.estimators.append(MotionLevelEstimator((135, 240), downscale))
 
-    def estimate(self, frame_center, frame_offset):
+    def estimate(self, frame_center, frame_offset, refine=True):
         frame_center_cuda = cuda.to_device(frame_center)
         frame_offset_cuda = cuda.to_device(frame_offset)
         mvf, sad = self.l2_estimator.compute(frame_center, frame_offset, reverse=False)
@@ -152,11 +152,15 @@ class HierarchicalMotionEstimator:
             sad,
             reverse=True,
         )
-        mvf = cuda.to_device(mvf)
-
-        for i, estimator in enumerate(self.estimators):
-            mvf = estimator.refine(mvf, frame_center_cuda, frame_offset_cuda)
-        return mvf
+        print(f"{sad.mean()} before refine")
+        if refine:
+            mvf = cuda.to_device(mvf)
+            for i, estimator in enumerate(self.estimators):
+                mvf, sad = estimator.refine(mvf, frame_center_cuda, frame_offset_cuda)
+            sad = sad.copy_to_host()
+            mvf = mvf.copy_to_host()
+            print(f"{sad.mean()} after refine")
+        return mvf, sad
 
 
 path = "/media/martin/DeepLearning/mantis_drone_2023/raw/mantis_drone_2023/DJI_202309101443_008_wide_hd/0/1694357059368.jpg"
@@ -164,7 +168,7 @@ if __name__ == "__main__":
     frame = cv2.imread(path, 0)
     frame0 = np.zeros_like(frame)
     # frame1 = np.zeros_like(frame)
-    delta = 100
+    delta = 50
     frame0[delta:] = frame[: 1080 - delta]
 
     refiner = HierarchicalMotionEstimator()
