@@ -8,7 +8,7 @@ from tqdm import tqdm
 # updateset = np.array(list(zip(updatesetx, updatesety))).astype(np.float32)
 
 BLOCK_SIZE = 8
-SEARCH_SPACE = 3
+SEARCH_SPACE = 8
 OFFSET_CACHE_SIZE = BLOCK_SIZE + SEARCH_SPACE * 2
 
 
@@ -101,7 +101,6 @@ class MotionRefiner:
             cuda.to_device(x) for x in [mvf, frame_center, frame_offset]
         ]
         mvf_hr_cuda = cuda.device_array((2, y_blocks, x_blocks), np.float32)
-        mvf_hr_cuda = np.zeros((2, y_blocks, x_blocks), np.float32)
 
         mvf_refine[
             (cuda_y_blocks, cuda_x_blocks),
@@ -125,7 +124,7 @@ if __name__ == "__main__":
     mvf = np.zeros((2, 135 // 4, 240 // 4), dtype=np.float32)
     downscale = 1
     block_size = 8
-    for j in tqdm(range(100)):
+    for j in tqdm(range(1000)):
         refiner.refine(mvf, f0, f1, downscale, block_size)
 
 # %%
