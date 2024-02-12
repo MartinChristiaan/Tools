@@ -147,12 +147,12 @@ def convert_to_gray_if_needed(frame):
 
 
 class MotionEstimator:
-    def __init__(self, block_size=8, downscale=1, alpha=0):
+    def __init__(self, block_size=8, downscale=1, alpha=0, actual_updates=6):
         self.block_size = block_size
         self.downscale = downscale
         self.alpha = alpha
         self.mvf_prev = None
-        self.actual_updates = 6
+        self.actual_updates = actual_updates
 
     def compute(self, frame_center, frame_offset):
         frame_center = convert_to_gray_if_needed(frame_center)
