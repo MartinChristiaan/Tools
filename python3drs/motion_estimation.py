@@ -47,12 +47,12 @@ def three_drs(
                         candidates[i * actual_updates + j] = (
                             (
                                 mvf_cur[:, y_block + dy, x_block + dx]
-                                + updateset[update_candidates[j]] / downscale
+                                + updateset[update_candidates[j]]  # / downscale
                             )
                             if dn == 0
                             else (
                                 mvf_prev[:, y_block + dy, x_block + dx]
-                                + updateset[update_candidates[j]] / downscale
+                                + updateset[update_candidates[j]]  # / downscale
                             )
                         )
                 else:
