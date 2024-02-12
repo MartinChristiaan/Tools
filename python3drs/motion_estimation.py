@@ -5,8 +5,8 @@ from numba import jit, prange
 updatesetx = [0, 0.25, 1, 3, -0.25, -1, -3] + [0] * 6
 updatesety = [0, 0, 0, 0, 0, 0, 0] + [0.25, 1, 3, -0.25, -1, -3]
 updateset = np.array(list(zip(updatesetx, updatesety))).astype(np.float32)
-actual_updates = 6
 candidate_set = np.array([(0, -1, -1), (0, -1, 1), (-1, 1, 1)]).astype(np.int32)
+candidate_set = np.array([(0, -1, -1), (0, -1, 1)]).astype(np.int32)
 
 
 @jit(nopython=True, parallel=False)
@@ -21,6 +21,7 @@ def three_drs(
     num_blocks_y,
     block_size,
     downscale,
+    actual_updates,
 ):
 
     candidates = np.zeros((len(candidate_set) * actual_updates + 1, 2))
@@ -151,6 +152,7 @@ class MotionEstimator:
         self.downscale = downscale
         self.alpha = alpha
         self.mvf_prev = None
+        self.actual_updates = 6
 
     def compute(self, frame_center, frame_offset):
         frame_center = convert_to_gray_if_needed(frame_center)
@@ -175,6 +177,7 @@ class MotionEstimator:
             num_blocks_y,
             self.block_size,
             self.downscale,
+            self.actual_updates,
         )
         self.mvf_prev = mvf_cur
         return mvf_cur * self.downscale
