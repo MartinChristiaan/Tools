@@ -14,7 +14,7 @@ from tqdm import tqdm
 BLOCK_SIZE = 8
 SEARCH_SPACE = 12
 OFFSET_CACHE_SIZE = BLOCK_SIZE + SEARCH_SPACE * 2
-LEVELS = 3
+UPSCALE = 4
 
 
 @cuda.jit
@@ -32,16 +32,40 @@ def mvf_refine(
     min_sad = 9999999999999
     x_block = cuda.blockIdx.x * cuda.blockDim.x + cuda.threadIdx.x
     y_block = cuda.blockIdx.y * cuda.blockDim.y + cuda.threadIdx.y
-    scale_down = 4
 
     h, w = frame_center.shape
     if not (x_block < num_blocks_x and y_block < num_blocks_y):
         return
-    mv_x = mvf_prev[0, y_block // scale_down, x_block // scale_down]
-    mv_y = mvf_prev[1, y_block // scale_down, x_block // scale_down]
-    # mvf_cur[0, y_block, x_block] = 1
-    mv_best_x = mv_x
-    mv_best_y = mv_y
+    x_prev = x_block // UPSCALE
+    y_prev = y_block // UPSCALE
+
+    current_mv_x = mvf_prev[0, y_prev, x_prev]
+    current_mv_y = mvf_prev[1, y_prev, x_prev]
+
+    different_mvf_x = 0
+    different_mvf_y = 0
+    # find a suitable alternative to also consider
+    max_delta = 0
+    for dy in range(-1, 2):
+        for dx in range(-1, 2):
+            if dx == 0 and dy == 0:
+                continue
+            y_other = y_prev + dy
+            x_other = x_prev + dx
+            if y_other < 0 or y_other >= num_blocks_y // UPSCALE:
+                continue
+            if x_other < 0 or x_other >= num_blocks_x // UPSCALE:
+                continue
+            delta = abs(mvf_prev[0, y_other, x_other] - current_mv_x) + abs(
+                mvf_prev[1, y_other, x_other] - current_mv_y
+            )
+            if delta > max_delta:
+                different_mvf_x = mvf_prev[0, y_other, x_other]
+                different_mvf_y = mvf_prev[1, y_other, x_other]
+                max_delta = delta
+
+    mv_best_x = current_mv_x
+    mv_best_y = current_mv_y
 
     # allocate cashes
 
@@ -59,43 +83,54 @@ def mvf_refine(
             y = yb * downscale + y0
             v = frame_center[y, x]
             frame_center_cache[yb, xb] = v
+    # for mv_x, mv_y in [
+    #     (current_mv_x, current_mv_y),
+    #     (different_mvf_x, different_mvf_y),
+    # ]:
+    for i in range(2):
+        mv_x = current_mv_x if i == 0 else different_mvf_x
+        mv_y = current_mv_y if i == 0 else different_mvf_y
 
-    x0 = int(
-        BLOCK_SIZE * x_block * downscale + mv_x / downscale - SEARCH_SPACE * downscale
-    )
-    y0 = int(
-        BLOCK_SIZE * y_block * downscale + mv_y / downscale - SEARCH_SPACE * downscale
-    )
+        x0 = int(
+            BLOCK_SIZE * x_block * downscale
+            + mv_x / downscale
+            - SEARCH_SPACE * downscale
+        )
+        y0 = int(
+            BLOCK_SIZE * y_block * downscale
+            + mv_y / downscale
+            - SEARCH_SPACE * downscale
+        )
 
-    for xb in range(BLOCK_SIZE + SEARCH_SPACE * 2):
-        for yb in range(BLOCK_SIZE + SEARCH_SPACE * 2):
+        for xb in range(BLOCK_SIZE + SEARCH_SPACE * 2):
+            for yb in range(BLOCK_SIZE + SEARCH_SPACE * 2):
 
-            x = xb * downscale + x0
-            y = yb * downscale + y0
-            if x < 0 or x >= w - 1 or y < 0 or y > h - 1:
-                frame_offset_cache[yb, xb] = 0
-            else:
-                v = frame_next[y, x]
-                frame_offset_cache[yb, xb] = v
+                x = xb * downscale + x0
+                y = yb * downscale + y0
+                if x < 0 or x >= w - 1 or y < 0 or y > h - 1:
+                    frame_offset_cache[yb, xb] = 0
+                else:
+                    v = frame_next[y, x]
+                    frame_offset_cache[yb, xb] = v
 
-    # run convolution
+        # run convolution
 
-    for x_o in range(SEARCH_SPACE * 2):
-        for y_o in range(SEARCH_SPACE * 2):
-            sad = 0
-            for xc in range(BLOCK_SIZE):
-                for yc in range(BLOCK_SIZE):
-                    v1 = frame_center_cache[yc, xc]
-                    v2 = frame_offset_cache[y_o + yc, x_o + xc]
-                    if v1 > v2:
-                        sad += v1 - v2
-                    else:
-                        sad += v2 - v1
+        for x_o in range(SEARCH_SPACE * 2):
+            for y_o in range(SEARCH_SPACE * 2):
+                sad = 0
+                for xc in range(BLOCK_SIZE):
+                    for yc in range(BLOCK_SIZE):
+                        v1 = frame_center_cache[yc, xc]
+                        v2 = frame_offset_cache[y_o + yc, x_o + xc]
+                        if v1 > v2:
+                            sad += v1 - v2
+                        else:
+                            sad += v2 - v1
 
-            if min_sad > sad:
-                min_sad = sad
-                mv_best_x = mv_x + x_o * downscale - SEARCH_SPACE * downscale
-                mv_best_y = mv_y + y_o * downscale - SEARCH_SPACE * downscale
+                if min_sad > sad:
+                    min_sad = sad
+                    mv_best_x = mv_x + x_o * downscale - SEARCH_SPACE * downscale
+                    mv_best_y = mv_y + y_o * downscale - SEARCH_SPACE * downscale
     mvf_cur[0, y_block, x_block] = mv_best_x
     mvf_cur[1, y_block, x_block] = mv_best_y
     out_sad[y_block, x_block] = min_sad
@@ -131,15 +166,14 @@ class MotionLevelEstimator:
         return mvf_hr_cuda, out_sad
 
 
-from motion_estimation import MotionEstimator
+from blitzmotion.estimation import MotionEstimator
 
 
 class HierarchicalMotionEstimator:
     def __init__(self) -> None:
-        self.estimators = []
+        self.refiner = []
         self.l2_estimator = MotionEstimator(downscale=4)
-        for downscale in [1]:
-            self.estimators.append(MotionLevelEstimator((135, 240), downscale))
+        self.refiner = MotionLevelEstimator((135, 240), 1)
 
     def estimate(self, frame_center, frame_offset, refine=True):
         frame_center_cuda = cuda.to_device(frame_center)
@@ -152,14 +186,15 @@ class HierarchicalMotionEstimator:
             sad,
             reverse=True,
         )
-        print(f"{sad.mean()} before refine")
+        mvf[0] = cv2.medianBlur(mvf[0], 3)
+        mvf[1] = cv2.medianBlur(mvf[1], 3)
+        # print(f"{sad.mean()} before refine")
         if refine:
             mvf = cuda.to_device(mvf)
-            for i, estimator in enumerate(self.estimators):
-                mvf, sad = estimator.refine(mvf, frame_center_cuda, frame_offset_cuda)
+            mvf, sad = self.refiner.refine(mvf, frame_center_cuda, frame_offset_cuda)
             sad = sad.copy_to_host()
             mvf = mvf.copy_to_host()
-            print(f"{sad.mean()} after refine")
+            # print(f"{sad.mean()} after refine")
         return mvf, sad
 
 
@@ -173,7 +208,7 @@ if __name__ == "__main__":
 
     refiner = HierarchicalMotionEstimator()
     for j in tqdm(range(100)):
-        mvf = refiner.estimate(frame0, frame).copy_to_host()
+        mvf, sad = refiner.estimate(frame0, frame)
         # print(mvf.mean())
 
     plt.figure()
