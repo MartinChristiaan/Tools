@@ -7,13 +7,14 @@ from typing import List
 
 import cv2
 import pip
+from dlutils_ii import DatasetConfig
+from loguru import logger
+from tqdm import tqdm
+
 from blitzmotion.estimation import MotionEstimator, OutSadComputer
 from blitzmotion.refinement import HierarchicalMotionEstimator, MotionEstimator
 from blitzmotion.upscaling import nearest_neighbours_upscale, triple_median
 from blitzmotion.vizualization import flow_to_color, get_mixing_image
-from dlutils_ii import DatasetConfig
-from loguru import logger
-from tqdm import tqdm
 
 
 class MotionSADWriter:
@@ -30,7 +31,7 @@ class MotionSADWriter:
         self.refiner = MotionEstimator()
         self.write_output = write_output
 
-    def _write_image(self, image, name, timestamp):
+    def _write_sad(self, image, timestamp):
         if not self.write_output:
             return
         pathfinder = self.config.pathfinder
@@ -55,9 +56,7 @@ class MotionSADWriter:
             mvf[1] = cv2.medianBlur(mvf[1], 3)
             mvf_hr = nearest_neighbours_upscale(mvf)
         sad = self.sad_computer.compute_out_sad(mvf_hr, frame_center, frame_offset)
-        # mvf_image = get_mixing_image(frame_center, flow_to_color(mvf_hr)) # rather slow
-        # self.write_image(mvf_image, "mvf", timestamp)
-        self._write_image(sad, "sad", timestamp)
+        self._write_sad(sad, timestamp)
         return sad
 
     @staticmethod
@@ -70,8 +69,8 @@ class MotionSADWriter:
                     config, [0, int(-15 * offset_scale), int(15 * offset_scale)]
                 )
                 pipelines = [
-                    MotionSADWriter("fwd", config, True),
-                    MotionSADWriter("bwd", config, True),
+                    MotionSADWriter(int(15 * offset_scale), config, True),
+                    MotionSADWriter(int(-15 * offset_scale), config, True),
                 ]
                 for i in tqdm(range(len(reader))):
                     frames, annotations = reader.read(i)
@@ -81,15 +80,24 @@ class MotionSADWriter:
                     t = annotations.timestamp[0]
                     pipelines[0].process(frames[0], frames[2], t)
                     pipelines[1].process(frames[0], frames[1], t)
+            return True
         except Exception as e:
             logger.error(f"Error in {config.pathfinder.name}: {e}")
+            return False
 
     @staticmethod
-    def export_multiprocessed(configs: List[DatasetConfig]):
+    def export_multiprocessed(configs: List[DatasetConfig], num_processes=6):
+        import logging
         from multiprocessing import Pool
 
-        with Pool(6) as p:
-            p.map(MotionSADWriter.export, configs)
+        logging.getLogger("numba").setLevel(logging.WARNING)
+        with Pool(num_processes) as p:
+            results = p.map(MotionSADWriter.export, configs)
+        for x, config in zip(results, configs):
+            if not x:
+                logger.error(f"failed to process {config.pathfinder.name}")
+            else:
+                logger.info(f"Successfully processed {config.pathfinder.name}")
 
 
 import numpy as np
