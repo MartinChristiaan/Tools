@@ -1,11 +1,6 @@
 # %%
 from pathlib import Path
-<<<<<<< HEAD
-import pickle
-from typing import List
 from loguru import logger
-=======
->>>>>>> e219846ea376ce64b052c23de8bc28c77e9e284e
 import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
@@ -16,12 +11,9 @@ import streamlit as st
 from tqdm import tqdm
 
 from Project import Project
+from typing import List
 
 st.set_page_config(layout="wide")
-
-years = [2023]
-for i in range(1, 5):
-    years += [years[0] + i]
 
 
 def get_data(years):
@@ -124,6 +116,7 @@ def get_projects(years):
 # %%
 from datetime import datetime
 
+st.title("Hourplan viewer")
 current_year = datetime.now().year
 start_year = st.slider(
     "starting year", current_year - 1, current_year, current_year - 1
@@ -137,7 +130,6 @@ projects = get_projects(years)
 active_project_names = [x.name for x in projects]
 
 
-st.title("Project planner")
 project = st.selectbox("Project", active_project_names)
 
 
