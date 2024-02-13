@@ -99,7 +99,6 @@ class MotionSADWriter:
             else:
                 logger.info(f"Successfully processed {config.pathfinder.name}")
 
-
 import numpy as np
 
 path = "/media/martin/DeepLearning/mantis_drone_2023/raw/mantis_drone_2023/DJI_202309101443_008_wide_hd/0/1694357059368.jpg"
