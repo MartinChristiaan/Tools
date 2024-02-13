@@ -1,4 +1,5 @@
 # %%
+from pathlib import Path
 import numpy as np
 import plotly.graph_objects as go
 from scipy.io import loadmat
@@ -12,7 +13,12 @@ st.set_page_config(layout="wide")
 
 home = os.path.expanduser("~")
 
-# TODO also load previous year, + automatically load newest
+
+matdir = Path(
+    r"\\tsn.tno.nl\data\sv\sv-091547\Kluis\Algemeen_intern\Planning\ourplan\DailyDump\\"
+)
+
+
 data = loadmat(f"{home}/OurPlanDump_II_2024_240126.mat")
 # %%
 print(data.keys())
