@@ -1,3 +1,4 @@
+# %%
 from pathlib import Path
 
 import pandas as pd
@@ -10,7 +11,8 @@ from click import getchar
 # train_dir = f"/mnt/dl-41/data/leeuwenmcv/mantis/mantis-tyolov8"
 # train_dir = f"/mnt/dl-41/data/leeuwenmcv/general/ratio/yolo"
 print("use latest data? \n")
-use_latest_data = getchar() == "y"
+# use_latest_data = getchar() == "y"
+use_latest_data = True  # @ getchar() == "y"
 if not use_latest_data:
     train_dir = prompt(
         [
@@ -52,21 +54,20 @@ print(latest_data_df.columns)
 import matplotlib.pyplot as plt
 
 # Group the data by sequencename and model
-grouped_data = latest_data_df.groupby(["name", "model"]).mean().reset_index()
 
-# Iterate over each sequencename
-for sequencename in grouped_data["name"].unique():
-    # Filter the data for the current sequencename
-    sequencename_data = grouped_data[grouped_data["name"] == sequencename]
+import plotly.express as px
 
-    # Create a bar plot for recall and precision
-    plt.figure()
-    plt.bar(sequencename_data["model"], sequencename_data["F1 Recall"], label="Recall")
-    # plt.bar(
-    #     sequencename_data["model"], sequencename_data["F1 Precision"], label="Precision"
-    # )
-    plt.xlabel("Model")
-    plt.ylabel("Score")
-    plt.title(f"Recall and Precision for {sequencename}")
-    plt.legend()
-    plt.savefig(f"{sequencename}_barplot.png")
+# sequencename_data = grouped_data[grouped_data["name"] == sequencename]
+
+# Create a bar plot for recall and precision
+fig = px.bar(
+    latest_data_df,
+    x="model",
+    y="mAP",
+    # labels={"model": "Model", "F1 mAP": "mAP"},
+    color="name",
+    # title=f"Recall for {sequencename}",
+)
+fig.show()
+
+# %%
