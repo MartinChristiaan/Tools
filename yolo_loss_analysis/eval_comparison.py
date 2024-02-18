@@ -1,11 +1,17 @@
 # %%
+import scienceplots
+from hmac import new
 from pathlib import Path
 
 import pandas as pd
 
 from SFzfPrompt import prompt
 from charmenu import charmenu
+import matplotlib.pyplot as plt
 from click import getchar
+
+# plt.style.use("ggplot")
+plt.style.use("science")
 
 # train_dir = f"/mnt/dl-41/data/leeuwenmcv/mantis/tyolov8-cv90"
 # train_dir = f"/mnt/dl-41/data/leeuwenmcv/mantis/mantis-tyolov8"
@@ -50,13 +56,23 @@ print(latest_data_df.columns)
 #        'bbox_size_min', 'bbox_size_max', 'num_frames', 'model'],
 #       dtype='object')
 sequences = latest_data_df["name"].unique()
+new_models = []
+for model in latest_data_df["model"]:
+    if "air_to_ground" in model:
+        new_models.append("air_to_ground")
+    elif "naval" in model:
+        new_models.append("naval")
+    elif "ground" in model:
+        new_models.append("ground")
+    else:
+        new_models.append("generic")
+latest_data_df["model"] = new_models
 
 
 air_sequences = [x for x in sequences if "mantis_drone_2023" in x]
 naval_sequences = [x for x in sequences if "rotterdam" in x]
 ground_sequences = [x for x in sequences if not x in air_sequences + naval_sequences]
 
-import matplotlib.pyplot as plt
 
 # Define the models and categories
 models = latest_data_df["model"].unique()
@@ -95,41 +111,21 @@ r2 = [x + bar_width for x in r1]
 r3 = [x + bar_width for x in r2]
 
 # Create the bar chart
-plt.bar(r1, air_means, width=bar_width, label="Air")
-plt.bar(r2, naval_means, width=bar_width, label="Naval")
-plt.bar(r3, ground_means, width=bar_width, label="Ground")
+plt.figure(figsize=(10, 6))
+plt.bar(r1, air_means, width=bar_width, label="Air data")
+plt.bar(r2, naval_means, width=bar_width, label="Naval data")
+plt.bar(r3, ground_means, width=bar_width, label="Ground data")
 
 # Add labels, title, and legend
 plt.xlabel("Model")
 plt.ylabel("mAP")
-plt.title("Mean mAP per Model and Category")
+plt.title("mAP per Model and Dataset")
 plt.xticks([r + bar_width for r in range(len(models))], models)
 plt.legend()
-
+plt.grid(1)
 # Show the bar chart
-plt.show()
 
+plt.savefig("mAP_per_model_and_dataset.pdf")
 
-# # for every sequencename generate a barplot with the recall and precision per model
-# import matplotlib.pyplot as plt
-
-# # Group the data by sequencename and model
-
-# import plotly.express as px
-
-# # sequencename_data = grouped_data[grouped_data["name"] == sequencename]
-
-# # Create a bar plot for recall and precision
-# fig = px.bar(
-#     latest_data_df,
-#     x="model",
-#     y="mAP",
-#     # labels={"model": "Model", "F1 mAP": "mAP"},
-#     color="name",
-#     # title=f"Recall for {sequencename}",
-# )
-# fig.show()
-
-# # %%
 
 # %%
