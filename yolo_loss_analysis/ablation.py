@@ -59,9 +59,9 @@ curnames = [
 newnames = [
     "proposed",
     "cropped",
-    "wo_mosaic",
-    "single_frame",
-    "wo_bboxresize",
+    "no mosaic",
+    "single frame",
+    "no bbox clip",
 ]
 name_lut = dict(zip(curnames, newnames))
 df = df[df.model.isin(curnames)]
@@ -70,21 +70,28 @@ print(df)
 models = df["model"].unique()  # Get unique model names
 metrics = df["metric"].unique()  # Get unique metrics names
 
-fig, ax = plt.subplots(figsize=(10, 6))  # Set the size of the figure
-colors = plt.cm.tab10.colors  # Get a list of colors for each metric
 # Plot bars for each metric for each model
 bar_width = 0.8 / len(metrics)  # Width of each bar
 # models = df.model.unique()
+maps = list(df[df["metric"] == "mAP50"]["value"])
+# models = df[df["metric"] == "mAP50"]["model"]
+# %%
+map_sort = np.argsort(maps)[::-1]
+print(map_sort)
 
+fig, ax = plt.subplots(figsize=(10, 6))  # Set the size of the figure
+colors = plt.cm.tab10.colors  # Get a list of colors for each metric
 for i, metric in enumerate(metrics):
-    x = np.arange(len(models))
-    y = list(df[df["metric"] == metric]["value"])  # Y-axis values
+    x = np.arange(len(models))  # [map_sort]
+    print(x)
+    y = np.array(df[df["metric"] == metric]["value"])[map_sort]  # Y-axis values
+    print(y)
     ax.bar(x + i * bar_width - 0.4, y, width=bar_width, label=metric, color=colors[i])
 
 
 ax.set_xticks(range(len(models)))  # Set ticks on X-axis
 ax.set_xticklabels(
-    models, rotation=45, ha="right"
+    models[map_sort], rotation=45, ha="right"
 )  # Set labels on X-axis with rotation
 ax.set_ylabel("Value")  # Set label for Y-axis
 ax.set_xlabel("Model")  # Set label for X-axis
