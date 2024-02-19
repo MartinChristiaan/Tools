@@ -66,9 +66,11 @@ newnames = [
 name_lut = dict(zip(curnames, newnames))
 df = df[df.model.isin(curnames)]
 df["model"] = [name_lut[x] for x in df.model]
-print(df)
+# print(df)
 models = df["model"].unique()  # Get unique model names
 metrics = df["metric"].unique()  # Get unique metrics names
+
+df.to_csv("overview_results_re.csv", index=False)
 
 # Plot bars for each metric for each model
 bar_width = 0.8 / len(metrics)  # Width of each bar
@@ -86,7 +88,7 @@ for i, metric in enumerate(metrics):
     print(x)
     y = np.array(df[df["metric"] == metric]["value"])[map_sort]  # Y-axis values
     print(y)
-    ax.bar(x + i * bar_width - 0.4, y, width=bar_width, label=metric, color=colors[i])
+    ax.bar(x + i * bar_width - 0.4, y, width=bar_width, label=metric)
 
 
 ax.set_xticks(range(len(models)))  # Set ticks on X-axis

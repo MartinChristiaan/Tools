@@ -1,0 +1,16 @@
+model,metric,value
+proposed,precision,0.906
+proposed,recal,0.67885
+proposed,mAP50,0.76337
+cropped,precision,0.82903
+cropped,recal,0.66933
+cropped,mAP50,0.75841
+no bbox clip,precision,0.62171
+no bbox clip,recal,0.27993
+no bbox clip,mAP50,0.2845
+no mosaic,precision,0.8106
+no mosaic,recal,0.58142
+no mosaic,mAP50,0.68047
+single frame,precision,0.75394
+single frame,recal,0.5045
+single frame,mAP50,0.57071
