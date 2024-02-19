@@ -1,0 +1,5 @@
+Model,Air Mean mAP (%),Naval Mean mAP (%),Ground Mean mAP (%)
+naval,12,68,46
+generic,65,76,86
+ground,51,63,84
+air_to_ground,63,66,61

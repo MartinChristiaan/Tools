@@ -9,6 +9,7 @@ from SFzfPrompt import prompt
 from charmenu import charmenu
 import matplotlib.pyplot as plt
 from click import getchar
+import pandas as pd
 
 # plt.style.use("ggplot")
 plt.style.use("science")
@@ -98,9 +99,22 @@ for modelname in models:
         & (latest_data_df["model"] == modelname)
     ].mAP.mean()
 
-    air_means.append(air_mean)
-    naval_means.append(naval_mean)
-    ground_means.append(ground_mean)
+    air_means.append(int(air_mean * 100))
+    naval_means.append(int(naval_mean * 100))
+    ground_means.append(int(ground_mean * 100))
+
+# Create a dataframe to store the mean mAP values
+mean_mAP_df = pd.DataFrame(
+    {
+        "Model": models,
+        "Air Mean mAP (%)": air_means,
+        "Naval Mean mAP (%)": naval_means,
+        "Ground Mean mAP (%)": ground_means,
+    }
+)
+
+# Save the dataframe as a CSV file
+mean_mAP_df.to_csv("mean_mAP_results.csv", index=False)
 
 # Set the width of the bars
 bar_width = 0.25
