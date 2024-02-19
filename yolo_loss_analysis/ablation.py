@@ -1,4 +1,5 @@
 # %%
+import numpy as np
 import scienceplots
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -50,21 +51,22 @@ df["metric"] = [name_lut[x] for x in df.metric]
 curnames = [
     "combined_tyolo8m_balanced_02022024",
     "combined_tyolo8m_cropped_02022024",
-    "combined_tyolo8m_no_bbox_clip_02022024",
     "combined_tyolo8m_regular_02022024",
     "combined_yolo8m_balanced_02022024",
+    "combined_tyolo8m_no_bbox_clip_02022024",
 ]
 
 newnames = [
     "proposed",
     "cropped",
-    "wo_bboxresize",
     "wo_mosaic",
     "single_frame",
+    "wo_bboxresize",
 ]
 name_lut = dict(zip(curnames, newnames))
 df = df[df.model.isin(curnames)]
 df["model"] = [name_lut[x] for x in df.model]
+print(df)
 models = df["model"].unique()  # Get unique model names
 metrics = df["metric"].unique()  # Get unique metrics names
 
@@ -72,11 +74,11 @@ fig, ax = plt.subplots(figsize=(10, 6))  # Set the size of the figure
 colors = plt.cm.tab10.colors  # Get a list of colors for each metric
 # Plot bars for each metric for each model
 bar_width = 0.8 / len(metrics)  # Width of each bar
+# models = df.model.unique()
+
 for i, metric in enumerate(metrics):
-    x = (
-        df[df["metric"] == metric]["model"].astype("category").cat.codes
-    )  # X-axis values
-    y = df[df["metric"] == metric]["value"]  # Y-axis values
+    x = np.arange(len(models))
+    y = list(df[df["metric"] == metric]["value"])  # Y-axis values
     ax.bar(x + i * bar_width - 0.4, y, width=bar_width, label=metric, color=colors[i])
 
 
@@ -91,3 +93,5 @@ plt.grid(1)
 plt.tight_layout()  # Ensure tight layout
 plt.savefig("ablation.pdf")  # Save plot in vector format (PDF)
 plt.show()  # Show plot
+
+# %%
