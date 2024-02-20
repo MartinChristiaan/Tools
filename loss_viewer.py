@@ -9,6 +9,7 @@ from utils.SFzfPrompt import prompt
 # train_dir = f"/mnt/dl-41/data/leeuwenmcv/general/ratio/yolo"
 train_dir = prompt(
     [
+        f"/mnt/dl-41/data/leeuwenmcv/general/l3harris",
         f"/mnt/dl-41/data/leeuwenmcv/general/tyolo",
         f"/mnt/dl-3/data/leeuwenmcv/general/tyolo",
         f"/mnt/dl-41/data/leeuwenmcv/general/p2-experiment",
