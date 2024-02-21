@@ -62,7 +62,7 @@ for annotations_file,seq in zip(annotation_files,sequences):
 	for line in lines:
 		line_split =  line.split(',')
 		if len(line_split) > 1:
-			frame_no,idx,bbox_x,bbox_y,bbox_w,bbox_h,ignore,class_id,_,_ = line.split(',')
+			frame_no,track_id,bbox_x,bbox_y,bbox_w,bbox_h,ignore,class_id,_,_ = line.split(',')
 			label = label_lut[int(class_id)]	
 			datadict = {
 				"frame_no":frame_no,
@@ -70,10 +70,11 @@ for annotations_file,seq in zip(annotation_files,sequences):
 				"bbox_y":bbox_y,
 				"bbox_w":bbox_w,
 				"bbox_h":bbox_h,
+				"track_id":track_id,
 				# "ignore":ignore,
 				"class_id":class_id,
 				"label":label,
-				"timestamp":f"{int(frame_no)/25:.2f}"
+				"timestamp":f"{(int(frame_no)-1)/25:.2f}"
 			}
 			out_data.append(datadict)
 
@@ -82,12 +83,12 @@ for annotations_file,seq in zip(annotation_files,sequences):
 	from dlutils_ii.tools.drawer import DrawBboxEngine
 	from trackertoolbox.detections import Detections
 	t = mm.timestamps
-	drawer = DrawBboxEngine()
-	for i in range(2):
+	drawer = DrawBboxEngine(color_key='class_id',label_keys=['label'])
+	for i in range(10):
 		frame = mm.get_frame(t[i])
 		annotations_frame = annotations[annotations['timestamp'] == t[i]]
 		f_out = drawer.draw(frame,Detections(annotations_frame))
-		cv2.imwrite(f'{annotations_file.stem}_test_{i}.jpg',f_out)
+		cv2.imwrite(f'{annotations_file.stem}_test_{i}.jpg',cv2.cvtColor(f_out,cv2.COLOR_RGB2BGR))
 
 	
 
