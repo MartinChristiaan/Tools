@@ -2,6 +2,7 @@
 import os
 from pathlib import Path
 import shutil
+import cv2
 
 import pandas as pd
 data = '/data/VisDrone2019-VID-val/VisDrone2019-VID-val/'
@@ -34,7 +35,7 @@ for annotations_file,seq in zip(annotation_files,sequences):
 	logstr = ""
 	for i in range(num_images):
 		timestamp = i/25
-		logstr += f"{timestamp}\n"
+		logstr += f"{timestamp:.2f}\n"
 	with open(logfile,'w') as f:
 		f.write(logstr)
 	mm = MediaManager(videodir,video_suffix='.jpg')
@@ -61,7 +62,7 @@ for annotations_file,seq in zip(annotation_files,sequences):
 	for line in lines:
 		line_split =  line.split(',')
 		if len(line_split) > 1:
-			idx,frame_no,bbox_x,bbox_y,bbox_w,bbox_h,ignore,class_id,_,_ = line.split(',')
+			frame_no,idx,bbox_x,bbox_y,bbox_w,bbox_h,ignore,class_id,_,_ = line.split(',')
 			label = label_lut[int(class_id)]	
 			datadict = {
 				"frame_no":frame_no,
@@ -69,17 +70,37 @@ for annotations_file,seq in zip(annotation_files,sequences):
 				"bbox_y":bbox_y,
 				"bbox_w":bbox_w,
 				"bbox_h":bbox_h,
-				"ignore":ignore,
+				# "ignore":ignore,
 				"class_id":class_id,
 				"label":label,
-				"timestamp":int(frame_no)/25.9
+				"timestamp":f"{int(frame_no)/25:.2f}"
 			}
 			out_data.append(datadict)
-	# annotations_dir= Path(f"{resultsdir}/_annotations")
-	# annotations_dir.mkdir(parents=True,exist_ok=True)
 
 	mm.save_annotations(pd.DataFrame(out_data))
+	annotations = mm.load_annotations()
+	from dlutils_ii.tools.drawer import DrawBboxEngine
+	from trackertoolbox.detections import Detections
+	t = mm.timestamps
+	drawer = DrawBboxEngine()
+	for i in range(2):
+		frame = mm.get_frame(t[i])
+		annotations_frame = annotations[annotations['timestamp'] == t[i]]
+		f_out = drawer.draw(frame,Detections(annotations_frame))
+		cv2.imwrite(f'{annotations_file.stem}_test_{i}.jpg',f_out)
+
+	
+
+
+
+
+
+
+
 	# pd.DataFrame(out_data).to_csv(f"{annotations_dir}/{seq.stem}_annotations.csv",index=False)
+
+ 
+
 	
 		
 	
