@@ -39,8 +39,9 @@ from trackertoolbox.detections import Detections
 
 # get videoset and mediamanager
 videoset = VideosetsII()["mantis_2023"]
-idx = 0
+idx = 1
 cam = cameras_eval[idx]
+cam = "20230918T174658_crontab_recording_handmatig_regen_rainy/EO_zoom_half"
 mm = videoset.get_mediamanager(cam)
 # load tracks tyolo
 tracks_tyolo = Detections(mm.load("tyolov8/detections_tyolov8m-30112023.csv"))
