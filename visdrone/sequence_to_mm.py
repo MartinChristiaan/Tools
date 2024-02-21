@@ -6,6 +6,7 @@ import cv2
 
 import pandas as pd
 data = '/data/VisDrone2019-VID-val/VisDrone2019-VID-val/'
+data = '/data/VisDrone2019-VID-train/'
 mm_dir=  '/data/visdrone/'
 
 from media_manager.core import MediaManager
@@ -24,6 +25,8 @@ for annotations_file,seq in zip(annotation_files,sequences):
 	resultsdir.mkdir(parents=True,exist_ok=True)
 	imgdir = videodir / 'images'
 	logfile = videodir/"images.log"
+	imgdir.mkdir(parents=True,exist_ok=True)
+
 	# os.system(f'rsync -azP {seq}/ {imgdir}')
 	images = list(seq.glob('*.jpg'))
 	images.sort()
@@ -88,7 +91,8 @@ for annotations_file,seq in zip(annotation_files,sequences):
 		frame = mm.get_frame(t[i])
 		annotations_frame = annotations[annotations['timestamp'] == t[i]]
 		f_out = drawer.draw(frame,Detections(annotations_frame))
-		cv2.imwrite(f'{annotations_file.stem}_test_{i}.jpg',cv2.cvtColor(f_out,cv2.COLOR_RGB2BGR))
+		os.makedirs(f'/data/test/',exist_ok=True)
+		cv2.imwrite(f'/data/test/{annotations_file.stem}_test_{i}.jpg',cv2.cvtColor(f_out,cv2.COLOR_RGB2BGR))
 
 	
 
