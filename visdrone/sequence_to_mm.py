@@ -4,10 +4,11 @@ from pathlib import Path
 import shutil
 import cv2
 import pandas as pd
+from tqdm import tqdm
 
-mm_dir = "/data/visdrone_2019/"
+mm_dir = "/diskstation/datasets/visdrone_2019/"
 # shutil.rmtree(mm_dir)
-modes = ["val", "train", "test-dev"]
+modes = ["val", "train", "test"]
 for data, mode in zip(
     [
         "/data/VisDrone2019-VID-val/",
@@ -38,7 +39,7 @@ for data, mode in zip(
         images = list(seq.glob("*.jpg"))
         images.sort()
 
-        for i, img in enumerate(images):
+        for i, img in enumerate(tqdm(images)):
             filename = str(i).zfill(5) + ".jpg"
             shutil.copy(img, imgdir / filename)
         num_images = len(list(imgdir.glob("*.jpg")))
@@ -55,7 +56,7 @@ for data, mode in zip(
         lines = text.split("\n")
         out_data = []
         label_lut = {
-            0: "ignored regions",
+            0: "ignore_area",
             1: "pedestrian",
             2: "people",
             3: "bicycle",

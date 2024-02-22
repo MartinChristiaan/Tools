@@ -11,5 +11,5 @@ import pandas as pd
 basedirpath = Path(r"/diskstation")
 videosets = VideosetsII(basedirpath=basedirpath)  # basedirpath)
 vset = videosets["visdrone_2019"]
-mm = vset.get_mediamanager("uav0000137_00499_v")
+mm = vset.get_mediamanager("uav0000086_00000_v")
 print(mm.load_annotations())
