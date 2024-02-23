@@ -15,6 +15,7 @@ train_dir = prompt(
         f"/mnt/dl-3/data/leeuwenmcv/general/ratio/yolo",
         f"/mnt/dl-41/data/leeuwenmcv/general/p2-experiment",
         f"/mnt/toren/data/leeuwenmcv/general/p2-experiment",
+        f"/mnt/toren/data/leeuwenmcv/general/alt_dataset_experiment/",
     ]
 )
 

@@ -70,6 +70,15 @@ keys = [
             )
         ],
     ),
+    keybinding(
+        "<leader>+q+s",  # git search symbol
+        [
+            c(
+                "cd ~/git/tools/quick_edit && python3 quick_ssh.py",
+                focus=True,
+            )
+        ],
+    ),
 ]
 add_keybindings(keys)
 add_bashrc(keys)
