@@ -91,6 +91,7 @@ fi
 alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
+alias v='nvim'
 alias x='bash ~/git/tools/executor/execute.sh'
 # alias qe='bash -c "cd ~/git/tools/quick_open && python3 quick.py --explore"'
 # alias qc='bash -c "cd ~/git/tools/quick_open && python3 quick.py --clip"'
