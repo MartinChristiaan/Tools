@@ -1,7 +1,6 @@
 # %%
 from pathlib import Path
 from matplotlib import pyplot as plt
-
 import pandas as pd
 
 data = "/mnt/toren/data/leeuwenmcv/general/p2-experiment"
@@ -15,11 +14,12 @@ bbox_sizes = [int(x.split("_")[-1]) for x in names]
 
 recalls = []
 for csv_file in csv_files:
-	print(csv_file)
+    print(csv_file)
     df = pd.read_csv(csv_file)
     recall = df["recall"].max()
     recalls.append(recall)
-print(models, bbox_sizes,recalls)
+
+print(models, bbox_sizes, recalls)
 
 df = pd.DataFrame({"model": models, "bbox_size": bbox_sizes, "recall": recalls})
 
