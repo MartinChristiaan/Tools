@@ -37,6 +37,7 @@ df = pd.DataFrame(best_data)
 df.to_csv("overview_results.csv", index=False)
 
 df = pd.read_csv("overview_results.csv")
+
 metrics = df.metric.unique()
 metrics_to_keep = [
     x for x in metrics if "precision" in x or "mAP50(" in x or "recall" in x

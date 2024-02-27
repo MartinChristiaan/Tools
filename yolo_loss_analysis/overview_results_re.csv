@@ -2,15 +2,15 @@ model,metric,value
 proposed,precision,0.906
 proposed,recal,0.67885
 proposed,mAP50,0.76337
-cropped,precision,0.82903
-cropped,recal,0.66933
-cropped,mAP50,0.75841
-no bbox clip,precision,0.62171
-no bbox clip,recal,0.27993
-no bbox clip,mAP50,0.2845
-no mosaic,precision,0.8106
-no mosaic,recal,0.58142
-no mosaic,mAP50,0.68047
-single frame,precision,0.75394
-single frame,recal,0.5045
-single frame,mAP50,0.57071
+virat mixed,precision,0.76572
+virat mixed,recal,0.47125
+virat mixed,mAP50,0.52982
+virat only,precision,0.59821
+virat only,recal,0.1273
+virat only,mAP50,0.36224
+visdrone mixed,precision,0.70973
+visdrone mixed,recal,0.43234
+visdrone mixed,mAP50,0.49067
+visdrone only,precision,0.12854
+visdrone only,recal,0.23876
+visdrone only,mAP50,0.16652
