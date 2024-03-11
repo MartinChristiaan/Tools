@@ -46,26 +46,24 @@ mistake_files = list(model_dir.rglob("*.pkl"))
 for mfile in mistake_files:
     with open(mfile, "rb") as f:
         data = pickle.load(f)
-    # for mistake in data[0][0]:
-    print(data)
-    break
 
-#     max_items_for_grid = 20
+    max_items_for_grid = 20
 
-#     # split data into chunks
-#     chunked_data = [
-#         data[0][0][i : i + max_items_for_grid]
-#         for i in range(0, len(data[0][0]), max_items_for_grid)
-#     ]
+    # split data into chunks
+    chunked_data = [
+        data[i : i + max_items_for_grid]
+        for i in range(0, len(data), max_items_for_grid)
+    ]
 
-#     for chunk in chunked_data:
-#         print(chunk)
-#         images = [x["crop"] for x in chunk]
-#         grid = make_image_grid(images)
-#         cv2.imshow("imgrid", grid)
-#         cv2.waitKey(0)
+    for chunk in chunked_data:
+        print(len(chunk[0]))
 
-# cv2.destroyAllWindows()
+        images = [np.vstack([x[0][0]["crop"], x[1][0]["crop"]]) for x in chunk]
+        grid = make_image_grid(images)
+        cv2.imshow("imgrid", grid)
+        cv2.waitKey(0)
+
+cv2.destroyAllWindows()
 
 # Example usage:
 # Assuming 'images' is a list of image arrays
