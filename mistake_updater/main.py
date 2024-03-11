@@ -10,8 +10,8 @@ NUM_COLS = 6
 
 
 class ImageGridDisplay:
-    def __init__(self, model_dir):
-        self.model_dir = model_dir
+    def __init__(self, mistake_file):
+        # self.model_dir = model_dir
         self.xsize = 400
         self.ysize = 800
         self.current_index = 0
@@ -20,17 +20,18 @@ class ImageGridDisplay:
         self.mistakes_to_ignore_idx = []
         self.mouse_position = (0, 0)  # Initialize mouse position
 
-        mistake_files = list(self.model_dir.rglob("*.pkl"))
-        chunks = []
-        for mfile in mistake_files:
-            with open(mfile, "rb") as f:
-                data = pickle.load(f)
+        # mistake_files = list(self.model_dir.rglob("*.pkl"))
+        # chunks = []
+        data = []
+        # for mfile in mistake_files:
+        with open(mistake_file, "rb") as f:
+            data = pickle.load(f)
 
-            max_items_for_grid = 12
-            chunks += [
-                data[i : i + max_items_for_grid]
-                for i in range(0, len(data), max_items_for_grid)
-            ]
+        max_items_for_grid = 12
+        chunks += [
+            data[i : i + max_items_for_grid]
+            for i in range(0, len(data), max_items_for_grid)
+        ]
         self.chunks = chunks
         self.detections_to_change = []
 
