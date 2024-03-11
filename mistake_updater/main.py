@@ -1,77 +1,48 @@
-# %%
+import sys
 import cv2
 from pathlib import Path
 import pickle
-
 import numpy as np
+from utils import make_image_grid
 
 
-def make_image_grid(images, num_rows=4, num_cols=5):
-    """
-    Combine a list of images into a grid.
+class ImageGridDisplay:
+    def __init__(self, model_dir):
+        self.model_dir = model_dir
+        self.xsize = 400
+        self.ysize = 800
+        self.current_index = 0
 
-    Parameters:
-    images (list): List of image arrays.
-    num_rows (int): Number of rows in the grid.
-    num_cols (int): Number of columns in the grid.
+        mistake_files = list(self.model_dir.rglob("*.pkl"))
+        chunks = []
+        for mfile in mistake_files:
+            with open(mfile, "rb") as f:
+                data = pickle.load(f)
 
-    Returns:
-    ndarray: Image grid.
-    """
+            max_items_for_grid = 12
+            chunks += [
+                data[i : i + max_items_for_grid]
+                for i in range(0, len(data), max_items_for_grid)
+            ]
+        self.chunks = chunks
 
-    # Calculate total number of images and required grid size
-    total_images = len(images)
-    grid_height = num_rows * images[0].shape[0]
-    grid_width = num_cols * images[0].shape[1]
+    def display_images(self):
+        while True:
+            chunk = self.chunks[self.current_index]
+            images = [np.vstack([x[0][0]["crop"], x[1][0]["crop"]]) for x in chunk]
+            grid = make_image_grid(images)
+            cv2.imshow("imgrid", grid)
+            k = cv2.waitKey(0)
+            if k == ord("q"):
+                break
+            if k == ord("l"):
+                self.current_index += 1
+            if k == ord("h"):
+                self.current_index -= 1
+        cv2.destroyAllWindows()
 
-    # Create an empty grid to hold the combined images
-    grid = np.zeros((grid_height, grid_width, images[0].shape[2]), dtype=np.uint8)
-
-    # Fill the grid with images
-    for i in range(num_rows):
-        for j in range(num_cols):
-            index = i * num_cols + j
-            if index < total_images:
-                image = images[index]
-                grid[
-                    i * image.shape[0] : (i + 1) * image.shape[0],
-                    j * image.shape[1] : (j + 1) * image.shape[1],
-                    :,
-                ] = image
-    return grid
-
-
-model_dir = Path("/data/proposed")
-mistake_files = list(model_dir.rglob("*.pkl"))
-for mfile in mistake_files:
-    with open(mfile, "rb") as f:
-        data = pickle.load(f)
-
-    max_items_for_grid = 20
-
-    # split data into chunks
-    chunked_data = [
-        data[i : i + max_items_for_grid]
-        for i in range(0, len(data), max_items_for_grid)
-    ]
-
-    for chunk in chunked_data:
-        print(len(chunk[0]))
-
-        images = [np.vstack([x[0][0]["crop"], x[1][0]["crop"]]) for x in chunk]
-        grid = make_image_grid(images)
-        cv2.imshow("imgrid", grid)
-        cv2.waitKey(0)
-
-cv2.destroyAllWindows()
 
 # Example usage:
-# Assuming 'images' is a list of image arrays
-# grid = make_image_grid(images)
-
-# Display the grid
-# plt.imshow(grid)
-# plt.axis('off')
-# plt.show()
-
-# %%
+model_directory = Path("/data/proposed")
+image_grid_display = ImageGridDisplay(model_directory)
+image_grid_display.display_images()
