@@ -57,21 +57,22 @@ class ImageGridDisplay:
                 break
             chunk = self.chunks[self.current_index]
             images = [np.vstack([x[0][0]["crop"], x[1][0]["crop"]]) for x in chunk]
+            types = [x[0][0]["mistake_type"] for x in chunk]
 
             grid = make_image_grid(
                 images,
+                types,
                 selected_idx=self.selected_crop_idx,
                 active_idx=self.active_crop_idx,
             )
             cv2.imshow("imgrid", grid)
-            k = cv2.waitKey(20)
+            k = cv2.waitKey(5)
             if k == ord("q"):
                 break
-            if k == ord("l"):
-                for x in self.active_crop_idx:
-                    dtochange = self.chunks[x][0][0]
-                    print(dtochange)
-                    del dtochange["crop"]
+            if k == ord("d"):
+                for active_idx in self.active_crop_idx:
+                    dtochange = self.chunks[self.selected_crop_idx][active_idx][0][0]
+                    dtochange = {k: v for k, v in dtochange.items() if not k == "crop"}
                     self.detections_to_change.append(dtochange)
                 self.active_crop_idx = []
                 self.current_index += 1

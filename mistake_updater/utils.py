@@ -2,7 +2,9 @@ import numpy as np
 import cv2
 
 
-def make_image_grid(images, num_rows=2, num_cols=6, selected_idx=-1, active_idx=[]):
+def make_image_grid(
+    images, types, num_rows=2, num_cols=6, selected_idx=-1, active_idx=[]
+):
     """
     Combine a list of images into a grid.
 
@@ -31,8 +33,13 @@ def make_image_grid(images, num_rows=2, num_cols=6, selected_idx=-1, active_idx=
             index = i * num_cols + j
             if index < total_images:
                 image = images[index]
+                mtype = types[index]
 
                 border_color = (255, 255, 255)
+                if mtype == "false_positive":
+                    border_color = (0, 0, 255)
+                elif mtype == "false_negative":
+                    border_color = (255, 0, 0)
 
                 if index == selected_idx:
                     border_color = (0, 0, 0)
