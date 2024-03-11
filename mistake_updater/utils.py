@@ -19,8 +19,8 @@ def make_image_grid(images, num_rows=2, num_cols=6, selected_idx=-1, active_idx=
 
     # Calculate total number of images and required grid size
     total_images = len(images)
-    grid_height = num_rows * images[0].shape[0]
-    grid_width = num_cols * images[0].shape[1]
+    grid_height = num_rows * (images[0].shape[0] + 6)
+    grid_width = num_cols * (images[0].shape[1] + 6)
 
     # Create an empty grid to hold the combined images
     grid = np.zeros((grid_height, grid_width, images[0].shape[2]), dtype=np.uint8)
@@ -32,19 +32,18 @@ def make_image_grid(images, num_rows=2, num_cols=6, selected_idx=-1, active_idx=
             if index < total_images:
                 image = images[index]
 
-                # Check if the current index is in active_idx
-                if index in active_idx:
-                    # Add green border
-                    image = cv2.copyMakeBorder(
-                        image, 1, 1, 1, 1, cv2.BORDER_CONSTANT, value=(0, 255, 0)
-                    )
+                border_color = (255, 255, 255)
+
+                if index == selected_idx:
+                    border_color = (0, 0, 0)
+                elif index in active_idx:
+                    border_color = (0, 255, 0)
+
+                image = cv2.copyMakeBorder(
+                    image, 3, 3, 3, 3, cv2.BORDER_CONSTANT, value=border_color
+                )
 
                 # Check if the current index is equal to selected_idx
-                if index == selected_idx:
-                    # Add black border
-                    image = cv2.copyMakeBorder(
-                        image, 1, 1, 1, 1, cv2.BORDER_CONSTANT, value=(0, 0, 0)
-                    )
 
                 grid[
                     i * image.shape[0] : (i + 1) * image.shape[0],

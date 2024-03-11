@@ -30,6 +30,7 @@ class ImageGridDisplay:
                 for i in range(0, len(data), max_items_for_grid)
             ]
         self.chunks = chunks
+        self.detections_to_change = []
 
     def on_mouse(self, event, x, y, flags, param):
         if event == cv2.EVENT_MOUSEMOVE:
@@ -41,13 +42,19 @@ class ImageGridDisplay:
             self.mouse_position = (x, y)
             idx_x = x // self.xsize
             idx_y = y // self.ysize
-            self.active_crop_idx += [idx_y * NUM_COLS + idx_x]
+            idx_to_toggle = idx_y * NUM_COLS + idx_x
+            if idx_to_toggle in self.active_crop_idx:
+                self.active_crop_idx.remove(idx_to_toggle)
+            else:
+                self.active_crop_idx.append(idx_to_toggle)
 
     def display_images(self):
         cv2.namedWindow("imgrid")
         cv2.setMouseCallback("imgrid", self.on_mouse)
 
         while True:
+            if self.current_index >= len(self.chunks):
+                break
             chunk = self.chunks[self.current_index]
             images = [np.vstack([x[0][0]["crop"], x[1][0]["crop"]]) for x in chunk]
 
@@ -57,14 +64,18 @@ class ImageGridDisplay:
                 active_idx=self.active_crop_idx,
             )
             cv2.imshow("imgrid", grid)
-            print("Mouse position:", self.mouse_position)  # Print mouse position
             k = cv2.waitKey(20)
             if k == ord("q"):
                 break
             if k == ord("l"):
+                for x in self.active_crop_idx:
+                    dtochange = self.chunks[x][0][0]
+                    print(dtochange)
+                    del dtochange["crop"]
+                    self.detections_to_change.append(dtochange)
+                self.active_crop_idx = []
                 self.current_index += 1
-            if k == ord("h"):
-                self.current_index -= 1
+            #     self.current_index -= 1
         cv2.destroyAllWindows()
 
 
