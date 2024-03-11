@@ -34,27 +34,25 @@ class ImageGridDisplay:
         self.chunks = chunks
         self.detections_to_change = []
 
+    def get_1d_idx(self, x, y):
+
+        idx_x = x // self.xsize
+        idx_y = y // self.ysize
+        return idx_y * NUM_COLS + idx_x
+
     def on_mouse(self, event, x, y, flags, param):
         if event == cv2.EVENT_MOUSEMOVE:
             self.mouse_position = (x, y)
-            idx_x = x // self.xsize
-            idx_y = y // self.ysize
-            self.selected_crop_idx = idx_y * NUM_COLS + idx_x
+            self.selected_crop_idx = self.get_1d_idx(x, y)
         if event == cv2.EVENT_LBUTTONDOWN:
-            self.mouse_position = (x, y)
-            idx_x = x // self.xsize
-            idx_y = y // self.ysize
-            idx_to_toggle = idx_y * NUM_COLS + idx_x
+            idx_to_toggle = self.get_1d_idx(x, y)
             if idx_to_toggle in self.mistakes_to_correct_idx:
                 self.mistakes_to_correct_idx.remove(idx_to_toggle)
             else:
                 self.mistakes_to_correct_idx.append(idx_to_toggle)
 
         if event == cv2.EVENT_RBUTTONDOWN:
-            self.mouse_position = (x, y)
-            idx_x = x // self.xsize
-            idx_y = y // self.ysize
-            idx_to_toggle = idx_y * NUM_COLS + idx_x
+            idx_to_toggle = self.get_1d_idx(x, y)
             if idx_to_toggle in self.mistakes_to_correct_idx:
                 self.mistakes_to_ignore_idx.remove(idx_to_toggle)
             else:
