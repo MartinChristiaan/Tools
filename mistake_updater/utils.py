@@ -3,7 +3,7 @@ import cv2
 
 
 def make_image_grid(
-    images, types, num_rows=2, num_cols=6, selected_idx=-1, active_idx=[]
+    images, types, num_rows=2, num_cols=6, selected_idx=-1, active_idx=[], ignore_idx=[]
 ):
     """
     Combine a list of images into a grid.
@@ -45,6 +45,8 @@ def make_image_grid(
                     border_color = (0, 0, 0)
                 elif index in active_idx:
                     border_color = (0, 255, 0)
+                elif index in ignore_idx:
+                    border_color = (50, 50, 50)
 
                 image = cv2.copyMakeBorder(
                     image, 3, 3, 3, 3, cv2.BORDER_CONSTANT, value=border_color
