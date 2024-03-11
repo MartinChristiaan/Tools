@@ -5,6 +5,8 @@ import pickle
 import numpy as np
 from utils import make_image_grid
 
+NUM_COLS = 6
+
 
 class ImageGridDisplay:
     def __init__(self, model_dir):
@@ -12,6 +14,9 @@ class ImageGridDisplay:
         self.xsize = 400
         self.ysize = 800
         self.current_index = 0
+        self.selected_crop_idx = 0
+        self.active_crop_idx = []
+        self.mouse_position = (0, 0)  # Initialize mouse position
 
         mistake_files = list(self.model_dir.rglob("*.pkl"))
         chunks = []
@@ -26,13 +31,34 @@ class ImageGridDisplay:
             ]
         self.chunks = chunks
 
+    def on_mouse(self, event, x, y, flags, param):
+        if event == cv2.EVENT_MOUSEMOVE:
+            self.mouse_position = (x, y)
+            idx_x = x // self.xsize
+            idx_y = y // self.ysize
+            self.selected_crop_idx = idx_y * NUM_COLS + idx_x
+        if event == cv2.EVENT_LBUTTONDOWN:
+            self.mouse_position = (x, y)
+            idx_x = x // self.xsize
+            idx_y = y // self.ysize
+            self.active_crop_idx += [idx_y * NUM_COLS + idx_x]
+
     def display_images(self):
+        cv2.namedWindow("imgrid")
+        cv2.setMouseCallback("imgrid", self.on_mouse)
+
         while True:
             chunk = self.chunks[self.current_index]
             images = [np.vstack([x[0][0]["crop"], x[1][0]["crop"]]) for x in chunk]
-            grid = make_image_grid(images)
+
+            grid = make_image_grid(
+                images,
+                selected_idx=self.selected_crop_idx,
+                active_idx=self.active_crop_idx,
+            )
             cv2.imshow("imgrid", grid)
-            k = cv2.waitKey(0)
+            print("Mouse position:", self.mouse_position)  # Print mouse position
+            k = cv2.waitKey(20)
             if k == ord("q"):
                 break
             if k == ord("l"):
