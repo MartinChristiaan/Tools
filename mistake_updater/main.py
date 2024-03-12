@@ -70,7 +70,7 @@ class ImageGridDisplay:
             else:
                 self.mistakes_to_correct_idx.append(idx_to_toggle)
 
-        if event == cv2.EVENT_RBUTTONDOWN:
+        if event == cv2.EVENT_LBUTTONDBLCLK:
             idx_to_toggle = self.get_1d_idx(x, y)
             if idx_to_toggle in self.mistakes_to_correct_idx:
                 self.mistakes_to_ignore_idx.remove(idx_to_toggle)
@@ -113,7 +113,7 @@ class ImageGridDisplay:
                 df.to_csv("detections_to_change.csv", index=False)
             #     self.current_index -= 1
         cv2.destroyAllWindows()
-        return pd.concat(self.detections_to_change)
+        return pd.DataFrame(self.detections_to_change)
 
 
 index = 1
@@ -124,4 +124,4 @@ mfile = mistake_files[index]
 output_file = mistake_files[index]
 image_grid_display = ImageGridDisplay(mfile)
 detections_to_change = image_grid_display.display_images()
-print(detections_to_change)
+detections_to_change.to_csv("test.csv", index=False)
