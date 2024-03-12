@@ -101,11 +101,10 @@ class ImageGridDisplay:
         cv2.destroyAllWindows()
 
 
+index = 0
 # Example usage:
 model_directory = Path("/data/proposed")
-mistake_files = model_directory.rglob('*.pkl')
-for mfile in mistake_files:
-    mfile.stem.
-
-image_grid_display = ImageGridDisplay(model_directory)
+mistake_files = list(model_directory.rglob("*.pkl"))
+mfile = mistake_files[index]
+image_grid_display = ImageGridDisplay(mfile)
 image_grid_display.display_images()
