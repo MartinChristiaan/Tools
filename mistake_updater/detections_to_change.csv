@@ -1,14 +1,2 @@
-bbox_x,bbox_y,bbox_w,bbox_h,class_id,label,timestamp,eval_value,eval_n,eval_confidence,mistake_type
-5284.0,1696.0,360.0,136.0,0,object,1694336669.178,,0,-1.0,false_negative
-4624.0,3756.0,60.0,84.0,0,object,1694336669.178,,0,-1.0,false_negative
-6500.0,2024.0,60.0,68.0,0,object,1694336669.178,,0,-1.0,false_negative
-5880.0,1888.0,336.0,240.0,0,object,1694336669.178,,0,-1.0,false_negative
-3812.00256,2343.9996,15.99744,27.99792,0,object,1694318672.839,,0,-1.0,false_negative
-5636.002559999998,603.99864,32.002559999999995,51.999840000000006,0,object,1694318619.061,,0,-1.0,false_negative
-5448.0,644.0,16.0,44.0,0,object,1694318637.079,,0,-1.0,false_negative
-4652.0,1376.0,64.0,60.0,0,object,1694336668.11,,0,-1.0,false_negative
-4160.0,3636.0,60.0,88.0,0,object,1694336668.11,,0,-1.0,false_negative
-4808.0,4124.0,80.0,92.0,0,object,1694336667.042,,0,-1.0,false_negative
-4160.0,3636.0,60.0,88.0,0,object,1694336668.11,,0,-1.0,false_negative
-4160.0,3636.0,60.0,88.0,0,object,1694336668.11,,0,-1.0,false_negative
-4160.0,3636.0,60.0,88.0,0,object,1694336668.11,,0,-1.0,false_negative
+bbox_x,bbox_y,bbox_w,bbox_h,class_id,label,timestamp,eval_value,eval_n,eval_confidence,confidence,mistake_type
+1757.8,873.4,58.4,60.0,0,object,1694312672.238,,0,-1.0,,false_negative

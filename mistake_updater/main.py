@@ -39,11 +39,16 @@ class ImageGridDisplay:
         # for mfile in mistake_files:
         with open(mistake_file, "rb") as f:
             data = pickle.load(f)
-
+        print(data.keys())
+        crops = data["image_crops"]
+        detections = data["detections"]
         max_items_for_grid = 12
-        chunks += [
-            data[i : i + max_items_for_grid]
-            for i in range(0, len(data), max_items_for_grid)
+        chunks = [
+            (
+                crops[i : i + max_items_for_grid],
+                detections.iloc[i : i + max_items_for_grid],
+            )
+            for i in range(0, len(crops), max_items_for_grid)
         ]
         self.chunks = chunks
         self.detections_to_change = []
@@ -79,46 +84,44 @@ class ImageGridDisplay:
         while True:
             if self.current_index >= len(self.chunks):
                 break
-            chunk = self.chunks[self.current_index]
-            images = [np.vstack([x[0][0]["crop"], x[1][0]["crop"]]) for x in chunk]
-            types = [x[0][0]["mistake_type"] for x in chunk]
-
+            images, detections = self.chunks[self.current_index]
+            # types = [x[0][0]["mistake_type"] for x in chunk]
             grid = make_image_grid(
                 images,
-                types,
+                list(detections.mistake_type),
                 selected_idx=self.selected_crop_idx,
                 active_idx=self.mistakes_to_correct_idx,
                 ignore_idx=self.mistakes_to_ignore_idx,
             )
             cv2.imshow("imgrid", grid)
             k = cv2.waitKey(5)
+
             if k == ord("q"):
                 break
             if k == ord("d"):
                 for active_idx in self.mistakes_to_correct_idx:
-                    dtochange = self.chunks[self.selected_crop_idx][active_idx][0][0]
-                    dtochange = {k: v for k, v in dtochange.items() if not k == "crop"}
-                    self.detections_to_change.append(dtochange)
+                    self.detections_to_change.append(detections.iloc[active_idx])
 
                 for active_idx in self.mistakes_to_ignore_idx:
-                    dtochange = self.chunks[self.selected_crop_idx][active_idx][0][0]
-                    dtochange = {k: v for k, v in dtochange.items() if not k == "crop"}
+                    dtochange = detections.iloc[active_idx]
                     dtochange["mistake_type"] == "ignore"
+                    # self.detections_to_change.append(dtochange)
                     self.detections_to_change.append(dtochange)
-
                 self.mistakes_to_correct_idx = []
                 self.current_index += 1
                 df = pd.DataFrame(self.detections_to_change)
                 df.to_csv("detections_to_change.csv", index=False)
             #     self.current_index -= 1
         cv2.destroyAllWindows()
+        return pd.concat(self.detections_to_change)
 
 
-index = 0
+index = 1
 # Example usage:
 model_directory = Path("/data/proposed")
 mistake_files = list(model_directory.rglob("*_mistakes.pkl"))
 mfile = mistake_files[index]
 output_file = mistake_files[index]
 image_grid_display = ImageGridDisplay(mfile)
-image_grid_display.display_images()
+detections_to_change = image_grid_display.display_images()
+print(detections_to_change)
