@@ -1,3 +1,5 @@
+
+from datetime import datetime
 # %%
 from dataclasses import dataclass
 import sys
@@ -52,6 +54,7 @@ class ImageGridDisplay:
         ]
         self.chunks = chunks
         self.detections_to_change = []
+        self.mistake_file = mistake_file
 
     def get_1d_idx(self, x, y):
 
@@ -85,10 +88,6 @@ class ImageGridDisplay:
             if self.current_index >= len(self.chunks):
                 break
             images, detections = self.chunks[self.current_index]
-
-            print(detections)
-            print(len(images))
-            # types = [x[0][0]["mistake_type"] for x in chunk]
             grid = make_image_grid(
                 images,
                 list(detections.mistake_type),
@@ -118,10 +117,16 @@ class ImageGridDisplay:
         cv2.destroyAllWindows()
         df = pd.DataFrame(self.detections_to_change)
         camera = self.data["camera"].replace("/", "_")
-        df.to_csv(
-            f'{self.data["videoset"]}_{camera}_mistakes_to_resolve.csv', index=False
-        )
+        resolvable = dict(
+            videoset=self.data["videoset"],
+            camera=self.data["camera"],
+            annotation_suffix=self.data["annotation_suffix"],
+            detections = df,
 
+        )
+        new_path = self.mistake_file
+        with open(,'wb') as f:
+            pickle.dump(resolvable,f)
 
 index = 1
 # Example usage:

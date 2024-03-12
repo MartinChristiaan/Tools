@@ -42,6 +42,7 @@ cur_len = len(annotations)
 for c in "xywh":
     df[f"bbox_{c}"] /= 8
 false_neg_df = df[df.mistake_type == "false_negative"]
+false_pos_df = df[df.mistake_type == "false_positive"]
 # Iterate through each false negative in false_neg_df
 for i, false_neg in false_neg_df.iterrows():
     annotations_t = annotations[annotations.timestamp == false_neg["timestamp"]]
@@ -67,9 +68,12 @@ for i, false_neg in false_neg_df.iterrows():
     if best_annotation_index is not None:
         print("dropping")
         annotations.drop(index=best_annotation_index, inplace=True)
+
+false_pos_df = false_pos_df.drop(["confidence", "mistake_type", "eval_value", "eval_n"])
+new_annotations = pd.concat([false_pos_df, annotations])
+
 new_len = len(annotations)
 logger.info(f"went from {cur_len} to {new_len} annotations")
-
-mm.save_annotations(annotations, "smallObjectsCorrected")
+mm.save_annotations(new_annotations, "smallObjectsCorrected")
 # except:
 #     continue
