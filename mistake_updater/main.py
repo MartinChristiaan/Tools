@@ -1,12 +1,25 @@
+# %%
+from dataclasses import dataclass
 import sys
+from typing import List
 import cv2
 from pathlib import Path
 import pickle
 import numpy as np
 import pandas as pd
+
 from utils import make_image_grid
 
 NUM_COLS = 6
+
+
+@dataclass
+class Mistakes:
+    videoset: str
+    camera: str
+    image_crops: List[np.ndarray]
+    detections: pd.DataFrame
+    annotations_suffix: str
 
 
 class ImageGridDisplay:
@@ -104,7 +117,8 @@ class ImageGridDisplay:
 index = 0
 # Example usage:
 model_directory = Path("/data/proposed")
-mistake_files = list(model_directory.rglob("*.pkl"))
+mistake_files = list(model_directory.rglob("*_mistakes.pkl"))
 mfile = mistake_files[index]
+output_file = mistake_files[index]
 image_grid_display = ImageGridDisplay(mfile)
 image_grid_display.display_images()
