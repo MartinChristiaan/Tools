@@ -103,5 +103,9 @@ class ImageGridDisplay:
 
 # Example usage:
 model_directory = Path("/data/proposed")
+mistake_files = model_directory.rglob('*.pkl')
+for mfile in mistake_files:
+    mfile.stem.
+
 image_grid_display = ImageGridDisplay(model_directory)
 image_grid_display.display_images()
