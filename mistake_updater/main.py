@@ -39,7 +39,7 @@ class ImageGridDisplay:
         # for mfile in mistake_files:
         with open(mistake_file, "rb") as f:
             data = pickle.load(f)
-        print(data.keys())
+        self.data = data
         crops = data["image_crops"]
         detections = data["detections"]
         max_items_for_grid = 12
@@ -85,6 +85,9 @@ class ImageGridDisplay:
             if self.current_index >= len(self.chunks):
                 break
             images, detections = self.chunks[self.current_index]
+
+            print(detections)
+            print(len(images))
             # types = [x[0][0]["mistake_type"] for x in chunk]
             grid = make_image_grid(
                 images,
@@ -120,7 +123,7 @@ class ImageGridDisplay:
         )
 
 
-index = 3
+index = 1
 # Example usage:
 model_directory = Path("/data/proposed")
 mistake_files = list(model_directory.rglob("*_mistakes.pkl"))
