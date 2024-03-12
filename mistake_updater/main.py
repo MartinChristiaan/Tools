@@ -1,5 +1,5 @@
-
 from datetime import datetime
+
 # %%
 from dataclasses import dataclass
 import sys
@@ -25,7 +25,7 @@ class Mistakes:
 
 
 class ImageGridDisplay:
-    def __init__(self, mistake_file):
+    def __init__(self, mistake_file: Path):
         # self.model_dir = model_dir
         self.xsize = 400
         self.ysize = 800
@@ -88,6 +88,7 @@ class ImageGridDisplay:
             if self.current_index >= len(self.chunks):
                 break
             images, detections = self.chunks[self.current_index]
+            print(detections)
             grid = make_image_grid(
                 images,
                 list(detections.mistake_type),
@@ -120,21 +121,23 @@ class ImageGridDisplay:
         resolvable = dict(
             videoset=self.data["videoset"],
             camera=self.data["camera"],
-            annotation_suffix=self.data["annotation_suffix"],
-            detections = df,
-
+            annotation_suffix=self.data["annotations_suffix"],
+            detections=df,
         )
-        new_path = self.mistake_file
-        with open(,'wb') as f:
-            pickle.dump(resolvable,f)
+        new_path = self.mistake_file.parent / self.mistake_file.stem.replace(
+            "mistake", "corrections"
+        )
+        with open(new_path, "wb") as f:
+            pickle.dump(resolvable, f)
+
 
 index = 1
 # Example usage:
-model_directory = Path("/data/proposed")
-mistake_files = list(model_directory.rglob("*_mistakes.pkl"))
-mistake_files.sort()
-mfile = mistake_files[index]
-output_file = mistake_files[index]
-image_grid_display = ImageGridDisplay(mfile)
-detections_to_change = image_grid_display.display_images()
-detections_to_change.to_csv("test2.csv", index=False)
+if __name__ == "__main__":
+    model_directory = Path("/data/proposed")
+    mistake_files = list(model_directory.rglob("*_mistakes.pkl"))
+    mistake_files.sort()
+    mfile = mistake_files[index]
+    output_file = mistake_files[index]
+    image_grid_display = ImageGridDisplay(mfile)
+    image_grid_display.display_images()
