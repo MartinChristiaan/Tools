@@ -60,3 +60,34 @@ def make_image_grid(
                     :,
                 ] = image
     return grid
+
+
+def compute_iou(box1, box2):
+    """
+    Compute intersection over union (IoU) between two bounding boxes.
+    box1 and box2 should be in format [x, y, w, h].
+    """
+    x1, y1, w1, h1 = box1
+    x2, y2, w2, h2 = box2
+
+    # Compute coordinates of intersection rectangle
+    x_left = max(x1, x2)
+    y_top = max(y1, y2)
+    x_right = min(x1 + w1, x2 + w2)
+    y_bottom = min(y1 + h1, y2 + h2)
+
+    # If boxes do not intersect, return 0
+    if x_right < x_left or y_bottom < y_top:
+        return 0.0
+
+    # Compute intersection area
+    intersection_area = (x_right - x_left) * (y_bottom - y_top)
+
+    # Compute union area
+    box1_area = w1 * h1
+    box2_area = w2 * h2
+    union_area = box1_area + box2_area - intersection_area
+
+    # Compute IoU
+    iou = intersection_area / union_area
+    return iou

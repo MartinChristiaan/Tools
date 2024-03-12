@@ -113,15 +113,20 @@ class ImageGridDisplay:
                 df.to_csv("detections_to_change.csv", index=False)
             #     self.current_index -= 1
         cv2.destroyAllWindows()
-        return pd.DataFrame(self.detections_to_change)
+        df = pd.DataFrame(self.detections_to_change)
+        camera = self.data["camera"].replace("/", "_")
+        df.to_csv(
+            f'{self.data["videoset"]}_{camera}_mistakes_to_resolve.csv', index=False
+        )
 
 
-index = 1
+index = 3
 # Example usage:
 model_directory = Path("/data/proposed")
 mistake_files = list(model_directory.rglob("*_mistakes.pkl"))
+mistake_files.sort()
 mfile = mistake_files[index]
 output_file = mistake_files[index]
 image_grid_display = ImageGridDisplay(mfile)
 detections_to_change = image_grid_display.display_images()
-detections_to_change.to_csv("test.csv", index=False)
+detections_to_change.to_csv("test2.csv", index=False)
