@@ -41,7 +41,7 @@ if annotations is None:
     annotations = mm.load_annotations(data["annotations_suffix"])
 else:
     print("loaded")
-
+# %%
 cur_len = len(annotations)
 df = data["detections"]
 
@@ -75,14 +75,15 @@ for i, false_neg in false_neg_df.iterrows():
         print("dropping")
         annotations.drop(index=best_annotation_index, inplace=True)
 
-false_pos_df = false_pos_df.drop(["confidence", "mistake_type", "eval_value", "eval_n"])
-logger.info(f"went from {cur_len} to {len(annotation)} annotations after removing fn")
+false_pos_df = false_pos_df.drop(
+    ["confidence", "mistake_type", "eval_value", "eval_n", "eval_confidence"], axis=1
+)
+logger.info(f"went from {cur_len} to {len(annotations)} annotations after removing fn")
 new_annotations = pd.concat([false_pos_df, annotations])
 logger.info(
-    f"went from {len(annotation)} {len(new_annotations)} annotations after adding fp"
+    f"went from {len(annotations)} {len(new_annotations)} annotations after adding fp"
 )
 
-
-# mm.save_annotations(new_annotations, "smallObjectsCorrected")
+mm.save_annotations(new_annotations, "smallObjectsCorrected")
 # except:
 #     continue
