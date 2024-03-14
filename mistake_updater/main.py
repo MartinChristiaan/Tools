@@ -131,7 +131,7 @@ class ImageGridDisplay:
             pickle.dump(resolvable, f)
 
 
-index = 1
+index = 0
 # Example usage:
 if __name__ == "__main__":
     model_directory = Path("/data/proposed")
