@@ -117,7 +117,6 @@ class ImageGridDisplay:
             #     self.current_index -= 1
         cv2.destroyAllWindows()
         df = pd.DataFrame(self.detections_to_change)
-        camera = self.data["camera"].replace("/", "_")
         resolvable = dict(
             videoset=self.data["videoset"],
             camera=self.data["camera"],
@@ -131,7 +130,7 @@ class ImageGridDisplay:
             pickle.dump(resolvable, f)
 
 
-index = 1
+index = 0
 # Example usage:
 if __name__ == "__main__":
     model_directory = Path("/data/proposed")
