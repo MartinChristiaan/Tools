@@ -1,1 +1,4 @@
-
+bbox_x,bbox_y,bbox_w,bbox_h,class_id,label,timestamp,eval_value,eval_n,eval_confidence,confidence,mistake_type
+3584.0,1545.0,60.0,60.0,0,object,1694329787.629,,0,-1.0,,false_negative
+3525.0,1800.0,60.0,60.0,0,object,1694329787.629,,0,-1.0,,false_negative
+3241.0,1491.0,60.0,60.0,0,object,1694329787.629,,0,-1.0,,false_negative
