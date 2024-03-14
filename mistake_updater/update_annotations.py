@@ -23,14 +23,18 @@ videosets = VideosetsII(basedirpath=basedirpath)  # basedirpath)
 
 scale = 8
 
-df = pd.read_csv("test.csv")
 model_directory = Path("/data/proposed")
-mistake_files = list(model_directory.rglob("*_mistakes.pkl"))
-mistake_files.sort()
-mistake_file = mistake_files[0]
+# mistake_files = list(model_directory.rglob("*_mistakes.pkl"))
+corrected_files = list(model_directory.rglob("*_corrections.pkl"))
+print(corrected_files)
 
-with open(mistake_file, "rb") as f:
+for cfile in corrected_files:
+    break
+with open(cfile, "rb") as f:
     data = pickle.load(f)
+# %%
+
+
 mm = videosets[data["videoset"]].get_mediamanager(camera=data["camera"])
 annotations = mm.load_annotations("smallObjectsCorrected")
 if annotations is None:
@@ -39,6 +43,8 @@ else:
     print("loaded")
 
 cur_len = len(annotations)
+df = data["detections"]
+
 for c in "xywh":
     df[f"bbox_{c}"] /= 8
 false_neg_df = df[df.mistake_type == "false_negative"]
@@ -70,10 +76,13 @@ for i, false_neg in false_neg_df.iterrows():
         annotations.drop(index=best_annotation_index, inplace=True)
 
 false_pos_df = false_pos_df.drop(["confidence", "mistake_type", "eval_value", "eval_n"])
+logger.info(f"went from {cur_len} to {len(annotation)} annotations after removing fn")
 new_annotations = pd.concat([false_pos_df, annotations])
+logger.info(
+    f"went from {len(annotation)} {len(new_annotations)} annotations after adding fp"
+)
 
-new_len = len(annotations)
-logger.info(f"went from {cur_len} to {new_len} annotations")
-mm.save_annotations(new_annotations, "smallObjectsCorrected")
+
+# mm.save_annotations(new_annotations, "smallObjectsCorrected")
 # except:
 #     continue

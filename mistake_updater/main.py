@@ -124,7 +124,7 @@ class ImageGridDisplay:
             detections=df,
         )
         new_path = self.mistake_file.parent / self.mistake_file.stem.replace(
-            "mistake", "corrections"
+            "mistakes", "corrections.pkl"
         )
         with open(new_path, "wb") as f:
             pickle.dump(resolvable, f)
