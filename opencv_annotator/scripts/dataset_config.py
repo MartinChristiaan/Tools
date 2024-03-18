@@ -16,7 +16,7 @@ def get_mantis():
         pf = du.Pathfinder(
             "mantis_drone_2023",
             camera,
-            cache_dir="/media/martin/DeepLearning/mantis_drone_2023",
+            cache_dir="/data/sod_cache",
         )
         o = du.TrainOptions(
             False,
