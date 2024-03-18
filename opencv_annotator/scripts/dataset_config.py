@@ -6,6 +6,53 @@ import dlutils_ii as du
 from tqdm import tqdm
 from videosets_ii.videosets_ii import VideosetsII
 
+basedirpath = Path(r"/diskstation")
+videosets = VideosetsII(basedirpath=basedirpath)  # basoedirpath)
+
+
+def drone_tracking_dataset(output_dir="/data/sod_cache"):
+    vset_name = "drone-tracking"
+    vset = videosets[vset_name]
+    configs = []
+    for c in vset.cameras:
+        if "1280" in c or "cam1" in c:
+            continue
+        pathfinder = du.Pathfinder(videoset=vset_name, camera=c, cache_dir=output_dir)
+        train_options = du.TrainOptions(
+            val=False,
+            offset_scales=[1],
+            max_samples=20,
+        )
+        config = du.DatasetConfig(pathfinder, train_options)
+        configs.append(config)
+    return configs
+
+
+def drone_detection_dataset(output_dir="/data/sod_cache"):
+    vset_name = "drone_detection_dataset_2021"
+    vset = videosets[vset_name]
+    configs = []
+    val_cameras = [
+        "IR_DRONE_151",
+        "IR_DRONE_155",
+        "V_DRONE_039",
+        "V_DRONE_050",
+        "V_DRONE_069",
+    ]
+    for i, c in enumerate(vset.cameras):
+        val = c in val_cameras
+        pathfinder = du.Pathfinder(
+            videoset=vset_name, camera=c, cache_dir=output_dir  # , crop=0
+        )
+        train_options = du.TrainOptions(
+            val=val,
+            offset_scales=[1],
+            max_samples=20,
+        )
+        config = du.DatasetConfig(pathfinder, train_options)
+        configs.append(config)
+    return configs
+
 
 def get_mantis():
     vsets = VideosetsII("/diskstation")
