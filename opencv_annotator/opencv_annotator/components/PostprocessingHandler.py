@@ -23,6 +23,7 @@ class PostprocessingHandler:
         if key == "p":
             postproc = self.state.postproc_index.value
             newvalue = index_to_postproc(postproc_to_index(postproc) + 1)
+            print("updating")
             self.state.postproc_index.set_value(newvalue)
 
     def get_status(self) -> List[TextRequest]:
