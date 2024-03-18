@@ -13,14 +13,14 @@ from scripts.dataset_config import get_mantis
 
 
 mantis = get_mantis()
-du.Writer.export_multiprocessed(mantis,[0,-15,15],labelconfig=get_sod_label_config())
-index =7
+# du.Writer.export_multiprocessed(mantis,[0,-15,15],labelconfig=get_sod_label_config())
+index =10
 print(mantis[index].pathfinder.name)
 BoundingBoxAnnotator(mantis[index]).run()
 
-# x = mantis[index]
-# tmp_path = x.pathfinder.annotations_path.with_suffix(".tmp.csv")
-# annotations = pd.read_csv(tmp_path)
+x = mantis[index]
+tmp_path = x.pathfinder.annotations_path.with_suffix(".tmp.csv")
+annotations = pd.read_csv(tmp_path)
 # x.pathfinder.media_manager.save_annotations(annotations, "smallObjectsCorrected", True)
 # print('uploaded')
 
