@@ -88,7 +88,6 @@ class ImageGridDisplay:
             if self.current_index >= len(self.chunks):
                 break
             images, detections = self.chunks[self.current_index]
-            print(detections)
             grid = make_image_grid(
                 images,
                 list(detections.mistake_type),
@@ -130,13 +129,14 @@ class ImageGridDisplay:
             pickle.dump(resolvable, f)
 
 
-index = 7
+index = 11
 # Example usage:
 if __name__ == "__main__":
     model_directory = Path("/data/proposed")
     mistake_files = list(model_directory.rglob("*_mistakes.pkl"))
     mistake_files.sort()
     mfile = mistake_files[index]
+    print(mfile)
     output_file = mistake_files[index]
     image_grid_display = ImageGridDisplay(mfile)
     image_grid_display.display_images()
