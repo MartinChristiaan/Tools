@@ -23,6 +23,7 @@ def get_mantis():
             [1],
             max_samples=300,
             annotations_suffix="smallObjectsCorrected",
+            motion_models="compute",
         )
         cfg = du.DatasetConfig(pf, o)
         configs.append(cfg)
