@@ -22,7 +22,7 @@ def get_mantis():
             False,
             [1],
             max_samples=300,
-            annotations_suffix=None,
+            annotations_suffix="SmallObjectCorrected",
         )
         cfg = du.DatasetConfig(pf, o)
         configs.append(cfg)
