@@ -13,8 +13,8 @@ from scripts.dataset_config import get_mantis
 
 
 mantis = get_mantis()
-# du.Writer.export_multiprocessed(mantis,[0,-15,15],labelconfig=get_sod_label_config())
-index =10
+du.Writer.export_multiprocessed(mantis[:1],[0,-15,15],labelconfig=get_sod_label_config())
+index =0
 print(mantis[index].pathfinder.name)
 BoundingBoxAnnotator(mantis[index]).run()
 
