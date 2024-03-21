@@ -9,7 +9,7 @@ from opencv_annotator.annotator import BoundingBoxAnnotator
 from opencv_annotator.cache_annotator import IOManager
 from yolo_plugins.training.yolo_experiment import SODExperiment, get_sod_label_config
 
-from scripts.dataset_config import drone_detection_dataset,drone_tracking_dataset
+from config.dataset import drone_detection_dataset,drone_tracking_dataset
 
 
 datasets =  drone_detection_dataset()

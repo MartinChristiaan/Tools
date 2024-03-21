@@ -4,7 +4,7 @@
 from typing import List
 import dlutils_ii as du
 from opencv_annotator.annotator import BoundingBoxAnnotator
-from scripts.dataset_config import get_mantis
+from config.dataset import get_mantis
 import dlutils_ii as du
 from pathlib import Path
 

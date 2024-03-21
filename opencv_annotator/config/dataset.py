@@ -128,6 +128,29 @@ def get_webcams_2023() -> List[du.DatasetConfig]:
     return cfgs
 
 
+def get_tie(output_dir="/data/sod_cache"):
+    vset_name = "TIE_2023"
+    configs = []
+    vset = videosets[vset_name]
+    annotated_cameras = [
+        x for x in du.get_cameras_with_annotations(vset) if "halfres" in x
+    ]
+    for i, cam in enumerate(annotated_cameras):
+        is_val = i < 4
+        pathfinder = du.Pathfinder(videoset=vset_name, camera=cam, cache_dir=output_dir)
+        train_options = du.TrainOptions(
+            val=is_val,
+            offset_scales=[0.25, 0.5],
+            max_samples=500,
+            # blur=1,
+            # scale=1,
+            annotations_suffix="smallobjects",
+        )
+        config = du.DatasetConfig(pathfinder, train_options)
+        configs.append(config)
+    return configs
+
+
 if __name__ == "__main__":
     webcams = get_webcams_2023()
     from dlutils_ii.dataset_cache.fo_vizualize import open_fiftyone
