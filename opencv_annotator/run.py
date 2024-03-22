@@ -11,28 +11,27 @@ import fnmatch
 import dlutils_ii as du
 
 from opencv_annotator.annotator import BoundingBoxAnnotator
+from config.writers import writers, label_config
 
 
 parser = argparse.ArgumentParser(prog="ProgramName", description="Description")
 parser.add_argument("-c", "--config", type=str, default="*TIE*")
-parser.add_argument("-a", "--action", type=str, default="annotate")
+parser.add_argument("-a", "--action", type=str, default="export")
+parser.add_argument("-w", "--writer", type=str, default="tyolo_writer")
 args = parser.parse_known_args()[0]
+
 
 datasets = all_configs
 names = fnmatch.filter([x.pathfinder.name for x in datasets], args.config)
-datasets = [x for x in datasets if x.pathfinder.name in names]
-from functools import partial
-from click import getchar
+datasets = [x for x in datasets if x.pathfinder.name in names][::-1]
 
 
-action_lut = dict(
-    export=partial(
-        du.Writer.export_from_config,
-        frame_offsets=[0, -15, 15],
-        labelconfig=du.LabelConfig(),
-    ),
-    annotate=BoundingBoxAnnotator.annotate_config,
-)
+def export_fn(config: du.DatasetConfig):
+    writer = writers[args.writer]
+    writer(config, [0, -15, 15], label_config).write()
+
+
+action_lut = dict(export=export_fn, annotate=BoundingBoxAnnotator.annotate_config)
 for action in args.action.split(","):
     for d in datasets:
         action_lut[action](d)
