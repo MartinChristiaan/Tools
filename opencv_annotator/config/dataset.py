@@ -140,7 +140,7 @@ def get_tie(output_dir="/data/sod_cache"):
         pathfinder = du.Pathfinder(videoset=vset_name, camera=cam, cache_dir=output_dir)
         train_options = du.TrainOptions(
             val=is_val,
-            offset_scales=[0.25, 0.5],
+            offset_scales=[0.5],
             max_samples=40,
             # blur=1,
             # scale=1,

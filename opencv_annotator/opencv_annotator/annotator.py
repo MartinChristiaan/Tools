@@ -77,3 +77,7 @@ class BoundingBoxAnnotator:
             if key == ord("q"):
                 cv2.destroyAllWindows()
                 return
+
+    @staticmethod
+    def annotate_config(config):
+        BoundingBoxAnnotator(config).run()
