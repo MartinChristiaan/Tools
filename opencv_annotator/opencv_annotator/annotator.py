@@ -3,6 +3,7 @@ import shutil
 
 from click import getchar
 import cv2
+from matplotlib import pyplot as plt
 import pandas as pd
 from opencv_annotator.cache_annotator import IOManager
 from opencv_annotator.components.PostprocessingHandler import PostprocessingHandler
@@ -88,6 +89,13 @@ class BoundingBoxAnnotator:
         prev_annotations = config.pathfinder.media_manager.load_annotations(
             "smallObjectsCorrected"
         )
+        # plt.figure()
+        # plt.scatter(prev_annotations.timestamp, prev_annotations.bbox_x, label="prev")
+        # plt.scatter(annotations.timestamp, annotations.bbox_x, label="new")
+        # plt.xlabel("timestamp")
+        # plt.ylabel("bbox_x")
+        # plt.grid(True)
+        # plt.savefig('tmp.png')
 
         if prev_annotations is None:
             prev_annotations = config.pathfinder.media_manager.load_annotations(

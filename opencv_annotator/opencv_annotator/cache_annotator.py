@@ -8,9 +8,10 @@ import numpy as np
 import pandas as pd
 from opencv_annotator.annotation import Annotation, AnnotationPostproc
 from opencv_annotator.components.text_adder import TextRequest
-from dlutils_ii.annotation_cache.writer_annotations import vizualize_objects
+from yolo_plugins.evaluation.mistake_analysis import vizualize_objects
 from loguru import logger
 from opencv_annotator.state import Observable, State
+
 
 # %%
 
