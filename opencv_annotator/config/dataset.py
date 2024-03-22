@@ -132,17 +132,19 @@ def get_tie(output_dir="/data/sod_cache"):
     # annotated_cameras = [
     #     x for x in du.get_cameras_with_annotations(vset) if "halfres" in x
     # ]
-    annotated_cameras = vset.cameras
+    annotated_cameras = [
+        x for x in vset.cameras if "basler" in x and not "halfres" in x
+    ]
     for i, cam in enumerate(annotated_cameras):
         is_val = i < 4
         pathfinder = du.Pathfinder(videoset=vset_name, camera=cam, cache_dir=output_dir)
         train_options = du.TrainOptions(
             val=is_val,
             offset_scales=[0.25, 0.5],
-            max_samples=500,
+            max_samples=40,
             # blur=1,
             # scale=1,
-            annotations_suffix="smallobjects",
+            annotations_suffix=None,
         )
         config = du.DatasetConfig(pathfinder, train_options)
         configs.append(config)

@@ -9,7 +9,7 @@ import dlutils_ii as du
 
 
 parser = argparse.ArgumentParser(prog="ProgramName", description="Description")
-parser.add_argument("-c", "--config", type=str, default="*DJI*")
+parser.add_argument("-c", "--config", type=str, default="*TIE*")
 parser.add_argument("-a", "--action", type=str, default="export")
 args = parser.parse_known_args()[0]
 
@@ -23,7 +23,7 @@ action_lut = dict(
     export=partial(
         du.Writer.export_from_config,
         frame_offsets=[0, -15, 15],
-        label_config=du.LabelConfig(),
+        labelconfig=du.LabelConfig(),
     ),
 )
 for action in args.action.split(","):
