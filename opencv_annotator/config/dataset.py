@@ -132,9 +132,7 @@ def get_tie(output_dir="/data/sod_cache"):
     # annotated_cameras = [
     #     x for x in du.get_cameras_with_annotations(vset) if "halfres" in x
     # ]
-    annotated_cameras = [
-        x for x in vset.cameras if "basler" in x and not "halfres" in x
-    ]
+    annotated_cameras = [x for x in vset.cameras if "basler" in x and "halfres" in x]
     for i, cam in enumerate(annotated_cameras):
         is_val = i < 4
         pathfinder = du.Pathfinder(videoset=vset_name, camera=cam, cache_dir=output_dir)

@@ -12,7 +12,7 @@ from tqdm import tqdm
 mantis = get_mantis()
 from multiprocessing import Pool
 
-from pre_annotation_writer import PreAnnotationWriter
+from opencv_annotator.pre_annotation_writer import PreAnnotationWriter
 from config.dataset import get_tie
 
 def process_config(config):
