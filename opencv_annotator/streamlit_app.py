@@ -25,7 +25,8 @@ import fnmatch
 import dlutils_ii as du
 
 from opencv_annotator.annotator import BoundingBoxAnnotator
-from config.writers import writers, label_config
+from config.writers import writers, label_config, PreAnnotationWriter
+
 import streamlit as st
 
 
@@ -60,6 +61,13 @@ config = [
     if x.pathfinder.camera == camera and x.pathfinder.videoset == videoset
 ][0]
 
+prewriter = PreAnnotationWriter(config, [0, -15, 15])
+source_detections = prewriter.load_annotation_source()
+import plotly.express as px
+
+fig = px.scatter(source_detections, x="timestamp", y="bbox_x", color="track_id")
+st.plotly_chart(fig)
+
 
 # Assuming paths is your list of Path objects
 prev_annotations = config.pathfinder.media_manager.load_annotations(
@@ -68,7 +76,7 @@ prev_annotations = config.pathfinder.media_manager.load_annotations(
 print(prev_annotations)
 if not prev_annotations is None:
     # Create a Plotly scatter plot for the previous and new annotations
-    trace_prev = go.Scatter(
+    trace_tracks_yolo = go.Scatter(
         x=prev_annotations.timestamp,
         y=prev_annotations.bbox_x,
         mode="markers",
@@ -82,9 +90,9 @@ if not prev_annotations is None:
         trace_new = go.Scatter(
             x=annotations.timestamp, y=annotations.bbox_x, mode="markers", name="new"
         )
-        data = [trace_prev, trace_new]
+        data = [trace_tracks_yolo, trace_new]
     else:
-        data = [trace_prev]
+        data = [trace_tracks_yolo]
 
     # Create layout
     layout = go.Layout(
