@@ -25,28 +25,6 @@ from functools import partial
 from click import getchar
 
 
-def save(config: du.DatasetConfig):
-    tmp_path = config.pathfinder.annotations_path.with_suffix(".tmp.csv")
-    annotations = pd.read_csv(tmp_path)
-    prev_annotations = config.pathfinder.media_manager.load_annotations(
-        "smallObjectsCorrected"
-    )
-
-    if prev_annotations is None:
-        prev_annotations = config.pathfinder.media_manager.load_annotations(
-            config.options.annotations_suffix
-        )
-    if not prev_annotations is None:
-        print(
-            f"prev annotations {len(prev_annotations)}, new annotations {len(annotations)}, ok to upload?"
-        )
-    if getchar() == "y":
-        config.pathfinder.media_manager.save_annotations(
-            annotations, "smallObjectsCorrected", True
-        )
-        print("saved new annotations")
-
-
 action_lut = dict(
     export=partial(
         du.Writer.export_from_config,

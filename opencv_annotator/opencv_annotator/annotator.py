@@ -1,6 +1,9 @@
 from enum import IntEnum
+import shutil
 
+from click import getchar
 import cv2
+import pandas as pd
 from opencv_annotator.cache_annotator import IOManager
 from opencv_annotator.components.PostprocessingHandler import PostprocessingHandler
 from opencv_annotator.components.bbox_maker import BBoxMaker
@@ -78,6 +81,36 @@ class BoundingBoxAnnotator:
                 cv2.destroyAllWindows()
                 return
 
+    def save(self):
+        config = self.io_manager.dataset_config
+        tmp_path = config.pathfinder.annotations_path.with_suffix(".tmp.csv")
+        annotations = pd.read_csv(tmp_path)
+        prev_annotations = config.pathfinder.media_manager.load_annotations(
+            "smallObjectsCorrected"
+        )
+
+        if prev_annotations is None:
+            prev_annotations = config.pathfinder.media_manager.load_annotations(
+                config.options.annotations_suffix
+            )
+        if not prev_annotations is None:
+            print(
+                f"prev annotations {len(prev_annotations)}, new annotations {len(annotations)}, ok to upload?"
+            )
+        else:
+            print(f"new annotations {len(annotations)}, ok to upload?")
+        if getchar() == "y":
+            config.pathfinder.media_manager.save_annotations(
+                annotations, "smallObjectsCorrected", True
+            )
+            print("saved new annotations")
+            shutil.copy(
+                self.io_manager.tmp_annotation_path, config.pathfinder.annotations_path
+            )
+
     @staticmethod
     def annotate_config(config):
-        BoundingBoxAnnotator(config).run()
+        # check
+        annotator = BoundingBoxAnnotator(config)
+        annotator.run()
+        annotator.save()
