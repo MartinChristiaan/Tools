@@ -95,9 +95,6 @@ def get_marnehuizen():
     return du.DatasetConfig(pf, o)
 
 
-import yolo_plugins as yp
-
-
 def get_webcams_2023() -> List[du.DatasetConfig]:
     from media_manager.core import MediaManager
 
@@ -132,9 +129,10 @@ def get_tie(output_dir="/data/sod_cache"):
     vset_name = "TIE_2023"
     configs = []
     vset = videosets[vset_name]
-    annotated_cameras = [
-        x for x in du.get_cameras_with_annotations(vset) if "halfres" in x
-    ]
+    # annotated_cameras = [
+    #     x for x in du.get_cameras_with_annotations(vset) if "halfres" in x
+    # ]
+    annotated_cameras = vset.cameras
     for i, cam in enumerate(annotated_cameras):
         is_val = i < 4
         pathfinder = du.Pathfinder(videoset=vset_name, camera=cam, cache_dir=output_dir)
@@ -151,22 +149,30 @@ def get_tie(output_dir="/data/sod_cache"):
     return configs
 
 
-if __name__ == "__main__":
-    webcams = get_webcams_2023()
-    from dlutils_ii.dataset_cache.fo_vizualize import open_fiftyone
-    from scripts.pre_annotation_writer import PreAnnotationWriter
-    from yolo_plugins.defaults.inference import get_default_tyolo_processor
-    from yolo_plugins.processing import MMProcessSequence, Sequence
+all_configs = (
+    get_mantis()
+    + get_tie()
+    + [get_marnehuizen()]
+    + drone_detection_dataset()
+    + drone_tracking_dataset()
+)
 
-    proc = get_default_tyolo_processor()
-    for sequence in tqdm(webcams):
-        print(sequence.pathfinder.name)
-        # break
-        pathfinder = sequence.pathfinder
-        seq = MMProcessSequence(videoset=pathfinder.videoset, camera=pathfinder.camera)
-        seq._media_manager = pathfinder.media_manager
-        proc.mm_process(seq, False, True, True)
-        PreAnnotationWriter(
-            sequence, [-15, 15, 0], source="tyolov8/tracks_tyolov8m-30112023.csv"
-        ).write()
-    open_fiftyone(webcams, "0").wait()
+# if __name__ == "__main__":
+#     webcams = get_webcams_2023()
+#     from dlutils_ii.dataset_cache.fo_vizualize import open_fiftyone
+#     from scripts.pre_annotation_writer import PreAnnotationWriter
+#     from yolo_plugins.defaults.inference import get_default_tyolo_processor
+#     from yolo_plugins.processing import MMProcessSequence, Sequence
+
+#     proc = get_default_tyolo_processor()
+#     for sequence in tqdm(webcams):
+#         print(sequence.pathfinder.name)
+#         # break
+#         pathfinder = sequence.pathfinder
+#         seq = MMProcessSequence(videoset=pathfinder.videoset, camera=pathfinder.camera)
+#         seq._media_manager = pathfinder.media_manager
+#         proc.mm_process(seq, False, True, True)
+#         PreAnnotationWriter(
+#             sequence, [-15, 15, 0], source="tyolov8/tracks_tyolov8m-30112023.csv"
+#         ).write()
+#     open_fiftyone(webcams, "0").wait()
