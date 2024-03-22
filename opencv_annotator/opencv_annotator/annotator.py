@@ -1,4 +1,5 @@
 from enum import IntEnum
+import os
 import shutil
 
 from click import getchar
@@ -86,39 +87,18 @@ class BoundingBoxAnnotator:
         config = self.io_manager.dataset_config
         tmp_path = config.pathfinder.annotations_path.with_suffix(".tmp.csv")
         annotations = pd.read_csv(tmp_path)
-        prev_annotations = config.pathfinder.media_manager.load_annotations(
-            "smallObjectsCorrected"
+        config.pathfinder.media_manager.save_annotations(
+            annotations, "smallObjectsCorrected", True
         )
-        # plt.figure()
-        # plt.scatter(prev_annotations.timestamp, prev_annotations.bbox_x, label="prev")
-        # plt.scatter(annotations.timestamp, annotations.bbox_x, label="new")
-        # plt.xlabel("timestamp")
-        # plt.ylabel("bbox_x")
-        # plt.grid(True)
-        # plt.savefig('tmp.png')
-
-        if prev_annotations is None:
-            prev_annotations = config.pathfinder.media_manager.load_annotations(
-                config.options.annotations_suffix
-            )
-        if not prev_annotations is None:
-            print(
-                f"prev annotations {len(prev_annotations)}, new annotations {len(annotations)}, ok to upload?"
-            )
-        else:
-            print(f"new annotations {len(annotations)}, ok to upload?")
-        if getchar() == "y":
-            config.pathfinder.media_manager.save_annotations(
-                annotations, "smallObjectsCorrected", True
-            )
-            print("saved new annotations")
-            shutil.copy(
-                self.io_manager.tmp_annotation_path, config.pathfinder.annotations_path
-            )
+        print("saved new annotations")
+        shutil.copy(
+            self.io_manager.tmp_annotation_path, config.pathfinder.annotations_path
+        )
+        os.remove(self.io_manager.tmp_annotation_path)
 
     @staticmethod
     def annotate_config(config):
         # check
         annotator = BoundingBoxAnnotator(config)
         annotator.run()
-        annotator.save()
+        # annotator.save()

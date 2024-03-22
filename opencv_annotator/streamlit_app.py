@@ -43,7 +43,15 @@ datasets = all_configs
 
 
 videoset = st.selectbox("videoset", list({x.pathfinder.videoset for x in datasets}))
-camera = st.selectbox("camera", list({x.pathfinder.camera for x in datasets}))
+cameras = list(
+    {
+        x.pathfinder.camera
+        for x in datasets
+        if len(x.pathfinder.camera) > 0 and x.pathfinder.videoset == videoset
+    }
+)
+cameras.sort()
+camera = st.selectbox("camera", cameras)
 writer = st.selectbox("writer", list(writers.keys()))
 
 config = [
@@ -57,7 +65,8 @@ config = [
 prev_annotations = config.pathfinder.media_manager.load_annotations(
     "smallObjectsCorrected"
 )
-if prev_annotations:
+print(prev_annotations)
+if not prev_annotations is None:
     # Create a Plotly scatter plot for the previous and new annotations
     trace_prev = go.Scatter(
         x=prev_annotations.timestamp,
@@ -97,6 +106,9 @@ if st.button("write"):
 
 if st.button("annotate"):
     BoundingBoxAnnotator.annotate_config(config)
+if st.button("save"):
+    BoundingBoxAnnotator.save(config)
+
 
 # action_lut = dict(export=export_fn, annotate=BoundingBoxAnnotator.annotate_config)
 # for action in args.action.split(","):
