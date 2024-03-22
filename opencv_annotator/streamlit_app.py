@@ -1,3 +1,4 @@
+import shutil
 import plotly.graph_objs as go
 
 import streamlit as st
@@ -74,6 +75,7 @@ prev_annotations = config.pathfinder.media_manager.load_annotations(
     "smallObjectsCorrected"
 )
 print(prev_annotations)
+data = []
 if not prev_annotations is None:
     # Create a Plotly scatter plot for the previous and new annotations
     trace_tracks_yolo = go.Scatter(
@@ -82,19 +84,19 @@ if not prev_annotations is None:
         mode="markers",
         name="prev",
     )
+    data.append(trace_tracks_yolo)
 
-    tmp_path = config.pathfinder.annotations_path.with_suffix(".tmp.csv")
-    if tmp_path.exists():
-        annotations = pd.read_csv(tmp_path)
 
-        trace_new = go.Scatter(
-            x=annotations.timestamp, y=annotations.bbox_x, mode="markers", name="new"
-        )
-        data = [trace_tracks_yolo, trace_new]
-    else:
-        data = [trace_tracks_yolo]
+tmp_path = config.pathfinder.annotations_path.with_suffix(".tmp.csv")
+if tmp_path.exists():
+    annotations = pd.read_csv(tmp_path)
 
-    # Create layout
+    trace_new = go.Scatter(
+        x=annotations.timestamp, y=annotations.bbox_x, mode="markers", name="new"
+    )
+    data.append(trace_new)
+# Create layout
+if len(data) > 0:
     layout = go.Layout(
         title="Scatter Plot of Annotations",
         xaxis=dict(title="timestamp"),
@@ -108,14 +110,20 @@ if not prev_annotations is None:
     st.plotly_chart(fig)
 
 
-if st.button("write"):
+if st.button("annotate"):
     writer = writers[writer]
     writer(config, [0, -15, 15], label_config).write()
-
-if st.button("annotate"):
     BoundingBoxAnnotator.annotate_config(config)
 if st.button("save"):
-    BoundingBoxAnnotator.save(config)
+    # BoundingBoxAnnotator(config).save()
+    config.pathfinder.media_manager.save_annotations(
+        annotations, "smallObjectsCorrected", True
+    )
+    print("saved new annotations")
+    # shutil.copy(
+    #     self.io_manager.tmp_annotation_path, config.pathfinder.annotations_path
+    # )
+    # os.remove(self.io_manager.tmp_annotation_path)
 
 
 # action_lut = dict(export=export_fn, annotate=BoundingBoxAnnotator.annotate_config)
