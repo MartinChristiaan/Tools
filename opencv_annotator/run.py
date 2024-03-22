@@ -21,8 +21,8 @@ parser.add_argument("-c", "--config", type=str, default="*TIE*")
 parser.add_argument("-a", "--action", type=str, default="export,annotate")
 parser.add_argument("-w", "--writer", type=str, default="tyolo_writer")
 
-parser.add_argument("-s", "--start_idx", type=int, default=0)
-parser.add_argument("-n", "--num_items", type=int, default=1)
+parser.add_argument("-s", "--start_idx", type=int, default=1)
+parser.add_argument("-n", "--num_items", type=int, default=5)
 args = parser.parse_known_args()[0]
 
 
