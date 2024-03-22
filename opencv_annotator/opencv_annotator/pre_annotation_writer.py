@@ -33,5 +33,7 @@ class PreAnnotationWriter(du.Writer):
         ]
         if len(latest_path) == 0:
             return None
-        path = str(latest_path[0]).replace(str(mm.result_dirpath), "")
-        return self.pathfinder.media_manager.load(path)
+        path = f"{latest_path[0].parent.stem}/{latest_path[0].name}"
+        print(path)
+        data = self.pathfinder.media_manager.load(path)
+        return data
