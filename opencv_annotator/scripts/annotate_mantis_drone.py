@@ -16,7 +16,7 @@ mantis = get_mantis()
 # du.Writer.export_multiprocessed(mantis[:1],[0,-15,15],labelconfig=get_sod_label_config())
 index =0
 print(mantis[index].pathfinder.name)
-# BoundingBoxAnnotator(mantis[index]).run()
+BoundingBoxAnnotator(mantis[index]).run()
 
 x = mantis[index]
 tmp_path = x.pathfinder.annotations_path.with_suffix(".tmp.csv")

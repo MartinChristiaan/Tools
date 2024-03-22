@@ -176,7 +176,7 @@ class IOManager:
         offset = self.dataset_config.options.offset_scales[0]
         frames = [
             cv2.imread(self.dataset_config.pathfinder.frame_filename(o, timestamp))
-            for o in [0, int(-15 * offset), int(15 * offset)]
+            for o in [0, int(round(-15 * offset)), int(round(15 * offset))]
         ]
         vizframe = vizualize_objects(frames)
         self.frame_inputs = {
