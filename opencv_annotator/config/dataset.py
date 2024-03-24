@@ -139,9 +139,8 @@ def get_tie(output_dir="/data/sod_cache"):
         train_options = du.TrainOptions(
             val=is_val,
             offset_scales=[0.5],
-            max_samples=8,
-            # blur=1,
-            # scale=1,
+            max_samples=30,
+            min_temporal_spacing=10,
             annotations_suffix=None,
         )
         config = du.DatasetConfig(pathfinder, train_options)

@@ -53,7 +53,7 @@ cameras = list(
     }
 )
 cameras.sort()
-camera = st.selectbox("camera", cameras)
+camera = st.select_slider("camera", cameras)
 writer = st.selectbox("writer", list(writers.keys()))
 
 config = [
