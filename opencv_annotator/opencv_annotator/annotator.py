@@ -101,4 +101,5 @@ class BoundingBoxAnnotator:
         # check
         annotator = BoundingBoxAnnotator(config)
         annotator.run()
+        del annotator
         # annotator.save()
