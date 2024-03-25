@@ -30,6 +30,7 @@ from config.writers import writers, label_config, PreAnnotationWriter
 
 import streamlit as st
 
+st.set_page_config(layout="wide")
 
 # parser = argparse.ArgumentParser(prog="ProgramName", description="Description")
 # parser.add_argument("-c", "--config", type=str, default="*TIE*")
