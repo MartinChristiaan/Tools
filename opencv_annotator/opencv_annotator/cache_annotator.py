@@ -35,16 +35,25 @@ def apply_ignore_areas(annotations: List[Annotation]):
     return filtered_annotations + ignore_areas
 
 
+# TODO make accept multiple configs
+
+
 class IOManager:
-    def __init__(self, dataset_config: du.DatasetConfig, state: State) -> None:
+    def __init__(self, dataset_configs: List[du.DatasetConfig], state: State) -> None:
         self.state = state
-        self.pathfinder = dataset_config.pathfinder
-        items = list(dataset_config.pathfinder.annotations().groupby("timestamp"))
-        self.timestamps = [x[0] for x in items]
+        # self.pathfinder = dataset_config.pathfinder
+        items = []
+        for i, x in enumerate(dataset_configs):
+            annotations = x.pathfinder.annotations()
+
+            # items += list(enumerate(.groupby("timestamp")))
+
+        self.timestamps = [x[1][0] for x in items]
         self.detections = [Annotation.from_pandas(x[1]) for x in items]
 
-        self.dataset_config = dataset_config
+        # self.dataset_config = dataset_config
         self.current_annotations = pd.DataFrame()
+
         if self.tmp_annotation_path.exists():
             self.current_annotations = pd.read_csv(self.tmp_annotation_path)
         self.state.timestamps.set_value(self.timestamps)

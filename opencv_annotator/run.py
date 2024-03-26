@@ -52,8 +52,6 @@ for action in args.action.split(","):
         if not prev_annotations is None:
             continue
         action_lut[action](d)
-
-        print("save")
         if click.getchar() == "y":
             print("saving")
             tmp_path = d.pathfinder.annotations_path.with_suffix(".tmp.csv")
