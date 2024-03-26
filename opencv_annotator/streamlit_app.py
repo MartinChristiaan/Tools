@@ -115,6 +115,7 @@ if st.button("annotate"):
     writer = writers[writer]
     writer(config, [0, -15, 15], label_config).write()
     BoundingBoxAnnotator.annotate_config(config)
+    print("test")
 if st.button("save"):
     # BoundingBoxAnnotator(config).save()
     config.pathfinder.media_manager.save_annotations(
