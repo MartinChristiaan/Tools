@@ -22,11 +22,11 @@ from config.writers import writers, label_config
 
 parser = argparse.ArgumentParser(prog="ProgramName", description="Description")
 parser.add_argument("-c", "--config", type=str, default="*TIE*")
-parser.add_argument("-a", "--action", type=str, default="export")
+parser.add_argument("-a", "--action", type=str, default="annotate")
 parser.add_argument("-w", "--writer", type=str, default="tyolo_writer")
 
-parser.add_argument("-s", "--start_idx", type=int, default=5)
-parser.add_argument("-n", "--num_items", type=int, default=10000)
+parser.add_argument("-s", "--start_idx", type=int, default=30)
+parser.add_argument("-n", "--num_items", type=int, default=1)
 args = parser.parse_known_args()[0]
 
 datasets = all_configs
@@ -41,5 +41,5 @@ def export_fn(config: du.DatasetConfig):
 
 action_lut = dict(export=export_fn, annotate=BoundingBoxAnnotator.annotate_config)
 for action in args.action.split(","):
-    for d in datasets[args.start_idx : args.num_items]:
+    for d in datasets[args.start_idx : args.start_idx + args.num_items]:
         action_lut[action](d)
