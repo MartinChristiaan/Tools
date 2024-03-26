@@ -10,6 +10,7 @@ import argparse
 import pickle
 from pathlib import Path
 
+import click
 from loguru import logger
 import pandas as pd
 from config.dataset import all_configs
@@ -25,8 +26,8 @@ parser.add_argument("-c", "--config", type=str, default="*TIE*")
 parser.add_argument("-a", "--action", type=str, default="annotate")
 parser.add_argument("-w", "--writer", type=str, default="tyolo_writer")
 
-parser.add_argument("-s", "--start_idx", type=int, default=30)
-parser.add_argument("-n", "--num_items", type=int, default=1)
+parser.add_argument("-s", "--start_idx", type=int, default=40)
+parser.add_argument("-n", "--num_items", type=int, default=100)
 args = parser.parse_known_args()[0]
 
 datasets = all_configs
@@ -42,4 +43,24 @@ def export_fn(config: du.DatasetConfig):
 action_lut = dict(export=export_fn, annotate=BoundingBoxAnnotator.annotate_config)
 for action in args.action.split(","):
     for d in datasets[args.start_idx : args.start_idx + args.num_items]:
+
+        prev_annotations = d.pathfinder.media_manager.load_annotations(
+            "smallObjectsCorrected"
+        )
+        print(prev_annotations)
+        data = []
+        if not prev_annotations is None:
+            continue
         action_lut[action](d)
+
+        print("save")
+        if click.getchar() == "y":
+            print("saving")
+            tmp_path = d.pathfinder.annotations_path.with_suffix(".tmp.csv")
+            if tmp_path.exists():
+                annotations = pd.read_csv(tmp_path)
+            # mm = d.pathfinder.media_manager.
+            d.pathfinder.media_manager.save_annotations(
+                annotations, "smallObjectsCorrected", True
+            )
+            print("saved new annotations")
