@@ -45,12 +45,18 @@ class IOManager:
         # self.pathfinder = dataset_config.pathfinder
         items = []
         frame_index = 0
-        for i, x in enumerate(dataset_configs):
-            annotations = x.pathfinder.annotations()
+        self.frame_to_config_lut = {}
+        self.frame_to_timestamps_lut = {}
+
+        for i, config in enumerate(dataset_configs):
+            annotations = config.pathfinder.annotations()
+            timestamps = annotations.timestamp.unique()
             for t, tdf in annotations.groupby("timestamp"):
                 tdf["frame_index"] = [frame_index] * len(tdf)
                 tdf["config_index"] = [i] * len(tdf)
                 items.append(tdf)
+                self.frame_to_config_lut[frame_index] = config
+                self.frame_to_timestamps_lut[frame_index] = timestamps
                 frame_index += 1
 
             # items += list(enumerate(.groupby("timestamp")))
@@ -61,13 +67,20 @@ class IOManager:
             self.current_annotations = pd.read_csv(self.tmp_annotation_path)
 
         # self.state.timestamps.set_value(self.timestamps)
-
         self.frame_index = self.get_first_frame_index()
         self.tracked_annotations = []
         self.go_value = ""
 
         state.frame_index.subscribe(self.load_frame)
         state.keyboard_event.subscribe(self.keyboard_callback)
+
+    @property
+    def current_config(self) -> du.DatasetConfig:
+        return self.frame_to_config_lut[self.frame_index]
+
+    @property
+    def timestamps(self):
+        return self.frame_to_config_lut[self.frame_index]
 
     def keyboard_callback(self):
         state = self.state
@@ -85,6 +98,7 @@ class IOManager:
                 if frame_index > self.num_frames - 1:
                     frame_index = 0
             self.state.frame_index.set_value(frame_index)
+            self.frame_index = frame_index
             print("set new index")
 
         if state.keyboard_mode.value == "go":
@@ -115,7 +129,7 @@ class IOManager:
         else:
             return [
                 TextRequest(
-                    f"Frame selection : {self.frame_index}/{len(self.timestamps)} (a-d)",
+                    f"Frame selection : {self.frame_index}/{self.num_frames} (a-d)",
                     (255, 255, 255),
                     True,
                 )
@@ -127,9 +141,9 @@ class IOManager:
 
     def get_first_frame_index(self):
         if len(self.current_annotations) == 0:
-            return 0
+            return 0, 0
         for j in range(self.num_frames):
-            if self.timestamps[j] not in self.evaluated_time_indices:
+            if j not in self.evaluated_time_indices:
                 return j
         return 0
 
@@ -188,7 +202,7 @@ class IOManager:
             )
         detections += self.tracked_annotations
         detections = apply_ignore_areas(detections)
-        config = self.configs[detections.config_index[0]]
+        config = self.configs
         timestamp = detections.timestamp[0]
         offset = config.options.offset_scales[0]
         frames = [
@@ -202,7 +216,7 @@ class IOManager:
             "f15": frames[1],
             "f-15": frames[2],
         }
-        self.state.timestamp.set_value(self.timestamps[self.frame_index])
+        self.state.timestamp.set_value(timestamp)
         self.state.frame_inputs.set_value(self.frame_inputs)
         self.state.detections.set_value(detections)
         self.tracked_annotations = []
