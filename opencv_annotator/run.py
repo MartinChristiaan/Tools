@@ -43,11 +43,9 @@ def export_fn(config: du.DatasetConfig):
 action_lut = dict(export=export_fn, annotate=BoundingBoxAnnotator.annotate_config)
 for action in args.action.split(","):
     for d in datasets[args.start_idx : args.start_idx + args.num_items]:
-
         prev_annotations = d.pathfinder.media_manager.load_annotations(
             "smallObjectsCorrected"
         )
-        print(prev_annotations)
         data = []
         if not prev_annotations is None:
             continue

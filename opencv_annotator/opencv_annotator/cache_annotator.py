@@ -224,7 +224,7 @@ class IOManager:
 
     def should_track(self):
         # current_timestamp = self.items[self.frame_index][0]
-        if len(self.timestamps) < self.frame_index + 2:
+        if len(self.timestamps) < self.frame_index + 2: #should be seqframe index
             return False
         next_timestamp = self.timestamps[self.frame_index + 1]
         return not next_timestamp in self.evaluated_time_indices
