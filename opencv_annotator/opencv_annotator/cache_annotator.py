@@ -91,6 +91,8 @@ class IOManager:
         if key == "g":
             state.keyboard_mode.set_value("go")
             state.zoom.run()
+        if key == "s":
+            self.save()
 
     def get_status(self):
         state = self.state
