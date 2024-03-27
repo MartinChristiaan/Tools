@@ -26,7 +26,7 @@ parser.add_argument("-c", "--config", type=str, default="*TIE*")
 parser.add_argument("-a", "--action", type=str, default="annotate")
 parser.add_argument("-w", "--writer", type=str, default="tyolo_writer")
 
-parser.add_argument("-s", "--start_idx", type=int, default=40)
+parser.add_argument("-s", "--start_idx", type=int, default=0)
 parser.add_argument("-n", "--num_items", type=int, default=100)
 args = parser.parse_known_args()[0]
 
@@ -50,13 +50,13 @@ for action in args.action.split(","):
         if not prev_annotations is None:
             continue
         action_lut[action](d)
-        if click.getchar() == "y":
-            print("saving")
-            tmp_path = d.pathfinder.annotations_path.with_suffix(".tmp.csv")
-            if tmp_path.exists():
-                annotations = pd.read_csv(tmp_path)
-            # mm = d.pathfinder.media_manager.
-            d.pathfinder.media_manager.save_annotations(
-                annotations, "smallObjectsCorrected", True
-            )
-            print("saved new annotations")
+        # if click.getchar() == "y":
+        #     print("saving")
+        #     tmp_path = d.pathfinder.annotations_path.with_suffix(".tmp.csv")
+        #     if tmp_path.exists():
+        #         annotations = pd.read_csv(tmp_path)
+        #     # mm = d.pathfinder.media_manager.
+        #     d.pathfinder.media_manager.save_annotations(
+        #         annotations, "smallObjectsCorrected", True
+        #     )
+        #     print("saved new annotations")

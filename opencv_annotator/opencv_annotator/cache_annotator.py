@@ -35,52 +35,25 @@ def apply_ignore_areas(annotations: List[Annotation]):
     return filtered_annotations + ignore_areas
 
 
-# TODO make accept multiple configs
-
-
 class IOManager:
-    def __init__(self, dataset_configs: List[du.DatasetConfig], state: State) -> None:
+    def __init__(self, dataset_config: du.DatasetConfig, state: State) -> None:
         self.state = state
-        self.configs = dataset_configs
-        # self.pathfinder = dataset_config.pathfinder
-        items = []
-        frame_index = 0
-        self.frame_to_config_lut = {}
-        self.frame_to_timestamps_lut = {}
+        self.pathfinder = dataset_config.pathfinder
+        items = list(dataset_config.pathfinder.annotations().groupby("timestamp"))
+        self.timestamps = [x[0] for x in items]
+        self.detections = [Annotation.from_pandas(x[1]) for x in items]
 
-        for i, config in enumerate(dataset_configs):
-            annotations = config.pathfinder.annotations()
-            timestamps = annotations.timestamp.unique()
-            for t, tdf in annotations.groupby("timestamp"):
-                tdf["frame_index"] = [frame_index] * len(tdf)
-                tdf["config_index"] = [i] * len(tdf)
-                items.append(tdf)
-                self.frame_to_config_lut[frame_index] = config
-                self.frame_to_timestamps_lut[frame_index] = timestamps
-                frame_index += 1
-
-            # items += list(enumerate(.groupby("timestamp")))
-        self.num_frames = frame_index
-        self.detections = [Annotation.from_pandas(x) for x in items]
+        self.dataset_config = dataset_config
         self.current_annotations = pd.DataFrame()
         if self.tmp_annotation_path.exists():
             self.current_annotations = pd.read_csv(self.tmp_annotation_path)
-
-        # self.state.timestamps.set_value(self.timestamps)
+        self.state.timestamps.set_value(self.timestamps)
         self.frame_index = self.get_first_frame_index()
         self.tracked_annotations = []
         self.go_value = ""
 
         state.frame_index.subscribe(self.load_frame)
         state.keyboard_event.subscribe(self.keyboard_callback)
-
-    @property
-    def current_config(self) -> du.DatasetConfig:
-        return self.frame_to_config_lut[self.frame_index]
-
-    @property
-    def timestamps(self):
-        return self.frame_to_config_lut[self.frame_index]
 
     def keyboard_callback(self):
         state = self.state
@@ -92,13 +65,12 @@ class IOManager:
             if key == "a":
                 frame_index -= 1
                 if frame_index < 0:
-                    frame_index = self.num_frames - 1
+                    frame_index = len(self.timestamps) - 1
             else:
                 frame_index += 1
-                if frame_index > self.num_frames - 1:
+                if frame_index > len(self.timestamps) - 1:
                     frame_index = 0
             self.state.frame_index.set_value(frame_index)
-            self.frame_index = frame_index
             print("set new index")
 
         if state.keyboard_mode.value == "go":
@@ -129,27 +101,27 @@ class IOManager:
         else:
             return [
                 TextRequest(
-                    f"Frame selection : {self.frame_index}/{self.num_frames} (a-d)",
+                    f"Frame selection : {self.frame_index}/{len(self.timestamps)} (a-d)",
                     (255, 255, 255),
                     True,
                 )
             ]
 
     @property
-    def evaluated_time_indices(self):
-        return self.current_annotations.frame_index.unique()
+    def evaluated_timestamps(self):
+        return self.current_annotations.timestamp.unique()
 
     def get_first_frame_index(self):
         if len(self.current_annotations) == 0:
-            return 0, 0
-        for j in range(self.num_frames):
-            if j not in self.evaluated_time_indices:
+            return 0
+        for j in range(len(self.timestamps)):
+            if self.timestamps[j] not in self.evaluated_timestamps:
                 return j
         return 0
 
     @property
     def tmp_annotation_path(self):
-        return "tmp_annot.csv"
+        return self.pathfinder.annotations_path.with_suffix(".tmp.csv")
 
     def save_tmp(self):
         # get current annotations and put them in dataframe
@@ -189,24 +161,22 @@ class IOManager:
     def load_frame(self):
         self.frame_index = self.state.frame_index.value
         # timestamp, detections = self.items[self.frame_index]
-        # timestamp = self.timestamps[self.frame_index]
+        timestamp = self.timestamps[self.frame_index]
         detections = self.detections[self.frame_index]
         if (
             len(self.current_annotations)
-            and self.frame_index in self.current_annotations.frame_index.unique()
+            and timestamp in self.current_annotations.timestamp.unique()
         ):
             detections = Annotation.from_pandas(
                 self.current_annotations[
-                    self.current_annotations.frame_index == self.frame_index
+                    self.current_annotations.timestamp == timestamp
                 ]
             )
         detections += self.tracked_annotations
         detections = apply_ignore_areas(detections)
-        config = self.configs
-        timestamp = detections.timestamp[0]
-        offset = config.options.offset_scales[0]
+        offset = self.dataset_config.options.offset_scales[0]
         frames = [
-            cv2.imread(config.pathfinder.frame_filename(o, timestamp))
+            cv2.imread(self.dataset_config.pathfinder.frame_filename(o, timestamp))
             for o in [0, int(round(-15 * offset)), int(round(15 * offset))]
         ]
         vizframe = vizualize_objects(frames)
@@ -216,7 +186,7 @@ class IOManager:
             "f15": frames[1],
             "f-15": frames[2],
         }
-        self.state.timestamp.set_value(timestamp)
+        self.state.timestamp.set_value(self.timestamps[self.frame_index])
         self.state.frame_inputs.set_value(self.frame_inputs)
         self.state.detections.set_value(detections)
         self.tracked_annotations = []
@@ -224,10 +194,10 @@ class IOManager:
 
     def should_track(self):
         # current_timestamp = self.items[self.frame_index][0]
-        if len(self.timestamps) < self.frame_index + 2: #should be seqframe index
+        if len(self.timestamps) < self.frame_index + 2:
             return False
         next_timestamp = self.timestamps[self.frame_index + 1]
-        return not next_timestamp in self.evaluated_time_indices
+        return not next_timestamp in self.evaluated_timestamps
 
     def track(self, annotations: List[Annotation]):
         # TODO use other process for tracking. or as soon as bbox is drawn
