@@ -80,7 +80,7 @@ class BoundingBoxAnnotator:
                 self.state.keyboard_event.set_value(key_str)
 
             if key == ord("q"):
-                cv2.destroyAllWindows()
+                # cv2.destroyAllWindows()
                 return
 
     def save(self):

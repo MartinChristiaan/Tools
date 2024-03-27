@@ -1,5 +1,7 @@
 # %%
 from copy import deepcopy
+import os
+import shutil
 from typing import List
 
 import cv2
@@ -106,6 +108,19 @@ class IOManager:
                     True,
                 )
             ]
+
+    def save(self):
+        config = self.dataset_config
+        tmp_path = config.pathfinder.annotations_path.with_suffix(".tmp.csv")
+        if tmp_path.exists():
+            logger.info(f"saving {self.name}")
+            annotations = pd.read_csv(tmp_path)
+            annotations.drop(["track_id", "postproc"])
+            config.pathfinder.media_manager.save_annotations(
+                annotations, "smallObjectsCorrected", True
+            )
+            shutil.copy(self.tmp_annotation_path, config.pathfinder.annotations_path)
+            os.remove(self.tmp_annotation_path)
 
     @property
     def evaluated_timestamps(self):
