@@ -31,11 +31,14 @@ class PreAnnotationWriter(du.Writer):
         latest_path = [
             x for x in sorted_paths if "tyolov8" in str(x) and "track" in str(x)
         ]
-        print(latest_path)
+
         if len(latest_path) == 0:
             return None
         path = f"{latest_path[0].parent.stem}/{latest_path[0].name}"
         print(path)
-        data = self.pathfinder.media_manager.load(path)
+        from_supra = "_supra" in path
+        data = self.pathfinder.media_manager.load(
+            path.replace("_supra/", ""), from_supra
+        )
         print(data)
         return data
