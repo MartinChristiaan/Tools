@@ -192,6 +192,7 @@ class IOManager:
         detections += self.tracked_annotations
         detections = apply_ignore_areas(detections)
         offset = self.dataset_config.options.offset_scales[0]
+        print(offset)
         frames = [
             cv2.imread(self.dataset_config.pathfinder.frame_filename(o, timestamp))
             for o in [0, int(round(-15 * offset)), int(round(15 * offset))]
