@@ -93,6 +93,12 @@ class IOManager:
             state.zoom.run()
         if key == "u":
             self.update_annotations()
+        if key == "t":
+            if self.tmp_annotation_path.exists():
+                os.remove(self.tmp_annotation_path)
+            self.current_annotations = pd.DataFrame()
+            self.state.frame_index.set_value(0)
+            self.frame_index = 0
 
     def get_status(self):
         state = self.state
