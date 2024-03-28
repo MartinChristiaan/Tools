@@ -91,8 +91,8 @@ class IOManager:
         if key == "g":
             state.keyboard_mode.set_value("go")
             state.zoom.run()
-        if key == "s":
-            self.save()
+        if key == "u":
+            self.update_annotations()
 
     def get_status(self):
         state = self.state
@@ -111,13 +111,13 @@ class IOManager:
                 )
             ]
 
-    def save(self):
+    def update_annotations(self):
         config = self.dataset_config
         tmp_path = config.pathfinder.annotations_path.with_suffix(".tmp.csv")
         if tmp_path.exists():
-            logger.info(f"saving {self.name}")
+            logger.info(f"saving {config.pathfinder.name}")
             annotations = pd.read_csv(tmp_path)
-            annotations.drop(["track_id", "postproc"])
+            annotations.drop(["track_id", "postproc"], axis="columns")
             config.pathfinder.media_manager.save_annotations(
                 annotations, "smallObjectsCorrected", True
             )
@@ -226,6 +226,7 @@ class IOManager:
         logger.debug(f"tracking {len(annotations)} annotations")
 
         for annotation in annotations:
+
             bboxi = (
                 int(annotation.bbox_x),
                 int(annotation.bbox_y),

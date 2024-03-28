@@ -59,7 +59,13 @@ class Annotation:
         x = Annotation(0, 0, 0, 0, 0, "", 0)
         keys = set(x.__dict__.keys())
         dicts = df.to_dict(orient="records")
-        return [Annotation(**{k: v for k, v in d.items() if k in keys}) for d in dicts]
+
+        return [
+            Annotation(
+                **{k: v for k, v in d.items() if k in keys and not k == "postproc"}
+            )
+            for d in dicts
+        ]
 
     @staticmethod
     def to_pandas(annotations: List["Annotation"]):
