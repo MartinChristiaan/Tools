@@ -11,6 +11,7 @@ CORS(app)
 
 # pf = du.Pathfinder()
 
+
 class VideosetAPI:
     def __init__(self):
         self.manager = IOData()
@@ -29,7 +30,7 @@ class VideosetAPI:
         return self.manager.get_detections(timestamp).to_json(orient="records")
 
     def get_xt_plot(self):
-        # return self.manager.detections().to_json(orient='records')
+        # TODO add options for how it should be vizualied
         return dict(
             x=list(self.manager.detections.timestamp),
             y=list(self.manager.detections.bbox_x),
