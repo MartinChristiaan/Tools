@@ -29,11 +29,14 @@ class VideosetAPI:
             timestamp = self.manager.timestamps[0]
         return self.manager.get_detections(timestamp).to_json(orient="records")
 
-    def get_xt_plot(self):
+    def get_xt_plot(self, source):
         # TODO add options for how it should be vizualied
+        data = self.manager.detections
+        data = data[data.source == source]
+
         return dict(
-            x=list(self.manager.detections.timestamp),
-            y=list(self.manager.detections.bbox_x),
+            x=list(source.timestamp),
+            y=list(source.bbox_x),
             type="scatter",
             mode="markers",
         )
@@ -53,9 +56,9 @@ def get_detections(timestamp):
     return videoset_api.get_detections(float(timestamp))
 
 
-@app.route("/plotdata", methods=["GET"])
+@app.route("/plotdata/<source>", methods=["GET"])
 def get_xt_plot():
-    return videoset_api.get_xt_plot()
+    data = videoset_api.get_xt_plot()
 
 
 @app.route("/videoset", methods=["GET"])
@@ -68,20 +71,6 @@ def set_videoset():
     data = request.json  # JSON data sent in the request
     videoset_api.manager.set_videoset_data(data)
     return jsonify(videoset_api.manager.to_dict())
-
-
-@app.route("/handle_key/<key>", methods=["GET"])
-def next_frame(key):
-    if key in "ad":
-        delta = 1
-        if key == "a":
-            delta = -1
-        videoset_api.frame_index += delta
-
-    # if key in 'xz':
-    # 	videoset_api.update_frame_variation(-1 if key == 'z' else 1)
-
-    return "{}"  # videoset_api.get_annotations()
 
 
 if __name__ == "__main__":
