@@ -1,12 +1,14 @@
 import os
 from pathlib import Path
+from typing import List
+import cv2
 from loguru import logger
 
 from videosets_ii.videosets_ii import VideosetsII
 from trackertoolbox.detections import Detections
 from trackertoolbox.tracks import Tracks, TrackUpdates
 import pandas as pd
-
+import dlutils_ii as du
 basedirpath = Path(r"/diskstation")
 videosets = VideosetsII(basedirpath=basedirpath)  # basedirpath)
 names = list(videosets.to_pandas()["name"])
@@ -16,17 +18,24 @@ def get_modified_date(path):
     return os.path.getmtime(path)
 
 
-class IOData:
-    def __init__(self) -> None:
-        self.videoset = "aot"
-        self.camera = "part1/video0360"
+@dataclass
+class IOData(du.Pathfinder):
+    detections_sources : List[str ] = None
+    selected_sources : List[str ] = None
+    @property
+    def videoset_obj(self):
+        return videosets[self.videoset]
 
-        self.cameras = videosets[self.videoset].cameras
-        # self.detections_sources = ["tracks/yolov8s_precision_20240301_resnet18.csv"]
-        self.mm = videosets[self.videoset].get_mediamanager(self.camera)
-        self.detections_sources = self.load_annotation_source(self.mm)
-        self.selected_sources = self.detections_sources[:1]
-        self.detections = self.load_detections()
+    @property
+    def cameras(self):
+        return self.videoset_obj.cameras
+        # self.cameras = videosets[self.videoset].cameras
+        # # self.detections_sources = ["tracks/yolov8s_precision_20240301_resnet18.csv"]
+        # self.mm = videosets[self.videoset].get_mediamanager(self.camera)
+        # self.detections_sources = self.load_annotation_source(self.mm)
+        # self.selected_sources = self.detections_sources[:1]
+        # self.detections = self.load_detections()
+
 
     def to_dict(self):
         return dict(
@@ -39,7 +48,6 @@ class IOData:
         )
 
     def set_videoset_data(self, data):
-        print(data)
         if self.videoset != data["videoset"]:
             self.videoset = data["videoset"]
             self.cameras = videosets[self.videoset].cameras
@@ -54,7 +62,7 @@ class IOData:
             self.detections = self.load_detections()
 
     def update_mm(self):
-        self.mm = videosets[self.videoset].get_mediamanager(self.camera)
+        self._media_manager = videosets[self.videoset].get_mediamanager(self.camera)
         self.detections_sources = self.load_annotation_source(self.mm)
         self.selected_sources = [
             source
@@ -65,10 +73,13 @@ class IOData:
 
     @property
     def timestamps(self):
-        return self.mm.timestamps
+        return self.media_manager.timestamps
 
-    def get_frame(self, timestamp):
-        return self.mm.get_frame(timestamp)
+    def get_frame(self, timestamp,offset):
+        if os.path.exists(self.frame_filename,offset):
+            return cv2.imread(self.frame_filename)
+        # TODO auto cachcing?
+        return self.media_manager.get_frame(timestamp)
 
     def get_detections(self, timestamp):
         return self.detections[self.detections.timestamp == timestamp]
