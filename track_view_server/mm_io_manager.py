@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 import os
 from pathlib import Path
 from typing import List
@@ -9,6 +10,7 @@ from trackertoolbox.detections import Detections
 from trackertoolbox.tracks import Tracks, TrackUpdates
 import pandas as pd
 import dlutils_ii as du
+from dlutils_ii.dataset_cache.pathfinder import read_logfile
 basedirpath = Path(r"/diskstation")
 videosets = VideosetsII(basedirpath=basedirpath)  # basedirpath)
 names = list(videosets.to_pandas()["name"])
@@ -22,6 +24,7 @@ def get_modified_date(path):
 class IOData(du.Pathfinder):
     detections_sources : List[str ] = None
     selected_sources : List[str ] = None
+    annotation_suffix : str = "smallObjectsCorrected"
     @property
     def videoset_obj(self):
         return videosets[self.videoset]
@@ -29,13 +32,6 @@ class IOData(du.Pathfinder):
     @property
     def cameras(self):
         return self.videoset_obj.cameras
-        # self.cameras = videosets[self.videoset].cameras
-        # # self.detections_sources = ["tracks/yolov8s_precision_20240301_resnet18.csv"]
-        # self.mm = videosets[self.videoset].get_mediamanager(self.camera)
-        # self.detections_sources = self.load_annotation_source(self.mm)
-        # self.selected_sources = self.detections_sources[:1]
-        # self.detections = self.load_detections()
-
 
     def to_dict(self):
         return dict(
@@ -45,6 +41,7 @@ class IOData(du.Pathfinder):
             videosets=names,
             sources=[str(x) for x in self.detections_sources],
             selected_source=[str(x) for x in self.selected_sources],
+            cached_timestamps=read_logfile(self.logfile_path)
         )
 
     def set_videoset_data(self, data):
@@ -86,11 +83,10 @@ class IOData(du.Pathfinder):
 
     def load_detections(self):
         detections_list = []
-        for source in self.selected_sources:
-            path = f"{source.parent.stem}/{source.name}"
+        for path in self.selected_sources:
             from_supra = "_supra" in path
             detections = self.mm.load(path.replace("_supra/", ""), from_supra)
-            detections["source"] = source
+            detections["source"] = path
             detections_list.append(detections)
         if len(detections_list) > 0:
             return pd.concat(detections_list)
@@ -99,5 +95,13 @@ class IOData(du.Pathfinder):
     def load_annotation_source(self, mm):
         paths = list(mm.result_dirpath.rglob("*.csv"))
         sorted_paths = sorted(paths, key=get_modified_date)
-        latest_path = [x for x in sorted_paths]
-        return latest_path
+        path_options = [f"{x.parent.stem}/{x.name}" for x in sorted_paths]
+        return path_options
+    
+    
+    # save annotations to tmp annotation file on diskstation...
+    # save annoatiation to diskstations
+    
+    
+    
+    

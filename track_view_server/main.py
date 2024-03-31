@@ -9,6 +9,7 @@ from mm_io_manager import IOData
 app = Flask(__name__)
 CORS(app)
 
+# pf = du.Pathfinder()
 
 class VideosetAPI:
     def __init__(self):
