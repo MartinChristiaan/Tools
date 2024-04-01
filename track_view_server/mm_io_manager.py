@@ -62,7 +62,7 @@ class IOData(du.Pathfinder):
 
     def update_mm(self):
         self._media_manager = videosets[self.videoset].get_mediamanager(self.camera)
-        self.detections_sources = self.load_path_from_mediamanager(self.mm)
+        self.detections_sources = self.find_result_csv_in_mm_path(self.mm)
         self.selected_sources = [
             source
             for source in self.selected_sources
@@ -86,19 +86,21 @@ class IOData(du.Pathfinder):
     def load_detections(self):
         detections_list = []
         for path in self.selected_sources:
-            from_supra = "_supra" in path
-            detections = self.mm.load(path.replace("_supra/", ""), from_supra)
-            detections["source"] = path
+            detections = pd.read_csv(self.media_manager.result_dirpath / path)
             detections_list.append(detections)
+
         if len(detections_list) > 0:
             return pd.concat(detections_list)
         return None
 
-    def load_path_from_mediamanager(self, mm):
+    def find_result_csv_in_mm_path(self, mm):
         paths = list(mm.result_dirpath.rglob("*.csv"))
         sorted_paths = sorted(paths, key=get_modified_date)
         path_options = [f"{x.parent.stem}/{x.name}" for x in sorted_paths]
         return path_options
+
+    # def save_annotations(self):
+    #     self.media_manager.save_annotations()
 
     # save annotations to tmp annotation file on diskstation...
     # save annoatiation to diskstations

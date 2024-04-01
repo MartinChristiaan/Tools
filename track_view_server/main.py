@@ -1,15 +1,11 @@
 from flask import Flask, Response, jsonify, request
 from flask_cors import CORS
-import dlutils_ii as du
-from videosets_ii.videosets_ii import VideosetsII
 import cv2
 
 from mm_io_manager import IOData
 
 app = Flask(__name__)
 CORS(app)
-
-# pf = du.Pathfinder()
 
 
 class VideosetAPI:
@@ -24,13 +20,18 @@ class VideosetAPI:
         encoded_frame = encoded_frame.tobytes()
         return Response(encoded_frame, content_type="image/jpeg")
 
-    def get_detections(self, timestamp):
+    def get_detections(self, timestamp, source):
         if timestamp == 0:
             timestamp = self.manager.timestamps[0]
-        return self.manager.get_detections(timestamp).to_json(orient="records")
+
+        data = self.manager.get_detections(timestamp)
+        data = data[data.source == source]
+        # TODO check if works with len(0)
+        return data.to_json(orient="records")
 
     def get_xt_plot(self, source):
         # TODO add options for how it should be vizualied
+        # TODO check if works with len(0)
         data = self.manager.detections
         data = data[data.source == source]
 
@@ -51,14 +52,15 @@ def get_frame(timestamp):
     return videoset_api.get_frame(float(timestamp))
 
 
-@app.route("/detections/<timestamp>", methods=["GET"])
-def get_detections(timestamp):
-    return videoset_api.get_detections(float(timestamp))
+@app.route("/detections/<source_and_timstamps>", methods=["GET"])
+def get_detections(source_and_timstamps):
+    source, timestamp = source_and_timstamps.split("AAA")
+    return videoset_api.get_detections(float(timestamp), source)
 
 
 @app.route("/plotdata/<source>", methods=["GET"])
-def get_xt_plot():
-    data = videoset_api.get_xt_plot()
+def get_xt_plot(source):
+    data = videoset_api.get_xt_plot(source)
 
 
 @app.route("/videoset", methods=["GET"])
