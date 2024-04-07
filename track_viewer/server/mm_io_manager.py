@@ -4,11 +4,7 @@ from pathlib import Path
 import pickle
 from typing import List
 import cv2
-from loguru import logger
-
 from videosets_ii.videosets_ii import VideosetsII
-from trackertoolbox.detections import Detections
-from trackertoolbox.tracks import Tracks, TrackUpdates
 import pandas as pd
 import dlutils_ii as du
 from dlutils_ii.dataset_cache.pathfinder import read_logfile
@@ -43,8 +39,8 @@ class IOData(du.Pathfinder):
 
     def to_dict(self):
         cached_timestamps = []
-        if self.logfile_path(0).exists():
-            cached_timestamps = read_logfile(self.logfile_path(0))
+        # if self.logfile_path(0).exists():
+        #     cached_timestamps =
         return dict(
             videoset=self.videoset,
             camera=self.camera,

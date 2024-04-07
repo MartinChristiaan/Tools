@@ -1,0 +1,5 @@
+dlutils_ii @ git+https://dlutils_ii:glpat-EQCGEC3FjaXctPnr6jQt@gitlab.tsn.tno.nl/intelligent_imaging/python/deep_learning/dlutils_ii.git
+# videosets_ii @ git+https://videosets_ii:glpat-Fns9WB-uccyz-pcuPXdx@gitlab.tsn.tno.nl/intelligent_imaging/python/data_management/videosets_ii.git
+flask
+flask_cors
+opencv_python

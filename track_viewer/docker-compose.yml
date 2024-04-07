@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  track-viewer-server:
+    image: track-viewer-server
+    container_name: track-viewer-server
+    ports:
+      - "14119:5000"
+    volumes:
+      - /data/$USER/general/:/data
+      - /data/$USER/diskstation/:/diskstation
+    networks:
+      - mynetwork
+    build:
+        context: server
+
+  track-viewer-client:
+    image: track-viewer-client
+    container_name: track-viewer-client
+    ports:
+      - "14118:3000"
+    networks:
+      - mynetwork
+    build:
+        context: client
+
+networks:
+  mynetwork:
+    driver: bridge
