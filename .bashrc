@@ -135,3 +135,11 @@ alias et='cd ~/git/tools/VsCodeSynthesis && python3 edit_tool.py'
 alias gsf='cd ~/git/tools/VsCodeSynthesis && bash filesearch.sh'
 alias gss='cd ~/git/tools/VsCodeSynthesis && bash git_search_symbol.sh'
 alias qs='cd ~/git/tools/quick_edit && python3 quick_ssh.py'
+
+# pnpm
+export PNPM_HOME="/home/leeuwenmcv/.local/share/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
