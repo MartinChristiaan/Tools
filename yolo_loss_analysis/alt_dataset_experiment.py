@@ -11,9 +11,7 @@ data = "/mnt/toren/data/leeuwenmcv/general/alt_dataset_experiment"
 data2 = f"/mnt/dl-3/data/leeuwenmcv/general/tyolo"
 
 results2 = list(Path(data2).glob("*/results.csv"))
-proposed = [
-    x for x in results2 if "combined_tyolo8m_balanced_02022024" == x.parent.name
-]
+proposed = [x for x in results2 if "proposed" == x.parent.name]
 
 print(proposed)
 
@@ -89,7 +87,8 @@ maps = list(df[df["metric"] == "mAP50"]["value"])
 map_sort = np.argsort(maps)[::-1]
 print(map_sort)
 
-fig, ax = plt.subplots(figsize=(10, 6))  # Set the size of the figure
+fig, ax = plt.subplots(figsize=(8, 6))  # Set the size of the figure
+
 colors = plt.cm.tab20.colors  # Get a list of colors for each metric
 for i, metric in enumerate(metrics):
     x = np.arange(len(models))  # [map_sort]
