@@ -87,16 +87,15 @@ maps = list(df[df["metric"] == "mAP50"]["value"])
 # %%
 map_sort = np.argsort(maps)[::-1]
 print(map_sort)
-plt.set_cmap("gist_rainbow")
 
 fig, ax = plt.subplots(figsize=(10, 6))  # Set the size of the figure
-colors = plt.cm.tab10.colors  # Get a list of colors for each metric
+colors = plt.cm.tab20.colors  # Get a list of colors for each metric
 for i, metric in enumerate(metrics):
     x = np.arange(len(models))  # [map_sort]
     print(x)
     y = np.array(df[df["metric"] == metric]["value"])[map_sort]  # Y-axis values
     print(y)
-    ax.bar(x + i * bar_width - 0.4, y, width=bar_width, label=metric, c=colors[i])
+    ax.bar(x + i * bar_width - 0.4, y, width=bar_width, label=metric, color=colors[i])
 
 
 ax.set_xticks(range(len(models)))  # Set ticks on X-axis
@@ -108,7 +107,10 @@ ax.set_xlabel("Model")  # Set label for X-axis
 ax.legend()  # Add legend
 plt.grid(1)
 plt.tight_layout()  # Ensure tight layout
-plt.savefig("exp_external_datasets.pdf")  # Save plot in vector format (PDF)
+plt.savefig("exp_external_datasets.pdf", dpi=300)  # Save plot in vector format (PDF)
+plt.savefig(
+    "exp_external_datasets.png", dpi=300, transparent=True
+)  # Save plot in vector format (PDF)
 plt.show()  # Show plot
 
 # %%

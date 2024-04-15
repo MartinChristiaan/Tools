@@ -125,10 +125,11 @@ r2 = [x + bar_width for x in r1]
 r3 = [x + bar_width for x in r2]
 
 # Create the bar chart
-plt.figure(figsize=(10, 6))
-plt.bar(r1, air_means, width=bar_width, label="Air data")
-plt.bar(r2, naval_means, width=bar_width, label="Naval data")
-plt.bar(r3, ground_means, width=bar_width, label="Ground data")
+plt.figure()
+colors = plt.cm.tab20.colors
+plt.bar(r1, air_means, width=bar_width, label="Air data", color=colors[0])
+plt.bar(r2, naval_means, width=bar_width, label="Naval data", color=colors[1])
+plt.bar(r3, ground_means, width=bar_width, label="Ground data", color=colors[2])
 
 # Add labels, title, and legend
 plt.xlabel("Model")
@@ -139,7 +140,8 @@ plt.legend()
 plt.grid(1)
 # Show the bar chart
 
-plt.savefig("mAP_per_model_and_dataset.pdf")
+plt.savefig("mAP_per_model_and_dataset.pdf", dpi=300)
+plt.savefig("mAP_per_model_and_dataset.png", dpi=300, transparent=True)
 
 
 # %%
