@@ -87,6 +87,7 @@ maps = list(df[df["metric"] == "mAP50"]["value"])
 # %%
 map_sort = np.argsort(maps)[::-1]
 print(map_sort)
+plt.set_cmap("gist_rainbow")
 
 fig, ax = plt.subplots(figsize=(10, 6))  # Set the size of the figure
 colors = plt.cm.tab10.colors  # Get a list of colors for each metric
@@ -95,7 +96,7 @@ for i, metric in enumerate(metrics):
     print(x)
     y = np.array(df[df["metric"] == metric]["value"])[map_sort]  # Y-axis values
     print(y)
-    ax.bar(x + i * bar_width - 0.4, y, width=bar_width, label=metric)
+    ax.bar(x + i * bar_width - 0.4, y, width=bar_width, label=metric, c=colors[i])
 
 
 ax.set_xticks(range(len(models)))  # Set ticks on X-axis
