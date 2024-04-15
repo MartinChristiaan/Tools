@@ -62,6 +62,7 @@ df["metric"] = [name_lut[x] for x in df.metric]
 #     "combined_tyolo8m_no_bbox_clip_02022024",
 # ]
 curnames = list(df.model.unique())
+print(curnames)
 
 newnames = [
     "proposed",
