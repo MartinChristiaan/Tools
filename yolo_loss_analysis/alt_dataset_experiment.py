@@ -79,7 +79,7 @@ metrics = df["metric"].unique()  # Get unique metrics names
 df.to_csv("overview_results_re.csv", index=False)
 
 # Plot bars for each metric for each model
-bar_width = 0.8 / len(metrics)  # Width of each bar
+bar_width = 0.8  # Width of each bar
 # models = df.model.unique()
 maps = list(df[df["metric"] == "mAP50"]["value"])
 # models = df[df["metric"] == "mAP50"]["model"]
@@ -87,24 +87,21 @@ maps = list(df[df["metric"] == "mAP50"]["value"])
 map_sort = np.argsort(maps)[::-1]
 print(map_sort)
 
-fig, ax = plt.subplots(figsize=(4, 3))  # Set the size of the figure
+fig, ax = plt.subplots(figsize=(5, 4))  # Set the size of the figure
 
 colors = plt.cm.tab20.colors  # Get a list of colors for each metric
-for i, metric in enumerate(metrics):
+for i, metric in enumerate(metrics[-1:]):
     x = np.arange(len(models))  # [map_sort]
-    print(x)
     y = np.array(df[df["metric"] == metric]["value"])[map_sort]  # Y-axis values
-    print(y)
-    ax.bar(x + i * bar_width - 0.4, y, width=bar_width, label=metric, color=colors[i])
-
+    ax.bar(x, y, width=bar_width, label=metric, color=colors[i])
 
 ax.set_xticks(range(len(models)))  # Set ticks on X-axis
 ax.set_xticklabels(
     models[map_sort], rotation=45, ha="right"
 )  # Set labels on X-axis with rotation
-ax.set_ylabel("Value")  # Set label for Y-axis
+ax.set_ylabel("mAP")  # Set label for Y-axis
 ax.set_xlabel("Model")  # Set label for X-axis
-ax.legend()  # Add legend
+# ax.legend()  # Add legend
 plt.grid(1)
 plt.tight_layout()  # Ensure tight layout
 plt.savefig("exp_external_datasets.pdf", dpi=300)  # Save plot in vector format (PDF)

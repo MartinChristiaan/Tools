@@ -125,7 +125,7 @@ r2 = [x + bar_width for x in r1]
 r3 = [x + bar_width for x in r2]
 
 # Create the bar chart
-plt.figure(figsize=(4, 4))
+plt.figure(figsize=(5, 4))
 colors = plt.cm.tab20.colors
 plt.bar(r1, air_means, width=bar_width, label="Air data", color=colors[0])
 plt.bar(r2, naval_means, width=bar_width, label="Naval data", color=colors[1])
