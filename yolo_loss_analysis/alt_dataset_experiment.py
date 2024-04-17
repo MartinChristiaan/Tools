@@ -87,7 +87,7 @@ maps = list(df[df["metric"] == "mAP50"]["value"])
 map_sort = np.argsort(maps)[::-1]
 print(map_sort)
 
-fig, ax = plt.subplots(figsize=(5, 4))  # Set the size of the figure
+fig, ax = plt.subplots(figsize=(4, 4))  # Set the size of the figure
 
 colors = plt.cm.tab20.colors  # Get a list of colors for each metric
 for i, metric in enumerate(metrics[-1:]):
