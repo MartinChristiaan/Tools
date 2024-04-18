@@ -7,6 +7,7 @@ import { flask_url } from "../lib/utils";
 
 export default function Home() {
   const [timestamp, setTimestamp] = useState(0);
+  const [comment, setComment] = useState("");
   const [serverData, setServerData] = useState<ServerData>(
     new ServerData({
       videoset: "",
@@ -20,7 +21,8 @@ export default function Home() {
       groupbys: [],
       groupbys_options: [],
       plotmode: "markers",
-      color:""
+      color:"",
+      comment:""
     })
   );
 
@@ -75,7 +77,8 @@ export default function Home() {
   return (
     <div style={{ display: "flex", flexDirection: "column", width: "100vw" }}>
       <InputSelector serverData={serverData} setServerData={setServerData} />
-      <button className="btn btn-primary" onClick={handleSave}>Save</button>
+      {/* <button className="btn btn-primary" onClick={handleSave}>Save</button> */}
+      {/* <input type="text" value={comment} onChange= {(x) => setComment(x.target.value)}>Save</input> */}
       <div
         style={{
           display: "flex",

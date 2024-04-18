@@ -22,6 +22,7 @@ export class ServerData {
 	groupbys_options: string[];
 	plotmode:string;
 	color:string;
+	comment:string;
 
 	constructor(data: any) {
 		this.videoset = data.videoset;
@@ -36,6 +37,7 @@ export class ServerData {
 		this.groupbys = data.groupbys
 		this.groupbys_options = data.groupbys_options
 		this.color = data.color
+		this.comment=data.comment
 	}
 }
 
