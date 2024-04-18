@@ -54,7 +54,7 @@ export default function Home() {
   }, []);
   const handleSave = async () => {
     try {
-      const response = await fetch(flask_url + "/save/" + timestamp.toString(), {
+      const response = await fetch(flask_url + "/save/" + timestamp.toString() + "___" + comment, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -77,8 +77,8 @@ export default function Home() {
   return (
     <div style={{ display: "flex", flexDirection: "column", width: "100vw" }}>
       <InputSelector serverData={serverData} setServerData={setServerData} />
-      {/* <button className="btn btn-primary" onClick={handleSave}>Save</button> */}
-      {/* <input type="text" value={comment} onChange= {(x) => setComment(x.target.value)}>Save</input> */}
+      <button className="btn btn-primary" onClick={handleSave}>Save</button>
+      <input type="text" value={comment} onChange= {(x) => setComment(x.target.value)}/>
       <div
         style={{
           display: "flex",
