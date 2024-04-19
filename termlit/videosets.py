@@ -1,3 +1,4 @@
+from typing import List
 from media_manager.core import MediaManager
 import os
 from pathlib import Path
@@ -25,19 +26,34 @@ def get_cameras(videoset_names):
     return cameras
 
 
-from selection import select
+def get_videoset_cameras(videoset_names):
+    cameras = []
+    for vset in videoset_names:
+        cameras += [vset + "|" + cam for cam in videosets[vset].cameras]
+    return cameras
 
 
-def videoset_camera_selection():
-    vsets = select(videoset_names)
-    cameras = get_cameras(vsets)
-    cameras = select(cameras)
-    results = []
-    for camera, vset in product(cameras, vsets):
-        if camera in videosets[vset].cameras:
-            results.append((vset, camera))
-    return results
+from selection import MenuItem
+
+videoset_cameras = get_videoset_cameras(videoset_names)
+
+
+# def videoset_camera_selection():
+#     vsets = select(videoset_names)
+#     cameras = get_cameras(vsets)
+#     cameras = select(cameras)
+#     results = []
+#     for camera, vset in product(cameras, vsets):
+#         if camera in videosets[vset].cameras:
+#             results.append((vset, camera))
+#     return results
+
+
+# def menu(menuitems : List[MenuItem]):
+
+# current_config = {"videoset_cameras": [], "experiments": [], "use_tensorrt": False}
 
 
 if __name__ == "__main__":
-    videoset_camera_selection()
+    item = MenuItem("videoset_camera", videoset_cameras)
+    print(item.select())
