@@ -12,6 +12,7 @@
 
 
 from dataclasses import dataclass
+import enum
 from typing import List
 import click
 
@@ -31,6 +32,7 @@ def flatten_list(list_of_lists):
 class MenuItem:
     name: str
     options: List
+    selected: List = None
     single_value: bool = False
 
     def select(self):
@@ -42,15 +44,48 @@ class MenuItem:
             selected = []
             for sub_pattern in current_pattern.split("+"):
                 selected += fnmatch.filter(self.options, f"*{sub_pattern}*")
-            if len(selected) == 0:
-                current_pattern = ""
-                continue
+            # if len(selected) == 0:
+            #     current_pattern = ""
+            #     continue
+
             click.clear()
             print(",".join(selected))
             print(f"Pattern : {current_pattern}")
             char = click.getchar()
-            if char == " ":
+            if char == "\x7f":
+                current_pattern = current_pattern[:-1]
+            elif char == " ":
                 if self.single_value:
+                    self.selected = selected[0]
                     return selected[0]
-                return selected
-            current_pattern += char
+                else:
+                    self.selected = selected
+                    return selected
+            else:
+                current_pattern += char
+
+
+def menu(menu_items: List[MenuItem], name: str):
+
+    while True:
+        click.clear()
+        print(name)
+        print("")
+        selected_idx = 0
+        for i, item in enumerate(menu_items):
+            printname = item.name
+            if i == selected_idx:
+                printname = " > " + printname
+            print(printname)
+        c = click.getchar()
+
+        if c == "j":
+            selected_idx += 1
+            if selected_idx >= len(menu_items):
+                selected_idx = 0
+        if c == "k":
+            selected_idx -= 1
+            if selected_idx < 0:
+                selected_idx = len(menu_items) - 1
+        if c == " ":
+            menu_items[selected_idx].select
