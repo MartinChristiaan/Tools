@@ -39,6 +39,9 @@ class MenuItem:
         if len(self.options) == 0:
             logger.warning(f"no options available for {self.name}")
             return None
+        return self.select_stringlist()
+
+    def select_stringlist(self):
         current_pattern = ""
         while True:
             selected = []
@@ -67,15 +70,15 @@ class MenuItem:
 
 def menu(menu_items: List[MenuItem], name: str):
 
+    selected_idx = 0
     while True:
         click.clear()
         print(name)
         print("")
-        selected_idx = 0
         for i, item in enumerate(menu_items):
-            printname = item.name
+            printname = f"{item.name} = {str(item.selected)[:200]}"
             if i == selected_idx:
-                printname = " > " + printname
+                printname = f"> {item.name} {item.selected}"
             print(printname)
         c = click.getchar()
 
@@ -88,4 +91,6 @@ def menu(menu_items: List[MenuItem], name: str):
             if selected_idx < 0:
                 selected_idx = len(menu_items) - 1
         if c == " ":
-            menu_items[selected_idx].select
+            menu_items[selected_idx].select()
+        if c == "\x7f":
+            return {x.name: x.selected for x in menu_items}
