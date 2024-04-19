@@ -2,12 +2,14 @@ from media_manager.core import MediaManager
 import os
 from pathlib import Path
 from loguru import logger
+from itertools import product
 from videosets_ii.videosets_ii import VideosetsII
 import pandas as pd
 
 basedirpath = Path(r"/diskstation")
-videosets = VideosetsII(basedirpath= basedirpath)#basedirpath)
-videoset_names = list(videosets.to_pandas()['name'])
+videosets = VideosetsII(basedirpath=basedirpath)  # basedirpath)
+videoset_names = list(videosets.to_pandas()["name"])
+
 
 def find_result_csv_in_mm_path(self, mm):
     paths = list(mm.result_dirpath.rglob("*.csv"))
@@ -15,4 +17,27 @@ def find_result_csv_in_mm_path(self, mm):
     path_options = [f"{x.parent.stem}/{x.name}" for x in paths]
     return path_options
 
-def 
+
+def get_cameras(videoset_names):
+    cameras = []
+    for vset in videoset_names:
+        cameras += videosets[vset].cameras
+    return cameras
+
+
+from selection import select
+
+
+def videoset_camera_selection():
+    vsets = select(videoset_names)
+    cameras = get_cameras(vsets)
+    cameras = select(cameras)
+    results = []
+    for camera, vset in product(cameras, vsets):
+        if camera in videosets[vset].cameras:
+            results.append((vset, camera))
+    return results
+
+
+if __name__ == "__main__":
+    videoset_camera_selection()
