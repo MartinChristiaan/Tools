@@ -121,7 +121,7 @@ class Menu:
 
     def load_cache_state(self):
         if self.cache_file.exists():
-            with open(self.cache_file, "rb"):
+            with open(self.cache_file, "rb") as f:
                 state = pickle.load(f)
             for k, v in state.items():
                 menu_item = [x for x in self.menu_items if x.name == k]
@@ -129,18 +129,16 @@ class Menu:
                     item._selected = v
 
     def save_state(self):
-
         state = {item.name: item.selected for item in self.menu_items}
-        with open(self.cache_file, "rb"):
-            for k, v in state.items():
-                menu_item = [x for x in self.menu_items if x.name == k]
-                for item in menu_item:
-                    item._selected = v
+        with open(self.cache_file, "wb") as f:
+            pickle.dump(state, f)
 
     def run(self):
+        from icecream import ic
+
         selected_idx = 0
         while True:
-            click.clear()
+            # click.clear()
             print(self.name)
             print("")
             for i, item in enumerate(self.menu_items):
@@ -149,7 +147,6 @@ class Menu:
                     printname = f"> {item.name} {str(item.selected)[:200]}"
                 print(printname)
             c = click.getchar()
-
             if c == "j":
                 selected_idx += 1
                 if selected_idx >= len(self.menu_items):
@@ -160,6 +157,6 @@ class Menu:
                     selected_idx = len(self.menu_items) - 1
             if c == " ":
                 self.menu_items[selected_idx].select()
-
-            if c == "\x7f":
+                self.save_state()
+            if c == "\x1b":  # esc
                 return {x.name: x.selected for x in self.menu_items}

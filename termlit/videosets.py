@@ -1,4 +1,5 @@
 from pathlib import Path
+from dataclasses import dataclass
 from videosets_ii.videosets_ii import VideosetsII
 
 from selection import (
@@ -35,14 +36,36 @@ def get_videoset_cameras(videoset_names):
     return cameras
 
 
+# camera_lut = []
+# for vset in videoset_names:
+#     camera_lut] += [vset + "|" + cam for cam in videosets[vset].cameras]
 videoset_cameras = get_videoset_cameras(videoset_names)
+
+
+@dataclass
+class CameraSelector(MenuItemMultiStr):
+    videoset_selector: MenuItemMultiStr
+
+    def select(self):
+        self.options = []
+        for videoset in videoset_selector.selected:
+            self.options += videosets[videoset].cameras
+        return super().select()
+
+
+videoset_selector = MenuItemMultiStr("videosets", _selected=[], options=videoset_names)
+camera_selector = CameraSelector(
+    "camera", _selected=[], options=None, videoset_selector=videoset_selector
+)
+
+
 menu_items = [
     MenuItemMultiStr("experiments", _selected=[], options=["proposed", "clipped"]),
-    MenuItemMultiStr("MM", _selected=[], options=videoset_cameras),
     MenuItemBool("use tensorrt", True),
     MenuItemFloat("confidence", 0.1),
 ]
 result = Menu(menu_items, "processing_app").run()
+print(result)
 
 
 # def videoset_camera_selection():
