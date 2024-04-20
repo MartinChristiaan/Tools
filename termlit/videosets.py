@@ -1,12 +1,13 @@
-from typing import List
-from media_manager.core import MediaManager
-import os
 from pathlib import Path
-from loguru import logger
-from itertools import product
-import numpy as np
 from videosets_ii.videosets_ii import VideosetsII
-import pandas as pd
+
+from selection import (
+    Menu,
+    MenuItem,
+    MenuItemBool,
+    MenuItemMultiStr,
+    MenuItemFloat,
+)
 
 basedirpath = Path(r"/diskstation")
 videosets = VideosetsII(basedirpath=basedirpath)  # basedirpath)
@@ -34,17 +35,14 @@ def get_videoset_cameras(videoset_names):
     return cameras
 
 
-from selection import MenuItem, menu
-
 videoset_cameras = get_videoset_cameras(videoset_names)
 menu_items = [
-    MenuItem("experiments", ["proposed", "clipped"]),
-    MenuItem("MM", videoset_cameras),
-    MenuItem("use tensorrt", None, selected=True),
-    MenuItem("confidence", None),
+    MenuItemMultiStr("experiments", _selected=[], options=["proposed", "clipped"]),
+    MenuItemMultiStr("MM", _selected=[], options=videoset_cameras),
+    MenuItemBool("use tensorrt", True),
+    MenuItemFloat("confidence", 0.1),
 ]
-result = menu(menu_items, "processing_app")
-print(result)
+result = Menu(menu_items, "processing_app").run()
 
 
 # def videoset_camera_selection():

@@ -13,6 +13,8 @@
 
 from dataclasses import dataclass
 import enum
+from pathlib import Path
+import pickle
 from typing import List
 import click
 
@@ -28,34 +30,66 @@ def flatten_list(list_of_lists):
     return result
 
 
+from typing import List
+
+
 @dataclass
 class MenuItem:
     name: str
-    options: List
-    selected: List = None
+    _selected: any = None
+
+    @property
+    def selected(self):
+        return self._selected
+
+    def select(self):
+        pass
+
+
+@dataclass
+class MenuItemFloat(MenuItem):
+    _selected: float = None
+
+    def select(self):
+        self._selected = float(input(f"{self.name} (float) : "))
+
+
+@dataclass
+class MenuItemStr(MenuItem):
+    _selected: str = None
+
+    def select(self):
+        self._selected = input(f"{self.name} (float) : ")
+
+
+@dataclass
+class MenuItemInt(MenuItem):
+    _selected: int = None
+
+    def select(self):
+        self._selected = int(input(f"{self.name} (int) : "))
+
+
+@dataclass
+class MenuItemBool(MenuItem):
+    _selected: bool = None
+
+    def select(self):
+        self._selected = not self.selected
+
+
+@dataclass
+class MenuItemMultiStr(MenuItem):
+    options: List = None
     single_value: bool = False
 
     def select(self):
-        if self.options is None:
-            if type(self.selected) == bool:
-                self.selected = not self.selected
-                return self.selected
-            if type(self.selected) == float:
-                self.selected = float(input("enter your input : "))
-        if len(self.options) == 0:
-            logger.warning(f"no options available for {self.name}")
-            return None
-        return self.select_stringlist()
-
-    def select_stringlist(self):
+        print("selecting")
         current_pattern = ""
         while True:
             selected = []
             for sub_pattern in current_pattern.split("+"):
                 selected += fnmatch.filter(self.options, f"*{sub_pattern}*")
-            # if len(selected) == 0:
-            #     current_pattern = ""
-            #     continue
 
             click.clear()
             print(",".join(selected))
@@ -65,38 +99,67 @@ class MenuItem:
                 current_pattern = current_pattern[:-1]
             elif char == " ":
                 if self.single_value:
-                    self.selected = selected[0]
-                    return selected[0]
+                    self._selected = selected[0]
+                    return
                 else:
-                    self.selected = selected
-                    return selected
+                    self._selected = selected
+                    return
             else:
                 current_pattern += char
 
 
-def menu(menu_items: List[MenuItem], name: str):
+class Menu:
+    def __init__(
+        self, menu_items: List[MenuItem], name: str, cache_dir="/data/menu_cache"
+    ) -> None:
+        self.menu_items = menu_items
+        self.name = name
+        self.cache_dir = Path(cache_dir)
+        self.cache_dir.mkdir(exist_ok=True, parents=True)
+        self.cache_file = self.cache_dir / "name.pkl"
+        self.load_cache_state()
 
-    selected_idx = 0
-    while True:
-        click.clear()
-        print(name)
-        print("")
-        for i, item in enumerate(menu_items):
-            printname = f"{item.name} = {str(item.selected)[:200]}"
-            if i == selected_idx:
-                printname = f"> {item.name} {item.selected}"
-            print(printname)
-        c = click.getchar()
+    def load_cache_state(self):
+        if self.cache_file.exists():
+            with open(self.cache_file, "rb"):
+                state = pickle.load(f)
+            for k, v in state.items():
+                menu_item = [x for x in self.menu_items if x.name == k]
+                for item in menu_item:
+                    item._selected = v
 
-        if c == "j":
-            selected_idx += 1
-            if selected_idx >= len(menu_items):
-                selected_idx = 0
-        if c == "k":
-            selected_idx -= 1
-            if selected_idx < 0:
-                selected_idx = len(menu_items) - 1
-        if c == " ":
-            menu_items[selected_idx].select()
-        if c == "\x7f":
-            return {x.name: x.selected for x in menu_items}
+    def save_state(self):
+
+        state = {item.name: item.selected for item in self.menu_items}
+        with open(self.cache_file, "rb"):
+            for k, v in state.items():
+                menu_item = [x for x in self.menu_items if x.name == k]
+                for item in menu_item:
+                    item._selected = v
+
+    def run(self):
+        selected_idx = 0
+        while True:
+            click.clear()
+            print(self.name)
+            print("")
+            for i, item in enumerate(self.menu_items):
+                printname = f"{item.name} = {str(item.selected)[:200]}"
+                if i == selected_idx:
+                    printname = f"> {item.name} {str(item.selected)[:200]}"
+                print(printname)
+            c = click.getchar()
+
+            if c == "j":
+                selected_idx += 1
+                if selected_idx >= len(self.menu_items):
+                    selected_idx = 0
+            if c == "k":
+                selected_idx -= 1
+                if selected_idx < 0:
+                    selected_idx = len(self.menu_items) - 1
+            if c == " ":
+                self.menu_items[selected_idx].select()
+
+            if c == "\x7f":
+                return {x.name: x.selected for x in self.menu_items}
