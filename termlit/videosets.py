@@ -44,7 +44,7 @@ videoset_cameras = get_videoset_cameras(videoset_names)
 
 @dataclass
 class CameraSelector(MenuItemMultiStr):
-    videoset_selector: MenuItemMultiStr
+    videoset_selector: MenuItemMultiStr = None
 
     def select(self):
         self.options = []
@@ -57,9 +57,9 @@ videoset_selector = MenuItemMultiStr("videosets", _selected=[], options=videoset
 camera_selector = CameraSelector(
     "camera", _selected=[], options=None, videoset_selector=videoset_selector
 )
-
-
 menu_items = [
+    videoset_selector,
+    camera_selector,
     MenuItemMultiStr("experiments", _selected=[], options=["proposed", "clipped"]),
     MenuItemBool("use tensorrt", True),
     MenuItemFloat("confidence", 0.1),

@@ -1,3 +1,5 @@
+import os
+
 # import os
 # from pathlib import Path
 # from loguru import logger
@@ -78,6 +80,22 @@ class MenuItemBool(MenuItem):
         self._selected = not self.selected
 
 
+def print_grid(strings):
+    # Get terminal width
+    terminal_width = os.get_terminal_size().columns
+
+    # Calculate number of columns based on terminal width
+    num_columns = terminal_width // (max(len(s) for s in strings) + 2)  # +2 for padding
+
+    # Pad shorter strings with spaces to ensure equal length
+    padded_strings = [s.ljust(max(len(s) for s in strings) + 2) for s in strings]
+
+    # Print grid
+    for i in range(0, len(padded_strings), num_columns):
+        row = padded_strings[i : i + num_columns]
+        print("".join(row))
+
+
 @dataclass
 class MenuItemMultiStr(MenuItem):
     options: List = None
@@ -92,7 +110,8 @@ class MenuItemMultiStr(MenuItem):
                 selected += fnmatch.filter(self.options, f"*{sub_pattern}*")
 
             click.clear()
-            print(",".join(selected))
+            # print(",".join(selected))
+            print_grid(selected)
             print(f"Pattern : {current_pattern}")
             char = click.getchar()
             if char == "\x7f":
@@ -138,7 +157,7 @@ class Menu:
 
         selected_idx = 0
         while True:
-            # click.clear()
+            click.clear()
             print(self.name)
             print("")
             for i, item in enumerate(self.menu_items):
