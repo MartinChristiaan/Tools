@@ -36,6 +36,12 @@ class MenuItem:
     single_value: bool = False
 
     def select(self):
+        if self.options is None:
+            if type(self.selected) == bool:
+                self.selected = not self.selected
+                return self.selected
+            if type(self.selected) == float:
+                self.selected = float(input("enter your input : "))
         if len(self.options) == 0:
             logger.warning(f"no options available for {self.name}")
             return None

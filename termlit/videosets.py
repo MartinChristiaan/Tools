@@ -34,14 +34,14 @@ def get_videoset_cameras(videoset_names):
     return cameras
 
 
-from selection import MenuItemStringList, menu
+from selection import MenuItem, menu
 
 videoset_cameras = get_videoset_cameras(videoset_names)
 menu_items = [
-    MenuItemStringList("experiments", ["proposed", "clipped"]),
-    MenuItemStringList("MM", videoset_cameras),
-    MenuItemStringList("use tensorrt", [True, False]),
-    MenuItemStringList("confidence", np.linspace(0, 1, 100)),
+    MenuItem("experiments", ["proposed", "clipped"]),
+    MenuItem("MM", videoset_cameras),
+    MenuItem("use tensorrt", None, selected=True),
+    MenuItem("confidence", None),
 ]
 result = menu(menu_items, "processing_app")
 print(result)
@@ -64,5 +64,5 @@ print(result)
 
 
 if __name__ == "__main__":
-    item = MenuItemStringList("videoset_camera", videoset_cameras)
+    item = MenuItem("videoset_camera", videoset_cameras)
     print(item.select())
