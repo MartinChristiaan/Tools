@@ -1,5 +1,7 @@
+from multiprocessing import Queue
 from pathlib import Path
 from dataclasses import dataclass
+import time
 from videosets_ii.videosets_ii import VideosetsII
 
 from selection import (
@@ -48,42 +50,44 @@ class CameraSelector(MenuItemMultiStr):
 
     def select(self):
         self.options = []
-        for videoset in videoset_selector.selected:
+        for videoset in self.videoset_selector.selected:
             self.options += videosets[videoset].cameras
         return super().select()
 
 
-videoset_selector = MenuItemMultiStr("videosets", _selected=[], options=videoset_names)
-camera_selector = CameraSelector(
-    "camera", _selected=[], options=None, videoset_selector=videoset_selector
-)
-menu_items = [
-    videoset_selector,
-    camera_selector,
-    MenuItemMultiStr("experiments", _selected=[], options=["proposed", "clipped"]),
-    MenuItemBool("use tensorrt", True),
-    MenuItemFloat("confidence", 0.1),
-]
-result = Menu(menu_items, "processing_app").run()
-print(result)
+class TaskProcessor:
+    def __init__(self, task) -> None:
+        self.queue = Queue()
+        self.task = task
+        self.config_in_progess = None
 
-
-# def videoset_camera_selection():
-#     vsets = select(videoset_names)
-#     cameras = get_cameras(vsets)
-#     cameras = select(cameras)
-#     results = []
-#     for camera, vset in product(cameras, vsets):
-#         if camera in videosets[vset].cameras:
-#             results.append((vset, camera))
-#     return results
-
-
-# def menu(menuitems : List[MenuItem]):
-
-# current_config = {"videoset_cameras": [], "experiments": [], "use_tensorrt": False}
+    def processor(self):
+        while True:
+            if not self.queue.empty():
+                self.config_in_progess = self.queue.get()
+                self.task(self.config_in_progess)
+                self.config_in_progess = None
+            else:
+                time.sleep(0.1)
 
 
 if __name__ == "__main__":
-    item = MenuItem("videoset_camera", videoset_cameras)
-    print(item.select())
+
+    videoset_selector = MenuItemMultiStr(
+        "videosets", _selected=[], options=videoset_names
+    )
+    camera_selector = CameraSelector(
+        "camera", _selected=[], options=None, videoset_selector=videoset_selector
+    )
+    queue = Queue()
+    menu_items = [
+        videoset_selector,
+        camera_selector,
+        MenuItemMultiStr("experiments", _selected=[], options=["proposed", "clipped"]),
+        MenuItemBool("use tensorrt", True),
+        MenuItemFloat("confidence", 0.1),
+        MenuItem("Queue c"),
+    ]
+    configurations = Menu(menu_items, "processing_app").run()
+    for configuration in configurations:
+        queue.put(configuration)

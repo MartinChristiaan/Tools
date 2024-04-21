@@ -1,3 +1,4 @@
+from multiprocessing import Queue
 import os
 
 # import os
@@ -17,11 +18,14 @@ from dataclasses import dataclass
 import enum
 from pathlib import Path
 import pickle
+import time
 from typing import List
 import click
 
 import fnmatch
 from loguru import logger
+
+from videosets import TaskProcessor
 
 
 def flatten_list(list_of_lists):
@@ -179,3 +183,54 @@ class Menu:
                 self.save_state()
             if c == "\x1b":  # esc
                 return {x.name: x.selected for x in self.menu_items}
+
+
+class TaskProcessor:
+    def __init__(self, task) -> None:
+        self.queue = []
+        self.task = task
+        self.config_in_progess = None
+
+    def processor(self):
+        while True:
+            if not len(self.queue) == 0:
+                self.config_in_progess = self.queue[0]
+                self.task(self.config_in_progess)
+                self.config_in_progess = None
+                self.queue = self.queue[1:]
+            else:
+                time.sleep(0.1)
+
+
+@dataclass
+class QueueControl(MenuItem):
+    processer: TaskProcessor
+
+    def select(self):
+        while True:
+            out_str = f"""
+	Items in queue : {self.processor.queue.size()}
+	currently processing : {self.processor.config_in_process}
+			"""
+            selected_idx = 0
+
+            for i, t in enumerate(self.processer.queue):
+                task_str = str(t)[:200]
+                if selected_idx == i:
+                    task_str = " > " + task_str
+                out_str += task_str + "\n"
+            print(out_str)
+            c = click.getchar()
+            if c == "j":
+                selected_idx += 1
+                if selected_idx >= len(self.menu_items):
+                    selected_idx = 0
+            if c == "k":
+                selected_idx -= 1
+                if selected_idx < 0:
+                    selected_idx = len(self.menu_items) - 1
+            if c == " ":
+                self.menu_items[selected_idx].select()
+                self.save_state()
+            if c == "\x1b":  # esc
+                return
