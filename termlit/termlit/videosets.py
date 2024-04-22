@@ -2,6 +2,7 @@ from multiprocessing import Queue
 from pathlib import Path
 from dataclasses import dataclass
 import time
+import click
 from videosets_ii.videosets_ii import VideosetsII
 
 from termlit.selection import (
@@ -57,7 +58,7 @@ class CameraSelector(MenuItemMultiStr):
         return super().select()
 
 
-videoset_selector = MenuItemMultiStr("videosets", _selected=[], options=videoset_names)
+videoset_selector = MenuItemMultiStr("videoset", _selected=[], options=videoset_names)
 camera_selector = CameraSelector(
     "camera", _selected=[], options=None, videoset_selector=videoset_selector
 )
@@ -70,18 +71,28 @@ if __name__ == "__main__":
     #     time.sleep(600)
 
     # processor = TaskProcessor(task)
-
+    queue_file = Path("processing_app_queue.csv")
     menu_items = [
         videoset_selector,
         camera_selector,
-        MenuItemMultiStr("experiments", _selected=[], options=["proposed", "clipped"]),
+        MenuItemMultiStr("experiment", _selected=[], options=["proposed", "clipped"]),
         MenuItemBool("use tensorrt", True),
         MenuItemFloat("confidence", 0.1),
         # QueueControl("queue", processer=processor),
     ]
-    # while True:
-    items = Menu(menu_items, "processing_app").run()
-    import pandas as pd
+    while True:
+        items = Menu(menu_items, "processing_app").run()
+        items_filtered = []
+        for item in items:
+            if item["camera"] not in videosets[item["videoset"]].cameras:
+                items_filtered.append(item)
+        import pandas as pd
 
-    df = pd.DataFrame(items)
-    df.to_csv("processing_app.csv")
+        df = pd.DataFrame(items_filtered)
+        if not queue_file.exists():
+            df.to_csv(queue_file, index=False)
+        else:
+            df.to_csv(queue_file, index=False, header=False, mode="a")
+        print()
+        print(f"added {len(df)} items, press any key to continue")
+        click.getchar()

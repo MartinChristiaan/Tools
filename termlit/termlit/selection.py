@@ -112,7 +112,8 @@ class MenuItemMultiStr(MenuItem):
 
             click.clear()
             # print(",".join(selected))
-            print_grid(selected)
+            if len(selected) > 0:
+                print_grid(selected)
             print(f"Pattern : {current_pattern}")
             char = click.getchar()
             if char == "\x7f":
