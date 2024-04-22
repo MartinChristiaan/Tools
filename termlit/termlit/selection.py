@@ -179,7 +179,7 @@ class Menu:
                 self.menu_items[selected_idx].select()
                 self.save_state()
             if c == "\x1b":  # esc
-                config_dict = {x.name: x.selected for x in self.menu_items}
+                configs = {x.name: x.selected for x in self.menu_items}
                 break
 
         tasks = []
@@ -200,6 +200,7 @@ class Menu:
             for k, v in single_values:
                 config[k] = v
             for k, v in zip(list_keys, val_tuple):
+                print(k, v)
                 config[k] = v
             configs.append(config)
         return configs
