@@ -191,16 +191,17 @@ class Menu:
             if isinstance(v, list):
                 list_values.append(v)
                 list_keys.append(k)
+                print(len(v))
             else:
                 single_values.append((k, v))
         configs = []
+        from icecream import ic
 
-        for val_tuple in product(list_values):
+        for val_tuple in product(*list_values):
             config = {}
-            for k, v in single_values:
-                config[k] = v
             for k, v in zip(list_keys, val_tuple):
-                print(k, v)
+                config[k] = v
+            for k, v in single_values:
                 config[k] = v
             configs.append(config)
         return configs
@@ -222,6 +223,7 @@ class TaskProcessor:
                 self.config_in_progess = None
                 self.queue = self.queue[1:]
             else:
+                print("sleeping")
                 time.sleep(0.1)
 
 

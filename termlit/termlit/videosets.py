@@ -63,13 +63,13 @@ camera_selector = CameraSelector(
 )
 
 if __name__ == "__main__":
-    from termlit.selection import TaskProcessor
+    # from termlit.selection import TaskProcessor
 
-    def task(config):
-        print(f"running {config}")
-        time.sleep(600)
+    # def task(config):
+    #     print(f"running {config}")
+    #     time.sleep(600)
 
-    processor = TaskProcessor(task)
+    # processor = TaskProcessor(task)
 
     menu_items = [
         videoset_selector,
@@ -77,11 +77,11 @@ if __name__ == "__main__":
         MenuItemMultiStr("experiments", _selected=[], options=["proposed", "clipped"]),
         MenuItemBool("use tensorrt", True),
         MenuItemFloat("confidence", 0.1),
-        QueueControl("queue", processer=processor),
+        # QueueControl("queue", processer=processor),
     ]
     # while True:
-    processor.queue += Menu(menu_items, "processing_app").run()
-    print(processor.queue)
-    print("hello")
-    for j in range(100):
-        time.sleep(10)
+    items = Menu(menu_items, "processing_app").run()
+    import pandas as pd
+
+    df = pd.DataFrame(items)
+    df.to_csv("processing_app.csv")
