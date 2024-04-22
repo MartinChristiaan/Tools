@@ -17,8 +17,11 @@ COMP=USERID=$(USERID) GROUPID=$(GROUPID) docker-compose -f $(YML)
 image:
 	$(COMP) build
 
-run:
+up:
 	$(COMP) up -d
+
+run: 
+	$(COMP) exec  track-viewer-server /bin/bash
 
 down:
 	$(COMP) down

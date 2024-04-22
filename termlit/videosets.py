@@ -4,7 +4,7 @@ from dataclasses import dataclass
 import time
 from videosets_ii.videosets_ii import VideosetsII
 
-from selection import (
+from termlit.selection import (
     Menu,
     MenuItem,
     MenuItemBool,
@@ -57,6 +57,11 @@ class CameraSelector(MenuItemMultiStr):
         return super().select()
 
 
+videoset_selector = MenuItemMultiStr("videosets", _selected=[], options=videoset_names)
+camera_selector = CameraSelector(
+    "camera", _selected=[], options=None, videoset_selector=videoset_selector
+)
+
 if __name__ == "__main__":
     from selection import TaskProcessor
 
@@ -66,12 +71,6 @@ if __name__ == "__main__":
 
     processor = TaskProcessor(task)
 
-    videoset_selector = MenuItemMultiStr(
-        "videosets", _selected=[], options=videoset_names
-    )
-    camera_selector = CameraSelector(
-        "camera", _selected=[], options=None, videoset_selector=videoset_selector
-    )
     menu_items = [
         videoset_selector,
         camera_selector,

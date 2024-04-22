@@ -77,14 +77,17 @@ def set_videoset():
     return jsonify(videoset_api.manager.to_dict())
 
 
-@app.route("/save/<timestamp>", methods=["GET"])
-def save(timestamp):
-    saves_folder = Path("saves/")
+
+@app.route("/save/<timestamp_and_comment>", methods=["GET"])
+def save(timestamp_and_comment):
+    saves_folder = Path("/data/track-viewer-saves/")
     saves_folder.mkdir(exist_ok=True)
     from datetime import datetime
 
     manager = videoset_api.manager
+    timestamp,comment = timestamp_and_comment.split('___')
     manager.timestamp = float(timestamp)
+    manager.comment = comment
     datestr = datetime.now().strftime("%Y%m%dT%H%M%S")
     save_path = saves_folder / f"{datestr}_{manager.videoset}_{manager.camera_flat}.pkl"
     with open(save_path, "wb") as f:

@@ -28,6 +28,7 @@ class IOData(du.Pathfinder):
     color = ""
     plotmode: str = "markers"  # can also be set to lines
     timestamp: float = 0
+    comment:str = ""
 
     @property
     def videoset_obj(self):
@@ -55,6 +56,7 @@ class IOData(du.Pathfinder):
             plotmode=self.plotmode,
             color=self.color,
             timestamp=self.timestamp,
+            comment=self.comment
         )
 
     # def save(self):

@@ -1,3 +1,4 @@
+from itertools import product
 from multiprocessing import Process
 import os
 
@@ -178,7 +179,30 @@ class Menu:
                 self.menu_items[selected_idx].select()
                 self.save_state()
             if c == "\x1b":  # esc
-                return {x.name: x.selected for x in self.menu_items}
+                config_dict = {x.name: x.selected for x in self.menu_items}
+                break
+
+        tasks = []
+        list_values = []
+        list_keys = []
+        single_values = []
+
+        for k, v in configs.items():
+            if isinstance(v, list):
+                list_values.append(v)
+                list_keys.append(k)
+            else:
+                single_values.append((k, v))
+        configs = []
+
+        for val_tuple in product(list_values):
+            config = {}
+            for k, v in single_values:
+                config[k] = v
+            for k, v in zip(list_keys, val_tuple):
+                config[k] = v
+            configs.append(config)
+        return configs
 
 
 class TaskProcessor:
