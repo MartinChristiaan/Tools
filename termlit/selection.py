@@ -1,4 +1,4 @@
-from multiprocessing import Queue
+from multiprocessing import Process
 import os
 
 # import os
@@ -15,7 +15,6 @@ import os
 
 
 from dataclasses import dataclass
-import enum
 from pathlib import Path
 import pickle
 import time
@@ -23,9 +22,6 @@ from typing import List
 import click
 
 import fnmatch
-from loguru import logger
-
-from videosets import TaskProcessor
 
 
 def flatten_list(list_of_lists):
@@ -157,7 +153,7 @@ class Menu:
             pickle.dump(state, f)
 
     def run(self):
-        from icecream import ic
+        pass
 
         selected_idx = 0
         while True:
@@ -190,8 +186,10 @@ class TaskProcessor:
         self.queue = []
         self.task = task
         self.config_in_progess = None
+        self.p = Process(target=self.run)
+        self.p.start()
 
-    def processor(self):
+    def run(self):
         while True:
             if not len(self.queue) == 0:
                 self.config_in_progess = self.queue[0]
@@ -204,7 +202,7 @@ class TaskProcessor:
 
 @dataclass
 class QueueControl(MenuItem):
-    processer: TaskProcessor
+    processer: TaskProcessor = None
 
     def select(self):
         while True:
@@ -229,8 +227,9 @@ class QueueControl(MenuItem):
                 selected_idx -= 1
                 if selected_idx < 0:
                     selected_idx = len(self.menu_items) - 1
-            if c == " ":
-                self.menu_items[selected_idx].select()
-                self.save_state()
+            if c == "d":
+                del self.processer.queue[selected_idx]
+            if c == "t":
+                self.processer.queue = []
             if c == "\x1b":  # esc
                 return

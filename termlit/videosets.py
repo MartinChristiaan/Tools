@@ -10,6 +10,8 @@ from selection import (
     MenuItemBool,
     MenuItemMultiStr,
     MenuItemFloat,
+    QueueControl,
+    TaskProcessor,
 )
 
 basedirpath = Path(r"/diskstation")
@@ -55,23 +57,14 @@ class CameraSelector(MenuItemMultiStr):
         return super().select()
 
 
-class TaskProcessor:
-    def __init__(self, task) -> None:
-        self.queue = Queue()
-        self.task = task
-        self.config_in_progess = None
-
-    def processor(self):
-        while True:
-            if not self.queue.empty():
-                self.config_in_progess = self.queue.get()
-                self.task(self.config_in_progess)
-                self.config_in_progess = None
-            else:
-                time.sleep(0.1)
-
-
 if __name__ == "__main__":
+    from selection import TaskProcessor
+
+    def task(config):
+        print(f"running {config}")
+        time.sleep(600)
+
+    processor = TaskProcessor(task)
 
     videoset_selector = MenuItemMultiStr(
         "videosets", _selected=[], options=videoset_names
@@ -79,15 +72,13 @@ if __name__ == "__main__":
     camera_selector = CameraSelector(
         "camera", _selected=[], options=None, videoset_selector=videoset_selector
     )
-    queue = Queue()
     menu_items = [
         videoset_selector,
         camera_selector,
         MenuItemMultiStr("experiments", _selected=[], options=["proposed", "clipped"]),
         MenuItemBool("use tensorrt", True),
         MenuItemFloat("confidence", 0.1),
-        MenuItem("Queue c"),
+        QueueControl("queue", processer=processor),
     ]
-    configurations = Menu(menu_items, "processing_app").run()
-    for configuration in configurations:
-        queue.put(configuration)
+    while True:
+        processor.queue += Menu(menu_items, "processing_app").run()
