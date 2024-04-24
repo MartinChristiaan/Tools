@@ -18,6 +18,7 @@ import os
 from dataclasses import dataclass
 from pathlib import Path
 import pickle
+import sys
 import time
 from typing import List
 import click
@@ -108,7 +109,7 @@ class MenuItemMultiStr(MenuItem):
         while True:
             selected = []
             for sub_pattern in current_pattern.split("+"):
-                selected += fnmatch.filter(self.options, f"*{sub_pattern}*")
+                selected += fnmatch.filter(self.options, f"{sub_pattern}")
 
             click.clear()
             # print(",".join(selected))
@@ -182,6 +183,9 @@ class Menu:
             if c == "\x1b":  # esc
                 configs = {x.name: x.selected for x in self.menu_items}
                 break
+
+            if c == "q":
+                sys.exit()
 
         tasks = []
         list_values = []
