@@ -22,20 +22,20 @@ class Container:
 	def get_observables(self) -> List[Observable]:
 		observables = []
 		for k,v in self.__dict__.items():
+			print(k)
 			if isinstance(v,Observable):
 				observables.append(v)
 		return observables
 
 class MediaManagerSelection(Container):
 	def __init__(self) -> None:
-		self.videoset = Observable(default_vset,'videoset')
-		self.camera_options = Observable(default_cams,'videoset')
-		self.camera = Observable(default_cam,'camera')
+		self.videoset = Observable(default_vset,'videoset',uimode='selectbox',options=default_vset)
+		self.camera = Observable(default_cam,'camera',uimode='selectbox',options=default_cams)
 		self.videoset.subscribe(self.on_videoset_update)
 		super().__init__('Media Manager Selection')
 
 	def on_videoset_update(self):
-		self.camera_options.set_value(videosets[self.videoset.value].cameras)
+		self.camera.options = (videosets[self.videoset.value].cameras)
 	
 
  
@@ -46,8 +46,9 @@ class API:
 	
 	def get_ui_data(self):
 		data = {}
+		print(self.containers)
 		for c in self.containers:
-			data[c.__class__.__name__] = {x.name:x.value for x in  c.get_observables()}
+			data[c.name] = {x.name:x.get_ui_data() for x in  c.get_observables()}
 		return data
 	
 	def set_ui_data(self,data):
@@ -67,7 +68,7 @@ app = Flask(__name__)
 
 # Create an instance of the Server class with some initial containers
 media_manager_selection = MediaManagerSelection()
-initial_containers = []  # Define your initial containers here
+initial_containers = [media_manager_selection]  # Define your initial containers here
 server = API(initial_containers)
 # Endpoint to get UI data
 @app.route('/get_ui_data', methods=['GET'])

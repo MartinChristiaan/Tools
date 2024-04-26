@@ -39,16 +39,18 @@ class FuncStack:
 
 stack = FuncStack()
 class Observable(Generic[T]):
-    def __init__(self, value: T, name="observer", log=True) -> None:
+    def __init__(self, value: T, name="observer", log=True,**uxprops) -> None:
         self._value = value
         self.subscribers = []
         self.name = name
         self.log = log
         self.runcount = 0
+        self.uxprops = uxprops
 
     def set_value(self, new_value):
-        self._value = new_value
-        self.run()
+        if not new_value is self._value:
+            self._value = new_value
+            self.run()
         # if self.log:
         # logger.debug(f"set {self.name} with {len(self.subscribers)} subs")
         # [x() for x in self.subscribers]
@@ -68,6 +70,9 @@ class Observable(Generic[T]):
     @property
     def value(self) -> T:
         return self._value
+    
+    def get_ui_data(self):
+        return {"value":self.value,**self.uxprops}
 
 
 @dataclass
