@@ -29,7 +29,7 @@ class Container:
 
 class MediaManagerSelection(Container):
 	def __init__(self) -> None:
-		self.videoset = Observable(default_vset,'videoset',uimode='selectbox',options=default_vset)
+		self.videoset = Observable(default_vset,'videoset',uimode='selectbox',options=list(videosets.to_pandas()['name']))
 		self.camera = Observable(default_cam,'camera',uimode='selectbox',options=default_cams)
 		self.videoset.subscribe(self.on_videoset_update)
 		super().__init__('Media Manager Selection')
@@ -62,10 +62,11 @@ class API:
 		
 		
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from typing import List
 
 app = Flask(__name__)
-
+CORS(app)
 # Create an instance of the Server class with some initial containers
 media_manager_selection = MediaManagerSelection()
 initial_containers = [media_manager_selection]  # Define your initial containers here
