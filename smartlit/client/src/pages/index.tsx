@@ -11,6 +11,34 @@ export default function Home() {
       .then(data => setUiData(data));
   }, []);
 
+
+  function onUpdate(cardKey, innerKey, value) {
+    // Make a copy of uiData
+    let newUiData = { ...uiData };
+    // Update the value in the local state
+    newUiData[cardKey][innerKey].value = value;
+
+    // Perform the POST request to update the server
+    fetch(flask_url + "/set_ui_data", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newUiData),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to update UI data");
+        }
+        // Update the state with the new UI data if the request was successful
+        setUiData(newUiData);
+      })
+      .catch((error) => {
+        console.error("Error updating UI data:", error);
+      });
+  }
+
+
   const renderOptions = (options) => {
     if (Array.isArray(options)) {
       return options.map(option => <option key={option}>{option}</option>);
@@ -19,13 +47,13 @@ export default function Home() {
     }
   };
 
-  const renderFormElement = (key, data) => {
+  const renderFormElement = (outerKey,innerkey, data) => {
     switch (data.uimode) {
       case "selectbox":
         return (
-          <Form.Group key={key}>
-            <Form.Label>{key}</Form.Label>
-            <Form.Control as="select" defaultValue={data.value}>
+          <Form.Group key={innerkey}>
+            <Form.Label>{innerkey}</Form.Label>
+            <Form.Control as="select" defaultValue={data.value} onChange={(e) => onUpdate(outerKey,innerkey,e.target.value)}>
               {renderOptions(data.options)}
             </Form.Control>
           </Form.Group>
@@ -42,7 +70,7 @@ export default function Home() {
           <Card.Title>{key}</Card.Title>
           <Form>
             {Object.entries(innerData).map(([innerKey, innerData]) =>
-              renderFormElement(innerKey, innerData)
+              renderFormElement(key,innerKey, innerData)
             )}
           </Form>
         </Card.Body>

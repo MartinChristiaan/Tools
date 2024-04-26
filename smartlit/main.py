@@ -32,10 +32,12 @@ class MediaManagerSelection(Container):
 		self.videoset = Observable(default_vset,'videoset',uimode='selectbox',options=list(videosets.to_pandas()['name']))
 		self.camera = Observable(default_cam,'camera',uimode='selectbox',options=default_cams)
 		self.videoset.subscribe(self.on_videoset_update)
+		self.videosets = videosets
 		super().__init__('Media Manager Selection')
 
 	def on_videoset_update(self):
-		self.camera.options = (videosets[self.videoset.value].cameras)
+		print(self.videoset.value)
+		self.camera.options = (self.videosets[self.videoset.value].cameras)
 	
 
  
