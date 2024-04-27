@@ -43,7 +43,7 @@ const Home = () => {
     <div className="app">
       <div className="row">
         <div className="line-chart">
-          <Chart options={options} series={series} type="line" width="500" />
+          <Chart options={options} series={series} type="line" width="1000" />
         </div>
       </div>
     </div>
