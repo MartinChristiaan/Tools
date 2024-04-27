@@ -15,10 +15,12 @@ class Home extends Component {
     this.state = {
       options: {
         chart: {
-          id: "basic-scatter",
+          id: "basic-line",
           events: {
             click: (event, chartContext, config) => {
-              console.log(event, chartContext, config);
+              // console.log(event, chartContext, config);
+              console.log(config.DataPointIndex)
+              console.log(config)
             },
           },
         },
@@ -43,11 +45,11 @@ class Home extends Component {
     return (
       <div className="app">
         <div className="row">
-          <div className="scatter-chart">
+          <div className="line-chart">
             <Chart
               options={this.state.options}
               series={this.state.series}
-              type="scatter"
+              type="line"
               width="500"
             />
           </div>
