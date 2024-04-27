@@ -1,6 +1,9 @@
+
+import 'bootstrap/dist/css/bootstrap.min.css';
 import { useEffect, useState } from "react";
 import { flask_url } from "../lib/utils";
 import { Card, Form } from "react-bootstrap";
+
 
 export default function Home() {
   const [uiData, setUiData] = useState(null);
@@ -26,12 +29,9 @@ export default function Home() {
       },
       body: JSON.stringify(newUiData),
     })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Failed to update UI data");
-        }
-        // Update the state with the new UI data if the request was successful
-        setUiData(newUiData);
+      .then(response => response.json())
+      .then((data) => {
+        setUiData(data);
       })
       .catch((error) => {
         console.error("Error updating UI data:", error);

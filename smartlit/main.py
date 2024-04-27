@@ -29,13 +29,18 @@ class Container:
 
 class SelectBoxObservable(Observable):
 	def __init__(self, value: Any, name="observer", log=True, options=[], **uxprops) -> None:
+		self.options = options
 		super().__init__(value, name, log, uimode='selectbox')
+	def get_ui_data(self):
+		data =  super().get_ui_data()
+		data['options'] = self.options
+		return data
 	
 
 class MediaManagerSelection(Container):
 	def __init__(self) -> None:
-		self.videoset = Observable(default_vset,'videoset',uimode='selectbox',options=list(videosets.to_pandas()['name']))
-		self.camera = Observable(default_cam,'camera',uimode='selectbox',options=default_cams)
+		self.videoset = SelectBoxObservable(default_vset,'videoset',uimode='selectbox',options=list(videosets.to_pandas()['name']))
+		self.camera = SelectBoxObservable(default_cam,'camera',uimode='selectbox',options=default_cams)
 		self.videoset.subscribe(self.on_videoset_update)
 		self.videosets = videosets
 		super().__init__('Media Manager Selection')
@@ -44,7 +49,6 @@ class MediaManagerSelection(Container):
 		cur_vset = self.videoset.value
 		self.camera.options = (self.videosets[cur_vset].cameras)
 		self.camera.set_value(self.camera.options[0])
-		print('new_ui_data',self.camera.get_ui_data())
 	
 
  
