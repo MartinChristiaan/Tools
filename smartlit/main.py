@@ -1,102 +1,61 @@
-from typing import Any, List
-from state import Observable
-
-import os
-from pathlib import Path
+from typing import List
+from Container import Container
+from MediaManagerSelection import MediaManagerSelection
 from loguru import logger
 
-from videosets_ii.videosets_ii import VideosetsII
-from trackertoolbox.detections import Detections
-from trackertoolbox.tracks import Tracks,TrackUpdates
-import pandas as pd
 
-basedirpath = Path(r"/diskstation")
-videosets = VideosetsII(basedirpath= basedirpath)#basedirpath)
-default_vset = 'drone_detection_dataset_2021'
-default_cams=  videosets[default_vset].cameras
-default_cam=  videosets[default_vset].cameras[5]
-
-class Container:
-	def __init__(self,name) -> None:
-		self.name = name
-	def get_observables(self) -> List[Observable]:
-		observables = []
-		for k,v in self.__dict__.items():
-			print(k)
-			if isinstance(v,Observable):
-				observables.append(v)
-		return observables
-
-class SelectBoxObservable(Observable):
-	def __init__(self, value: Any, name="observer", log=True, options=[], **uxprops) -> None:
-		self.options = options
-		super().__init__(value, name, log, uimode='selectbox')
-	def get_ui_data(self):
-		data =  super().get_ui_data()
-		data['options'] = self.options
-		return data
-	
-
-class MediaManagerSelection(Container):
-	def __init__(self) -> None:
-		self.videoset = SelectBoxObservable(default_vset,'videoset',uimode='selectbox',options=list(videosets.to_pandas()['name']))
-		self.camera = SelectBoxObservable(default_cam,'camera',uimode='selectbox',options=default_cams)
-		self.videoset.subscribe(self.on_videoset_update)
-		self.videosets = videosets
-		super().__init__('Media Manager Selection')
-
-	def on_videoset_update(self):
-		cur_vset = self.videoset.value
-		self.camera.options = (self.videosets[cur_vset].cameras)
-		self.camera.set_value(self.camera.options[0])
-	
-
- 
 class API:
-	def __init__(self,containers:List[Container]) -> None:
-		self.containers = containers
-		self.container_lut = {x.name:x for x in self.containers}
-	
-	def get_ui_data(self):
-		data = {}
-		for c in self.containers:
-			data[c.name] = {x.name:x.get_ui_data() for x in  c.get_observables()}
-		print(data)
-		return data
-	
-	def set_ui_data(self,data):
-		for k,container in self.container_lut.items():
-			cdata = data[k] 
-			for observable in container.get_observables():
-				observable.set_value(cdata[observable.name]['value'])
-		return self.get_ui_data()
+    def __init__(self, containers: List[Container]) -> None:
+        self.containers = containers
+        self.container_lut = {x.name: x for x in self.containers}
+
+    def get_ui_data(self):
+        data = {}
+        for c in self.containers:
+            data[c.name] = {x.name: x.get_ui_data() for x in c.get_observables()}
+        return data
+
+    def set_ui_data(self, data):
+        for k, container in self.container_lut.items():
+            cdata = data[k]
+            for observable in container.get_observables():
+                observable.set_value(cdata[observable.name]["value"])
+        return self.get_ui_data()
 
 
-		
-		
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from typing import List
 
-app = Flask(__name__)
-CORS(app)
-# Create an instance of the Server class with some initial containers
-media_manager_selection = MediaManagerSelection()
-initial_containers = [media_manager_selection]  # Define your initial containers here
-server = API(initial_containers)
-# Endpoint to get UI data
-@app.route('/get_ui_data', methods=['GET'])
-def get_ui_data():
-    data = server.get_ui_data()
-    return jsonify(data)
 
-# Endpoint to set UI data
-@app.route('/set_ui_data', methods=['POST'])
-def set_ui_data():
-    data = request.json
-    updated_data = server.set_ui_data(data)
-    return jsonify(updated_data)
+def create_app(initial_containers):
 
-if __name__ == '__main__':
+    app = Flask(__name__)
+    CORS(app)
+    # Create an instance of the Server class with some initial containers
+    server = API(initial_containers)
+
+    # Endpoint to get UI data
+    @app.route("/get_ui_data", methods=["GET"])
+    def get_ui_data():
+        data = server.get_ui_data()
+        return jsonify(data)
+
+    # Endpoint to set UI data
+    @app.route("/set_ui_data", methods=["POST"])
+    def set_ui_data():
+        data = request.json
+        updated_data = server.set_ui_data(data)
+        return jsonify(updated_data)
+
+    return app
+
+
+if __name__ == "__main__":
+
+    media_manager_selection = MediaManagerSelection()
+    initial_containers = [
+        media_manager_selection
+    ]  # Define your initial containers here
+    app = create_app
     app.run(debug=True)
-
