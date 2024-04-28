@@ -1,4 +1,6 @@
 from typing import List
+
+import pandas as pd
 from Container import Container
 from SelectBoxObservable import SelectBoxObservable
 from videosets_ii.videosets_ii import VideosetsII
@@ -74,7 +76,7 @@ class MediaManagerSelection(Container):
         self.videoset.subscribe(self.on_videoset_update)
         self.camera.subscribe(self.on_camera_update)
         self.data_table_path = SelectBoxObservable("", "time series", options=[])
-        # self.data_table = Plot(pd.DataFrame(), "data_table", "timestamp", "bbox_x", "")
+        self.data_table = Plot(pd.DataFrame(), "data_table", "timestamp", "bbox_x", "")
         # self.data_table_path.subscribe(self.on_data_table_path_update)
         super().__init__("Media Manager Selection")
 
