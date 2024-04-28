@@ -1,3 +1,5 @@
+import datetime
+from pathlib import Path
 from typing import TypeVar
 import numpy as np
 from loguru import logger
@@ -14,6 +16,11 @@ class FuncStack:
         self.merger_stack = {}
         self.lock = False
 
+        datestr = datetime.now().strftime("%Y%m%dT%H%M%S")
+        self.logdir = Path(f"./data/logs/funcstack/{datestr}/")
+        self.logdir.mkdir(exist_ok=True, parents=True)
+        self.exec_cnt = 0
+
     def add_fn(self, fn, merger=False):
         if merger:
             self.merger_stack[fn.__name__] = fn
@@ -21,9 +28,9 @@ class FuncStack:
             self.stack.append(fn)
 
     def execute_stack(self):
+        logfile = self.logdir / f"{self.exec_cnt}.log"
         if self.lock:
             return
-        logger.debug(f"executing stack {self.stack} {self.merger_stack}")
         self.lock = True
         while len(self.stack) + len(self.merger_stack) > 0:
             logger.debug(f"{self.stack}")
