@@ -54,6 +54,13 @@ class Observable(Generic[T]):
         if not new_value is self._value:
             self._value = new_value
             self.run()
+
+    def set_value_delayed_run(self, new_value):
+        if not new_value is self._value:
+            self._value = new_value
+            return True
+        return False
+
         # if self.log:
         #     logger.debug(f"set {self.name} with {len(self.subscribers)} subs")
         # [x() for x in self.subscribers]

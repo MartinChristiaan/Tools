@@ -17,8 +17,12 @@ class API:
     def set_ui_data(self, data):
         for k, container in self.container_lut.items():
             cdata = data[k]
+            should_run = []
             for observable in container.get_observables():
-                observable.set_value(cdata[observable.name]["value"])
+                if observable.set_value_delayed_run(cdata[observable.name]["value"]):
+                    should_run.append(observable)
+            for obs in should_run:
+                obs.run()
         return self.get_ui_data()
 
 
