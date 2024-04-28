@@ -56,7 +56,7 @@ class Observable(Generic[T]):
             self.run()
 
     def set_value_delayed_run(self, new_value):
-        if not new_value is self._value:
+        if not new_value == self._value:
             self._value = new_value
             return True
         return False

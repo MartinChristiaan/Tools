@@ -93,6 +93,8 @@ class MediaManagerSelection(Container):
             str(x).replace(str(self.mm.result_dirpath), "")
             for x in find_result_csv_in_mm_path(self.mm)
         ]
+        print(self.data_table_path.options)
 
     def on_data_table_path_update(self):
+        print("loading new data")
         self.data_table.set_value(self.mm.load(self.data_table_path.value))

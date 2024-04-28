@@ -22,6 +22,7 @@ class API:
                 if observable.set_value_delayed_run(cdata[observable.name]["value"]):
                     should_run.append(observable)
             for obs in should_run:
+                print(f"running {obs.name}")
                 obs.run()
         return self.get_ui_data()
 
@@ -63,4 +64,4 @@ if __name__ == "__main__":
         media_manager_selection
     ]  # Define your initial containers here
     app = create_app(initial_containers)
-    app.run(debug=True)
+    app.run()
