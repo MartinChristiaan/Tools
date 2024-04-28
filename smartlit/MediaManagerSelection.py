@@ -38,7 +38,6 @@ class Plot(Observable):
         super().__init__(df, name)
 
     def get_ui_data(self):
-
         base_df = self.value
         if len(base_df) == 0:
             return {}
@@ -77,7 +76,7 @@ class MediaManagerSelection(Container):
         self.camera.subscribe(self.on_camera_update)
         self.data_table_path = SelectBoxObservable("", "time series", options=[])
         self.data_table = Plot(pd.DataFrame(), "data_table", "timestamp", "bbox_x", "")
-        # self.data_table_path.subscribe(self.on_data_table_path_update)
+        self.data_table_path.subscribe(self.on_data_table_path_update)
         super().__init__("Media Manager Selection")
 
     def get_observables(self) -> List[Observable]:
@@ -96,5 +95,4 @@ class MediaManagerSelection(Container):
         ]
 
     def on_data_table_path_update(self):
-        pass
-        # self.data_table.set_value(self.mm.load(self.data_table_path.value))
+        self.data_table.set_value(self.mm.load(self.data_table_path.value))

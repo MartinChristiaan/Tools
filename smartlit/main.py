@@ -31,7 +31,7 @@ from flask_cors import CORS
 from typing import List
 
 
-def create_app(initial_containers):
+def create_app(initial_containers: List[Container]):
 
     app = Flask(__name__)
     CORS(app)
@@ -49,6 +49,8 @@ def create_app(initial_containers):
     def set_ui_data():
         data = request.json
         updated_data = server.set_ui_data(data)
+        for c in initial_containers:
+            c.save_state()
         return jsonify(updated_data)
 
     return app
