@@ -18,6 +18,7 @@ export default function Home() {
 
   function onUpdate(cardKey, innerKey, value) {
     // Make a copy of uiData
+    console.log("updating",cardKey,innerKey,value)
     let newUiData = { ...uiData };
     // Update the value in the local state
     newUiData[cardKey][innerKey].value = value;
@@ -65,7 +66,6 @@ const renderCard = (key, innerData) => {
     </Card>
   );
 };
-
 
   return (
     <div>
