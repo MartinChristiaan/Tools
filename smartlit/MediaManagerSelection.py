@@ -1,11 +1,8 @@
+from typing import List
 from Container import Container
 from SelectBoxObservable import SelectBoxObservable
-
 from videosets_ii.videosets_ii import VideosetsII
-from trackertoolbox.detections import Detections
-from trackertoolbox.tracks import Tracks, TrackUpdates
 from pathlib import Path
-import pandas as pd
 
 from state import Observable
 
@@ -76,26 +73,25 @@ class MediaManagerSelection(Container):
 
         self.videoset.subscribe(self.on_videoset_update)
         self.camera.subscribe(self.on_camera_update)
-        self.data_table_path = SelectBoxObservable("", "data_table_path", options=[])
+        self.data_table_path = SelectBoxObservable("", "time series", options=[])
         # self.data_table = Plot(pd.DataFrame(), "data_table", "timestamp", "bbox_x", "")
         # self.data_table_path.subscribe(self.on_data_table_path_update)
         super().__init__("Media Manager Selection")
 
+    def get_observables(self) -> List[Observable]:
+        return [self.videoset, self.camera, self.data_table_path]
+
     def on_videoset_update(self):
         cur_vset = self.videoset.value
-        print("new videoset", cur_vset)
         self.camera.options = self.videosets[cur_vset].cameras
         self.camera.set_value(self.camera.options[0])
-        print("new camera", self.camera.value)
 
     def on_camera_update(self):
-        print("new videoset2", self.videoset.value)
-        print("new camera2", self.camera.value)
         self.mm = videosets[self.videoset.value].get_mediamanager(self.camera.value)
         self.data_table_path.options = [
-            str(x) for x in find_result_csv_in_mm_path(self.mm)
+            str(x).replace(str(self.mm.result_dirpath), "")
+            for x in find_result_csv_in_mm_path(self.mm)
         ]
-        pass
 
     def on_data_table_path_update(self):
         pass
