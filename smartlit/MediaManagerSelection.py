@@ -1,3 +1,4 @@
+# %%
 from typing import List
 
 import pandas as pd
@@ -75,8 +76,8 @@ class MediaManagerSelection(Container):
         self.videoset.subscribe(self.on_videoset_update)
         self.camera.subscribe(self.on_camera_update)
         self.data_table_path = SelectBoxObservable("", "time series", options=[])
-        self.data_table = Plot(pd.DataFrame(), "data_table", "timestamp", "bbox_x", "")
-        self.data_table_path.subscribe(self.on_data_table_path_update)
+        # self.data_table = Plot(pd.DataFrame(), "data_table", "timestamp", "bbox_x", "")
+        # self.data_table_path.subscribe(self.on_data_table_path_update)
         super().__init__("Media Manager Selection")
 
     def get_observables(self) -> List[Observable]:
@@ -89,12 +90,19 @@ class MediaManagerSelection(Container):
 
     def on_camera_update(self):
         self.mm = videosets[self.videoset.value].get_mediamanager(self.camera.value)
-        self.data_table_path.options = [
-            str(x).replace(str(self.mm.result_dirpath), "")
-            for x in find_result_csv_in_mm_path(self.mm)
-        ]
-        print(self.data_table_path.options)
+        # self.data_table_path.options = [
+        #     str(x).replace(str(self.mm.result_dirpath), "")
+        #     for x in find_result_csv_in_mm_path(self.mm)
+        # ]
+        # print(self.data_table_path.options)
 
     def on_data_table_path_update(self):
         print("loading new data")
+
         self.data_table.set_value(self.mm.load(self.data_table_path.value))
+
+
+if __name__ == "__main__":
+    mm_sel = MediaManagerSelection()
+    mm_sel.videoset.set_value("drone-tracking")
+    mm_sel.videoset.set_value("drone_detection_dataset_2021")

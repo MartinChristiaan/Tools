@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 from pathlib import Path
 from typing import TypeVar
 import numpy as np
@@ -19,11 +19,18 @@ def create_logdir(name):
 
 
 class FuncStack:
-    def __init__(self) -> None:
+    _instance = None
+
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+            cls._instance._initialize()
+        return cls._instance
+
+    def _initialize(self):
         self.stack = []
         self.merger_stack = {}
         self.lock = False
-
         self.exec_cnt = 0
         self.logdir = create_logdir("funcstack")
 
@@ -55,8 +62,21 @@ class FuncStack:
         self.lock = False
 
 
+from datetime import datetime
+from pathlib import Path
+import pandas as pd
+
+
 class ObservableLogger:
-    def __init__(self) -> None:
+    _instance = None  # Class-level variable to store the singleton instance
+
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+            cls._instance._initialize()
+        return cls._instance
+
+    def _initialize(self):
         self.observables = []
         self.logdir = Path(f"./data/logs/observables/")
         self.logdir.mkdir(exist_ok=True, parents=True)
@@ -66,9 +86,9 @@ class ObservableLogger:
     def observer_update(self):
         data = {}
         for observer in self.observables:
-            data[observer.name] = data[observer.value]
-        df = pd.DataFrame(data)
-        df.to_csv(self.logfile, index=False, columns=self.logfile.exists(), mode="a")
+            data[observer.name] = observer.value
+        df = pd.DataFrame([data])
+        df.to_csv(self.logfile, index=False, header=not self.logfile.exists(), mode="a")
 
 
 stack = FuncStack()
@@ -83,6 +103,7 @@ class Observable(Generic[T]):
         self.log = log
         self.runcount = 0
         self.uxprops = uxprops
+        observer_logger.observables.append(self)
 
     def set_value(self, new_value):
         if not new_value == self._value:
@@ -100,6 +121,7 @@ class Observable(Generic[T]):
         # [x() for x in self.subscribers]
 
     def run(self):
+        observer_logger.observer_update()
         for x in self.subscribers:
             stack.add_fn(*x)
         if not stack.lock:
