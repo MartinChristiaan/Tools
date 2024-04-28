@@ -23,23 +23,26 @@ class FuncStack:
     def execute_stack(self):
         if self.lock:
             return
-        # logger.debug(f"executing stack {self.stack} {self.merger_stack}")
+        logger.debug(f"executing stack {self.stack} {self.merger_stack}")
         self.lock = True
         while len(self.stack) + len(self.merger_stack) > 0:
-            # logger.debug(f"{self.stack}")
+            logger.debug(f"{self.stack}")
             if len(self.stack) > 0:
                 fn = self.stack.pop(0)
                 fn()
             else:
                 key = list(self.merger_stack.keys())[0]
                 fn = self.merger_stack[key]()
-                # logger.debug(f"exec {fn} {key}")
+                logger.debug(f"exec {fn} {key}")
                 del self.merger_stack[key]
         self.lock = False
 
+
 stack = FuncStack()
+
+
 class Observable(Generic[T]):
-    def __init__(self, value: T, name="observer", log=True,**uxprops) -> None:
+    def __init__(self, value: T, name="observer", log=True, **uxprops) -> None:
         self._value = value
         self.subscribers = []
         self.name = name
@@ -52,14 +55,14 @@ class Observable(Generic[T]):
             self._value = new_value
             self.run()
         # if self.log:
-        # logger.debug(f"set {self.name} with {len(self.subscribers)} subs")
+        #     logger.debug(f"set {self.name} with {len(self.subscribers)} subs")
         # [x() for x in self.subscribers]
 
     def run(self):
         for x in self.subscribers:
             stack.add_fn(*x)
         if not stack.lock:
-            # logger.debug(f"starting stack {self.name}")
+            logger.debug(f"starting stack {self.name}")
             stack.execute_stack()
         self.runcount += 1
 
@@ -70,9 +73,9 @@ class Observable(Generic[T]):
     @property
     def value(self) -> T:
         return self._value
-    
+
     def get_ui_data(self):
-        return {"value":self.value,**self.uxprops}
+        return {"value": self.value, **self.uxprops}
 
 
 @dataclass
@@ -81,6 +84,7 @@ class MouseState:
     x: int
     y: int
     flags: int
+
 
 # class State:
 #     def __init__(self):

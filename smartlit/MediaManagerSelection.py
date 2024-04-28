@@ -76,19 +76,25 @@ class MediaManagerSelection(Container):
 
         self.videoset.subscribe(self.on_videoset_update)
         self.camera.subscribe(self.on_camera_update)
-        self.data_table_path = SelectBoxObservable("", options=[])
-        self.data_table = Plot(pd.DataFrame(), "data_table", "timestamp", "bbox_x", "")
-        self.data_table_path.subscribe(self.on_data_table_path_update)
+        # self.data_table_path = SelectBoxObservable("", options=[])
+        # self.data_table = Plot(pd.DataFrame(), "data_table", "timestamp", "bbox_x", "")
+        # self.data_table_path.subscribe(self.on_data_table_path_update)
         super().__init__("Media Manager Selection")
 
     def on_videoset_update(self):
         cur_vset = self.videoset.value
+        print("new videoset", cur_vset)
         self.camera.options = self.videosets[cur_vset].cameras
         self.camera.set_value(self.camera.options[0])
+        print("new camera", self.camera.value)
 
     def on_camera_update(self):
-        self.mm = videosets[self.videoset.value].get_mediamanager(self.camera.value)
-        self.data_table.options = find_result_csv_in_mm_path(self.mm)
+        print("new videoset2", self.videoset.value)
+        print("new camera2", self.camera.value)
+        # self.mm = videosets[self.videoset.value].get_mediamanager(self.camera.value)
+        # self.data_table.options = find_result_csv_in_mm_path(self.mm)
+        pass
 
     def on_data_table_path_update(self):
-        self.data_table.set_value(self.mm.load(self.data_table_path.value))
+        pass
+        # self.data_table.set_value(self.mm.load(self.data_table_path.value))
