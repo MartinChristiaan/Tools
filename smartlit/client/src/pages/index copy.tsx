@@ -1,8 +1,7 @@
 
-import 'bootstrap/dist/css/bootstrap.min.css';
 import { useEffect, useState } from "react";
 import { flask_url } from "../lib/utils";
-import { Card, Form } from "react-bootstrap";
+import { render_selectbox } from "../lib/selectbox";
 
 
 export default function Home() {
@@ -39,25 +38,10 @@ export default function Home() {
   }
 
 
-  const renderOptions = (options) => {
-    if (Array.isArray(options)) {
-      return options.map(option => <option key={option}>{option}</option>);
-    } else {
-      return null;
-    }
-  };
-
   const renderFormElement = (outerKey,innerkey, data) => {
     switch (data.uimode) {
       case "selectbox":
-        return (
-          <Form.Group key={innerkey}>
-            <Form.Label>{innerkey}</Form.Label>
-            <Form.Control as="select" defaultValue={data.value} onChange={(e) => onUpdate(outerKey,innerkey,e.target.value)}>
-              {renderOptions(data.options)}
-            </Form.Control>
-          </Form.Group>
-        );
+        return render_selectbox(innerkey, data, onUpdate, outerKey, renderOptions);
       default:
         return null;
     }
@@ -87,3 +71,4 @@ export default function Home() {
     </div>
   );
 }
+

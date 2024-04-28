@@ -1,6 +1,5 @@
 from Container import Container
 from SelectBoxObservable import SelectBoxObservable
-from main import default_cam, default_cams, default_vset, videosets
 
 from videosets_ii.videosets_ii import VideosetsII
 from trackertoolbox.detections import Detections
@@ -31,52 +30,34 @@ def get_modified_date(path):
     return os.path.getmtime(path)
 
 
-class PlotData(Observable):
-    def __init__(self, df, x_axis_label, y_axis_label, pivot_column) -> None:
-        self.value = df
+class Plot(Observable):
+    def __init__(self, df, name, x_axis_label, y_axis_label, pivot_column) -> None:
         self.x_axis_label = x_axis_label
         self.y_axis_label = y_axis_label
         self.pivot_column = pivot_column
         self.plot_type = "scatter"
+        super().__init__(df, name)
 
     def get_ui_data(self):
-        data = self.value
-        if len(data) == 0:
+
+        base_df = self.value
+        if len(base_df) == 0:
             return {}
 
-        if self.plot_type == "scatter":
-            datadict = dict(
-                x=list(data.timestamp),
-                y=list(data.bbox_x),
-                type="scatter",
-                mode=self.plotmode,
-                name="bbox_x",
-            )
-            if self.color != "":
-                datadict.update(
-                    {
-                        "marker": {
-                            "color": list(data[self.color]),
-                            "colorscale": "Jet",
-                        }
-                    }
-                )
-            return [datadict]
-
+        if len(self.pivot_column) == 0 or not self.pivot_column in base_df:
+            df_groups = [(self.y_axis_label, base_df)]
         else:
-            datas = []
-            for groups, groupdf in data.groupby(self.pivot_column):
-                datadict = dict(
-                    x=list(groupdf.timestamp),
-                    y=list(groupdf.bbox_x),
-                    type="scatter",
-                    mode=self.plotmode,
-                    name=",".join([str(x) for x in groups]),
+            df_groups = [x for x in base_df.groupby(self.pivot_column)]
+
+        series = []
+        for group_name, group_df in df_groups:
+            series.append(
+                dict(
+                    name=group_name,
+                    data=zip(group_df[self.x_axis_label], group_df[self.y_axis_label]),
                 )
-                # if self.color != "":
-                #     datadict.update({"color": list(data[self.color])})
-                datas.append(datadict)
-            return datas
+            )
+        return dict(series=series, plot_type=self.plot_type)
 
 
 class MediaManagerSelection(Container):
@@ -96,7 +77,8 @@ class MediaManagerSelection(Container):
         self.videoset.subscribe(self.on_videoset_update)
         self.camera.subscribe(self.on_camera_update)
         self.data_table_path = SelectBoxObservable("", options=[])
-        self.data_table = Observable(pd.DataFrame(), "data_table")
+        self.data_table = Plot(pd.DataFrame(), "data_table", "timestamp", "bbox_x", "")
+        self.data_table_path.subscribe(self.on_data_table_path_update)
         super().__init__("Media Manager Selection")
 
     def on_videoset_update(self):
@@ -108,5 +90,5 @@ class MediaManagerSelection(Container):
         self.mm = videosets[self.videoset.value].get_mediamanager(self.camera.value)
         self.data_table.options = find_result_csv_in_mm_path(self.mm)
 
-    def on_data_table_update(self):
-        df = self.mm.load(self.data_table.value)
+    def on_data_table_path_update(self):
+        self.data_table.set_value(self.mm.load(self.data_table_path.value))

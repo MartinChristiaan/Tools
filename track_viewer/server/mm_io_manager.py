@@ -28,7 +28,7 @@ class IOData(du.Pathfinder):
     color = ""
     plotmode: str = "markers"  # can also be set to lines
     timestamp: float = 0
-    comment:str = ""
+    comment: str = ""
 
     @property
     def videoset_obj(self):
@@ -56,7 +56,7 @@ class IOData(du.Pathfinder):
             plotmode=self.plotmode,
             color=self.color,
             timestamp=self.timestamp,
-            comment=self.comment
+            comment=self.comment,
         )
 
     # def save(self):
@@ -146,7 +146,6 @@ class IOData(du.Pathfinder):
     def get_xt_plot(self, source):
         data = self.detections
         data = data[data.source == source]
-
         if len(self.groupbys) == 0:
             datadict = dict(
                 x=list(data.timestamp),

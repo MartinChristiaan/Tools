@@ -1,7 +1,6 @@
 from typing import List
 from Container import Container
 from MediaManagerSelection import MediaManagerSelection
-from loguru import logger
 
 
 class API:
@@ -57,5 +56,5 @@ if __name__ == "__main__":
     initial_containers = [
         media_manager_selection
     ]  # Define your initial containers here
-    app = create_app
+    app = create_app(initial_containers)
     app.run(debug=True)
