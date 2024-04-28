@@ -1,0 +1,7 @@
+stack_count,videoset,camera,time series
+0,drone-tracking,V_DRONE_050,/V_DRONE_050/tyolov8/detections_proposed-20240326.csv
+0,drone-tracking,cam0_video/cam0_video,/V_DRONE_050/tyolov8/detections_proposed-20240326.csv
+0,drone-tracking,cam0_video/cam0_video,old/_annotations_20230625T154637.csv
+1,drone_detection_dataset_2021,cam0_video/cam0_video,old/_annotations_20230625T154637.csv
+1,drone_detection_dataset_2021,IR_DRONE_022,old/_annotations_20230625T154637.csv
+1,drone_detection_dataset_2021,IR_DRONE_022,_annotations/annotations_20230502T100000.csv

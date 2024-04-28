@@ -7,7 +7,7 @@ from SelectBoxObservable import SelectBoxObservable
 from videosets_ii.videosets_ii import VideosetsII
 from pathlib import Path
 
-from state import Observable
+from state import Observable, ObservableLogger
 
 basedirpath = Path(r"/diskstation")
 videosets = VideosetsII(basedirpath=basedirpath)  # basedirpath)
@@ -90,10 +90,10 @@ class MediaManagerSelection(Container):
 
     def on_camera_update(self):
         self.mm = videosets[self.videoset.value].get_mediamanager(self.camera.value)
-        # self.data_table_path.options = [
-        #     str(x).replace(str(self.mm.result_dirpath), "")
-        #     for x in find_result_csv_in_mm_path(self.mm)
-        # ]
+        self.data_table_path.options = [
+            f"{x.parent.stem}/{x.name}" for x in find_result_csv_in_mm_path(self.mm)
+        ]
+        self.data_table_path.set_value(self.data_table_path.options[0])
         # print(self.data_table_path.options)
 
     def on_data_table_path_update(self):
@@ -106,3 +106,5 @@ if __name__ == "__main__":
     mm_sel = MediaManagerSelection()
     mm_sel.videoset.set_value("drone-tracking")
     mm_sel.videoset.set_value("drone_detection_dataset_2021")
+
+    print(pd.read_csv(ObservableLogger().logfile).to_markdown())

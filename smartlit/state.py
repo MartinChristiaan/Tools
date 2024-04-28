@@ -60,6 +60,7 @@ class FuncStack:
                     f.write(fn.__name__ + "\n")
                 del self.merger_stack[key]
         self.lock = False
+        self.exec_cnt += 1
 
 
 from datetime import datetime
@@ -84,7 +85,7 @@ class ObservableLogger:
         self.logfile = self.logdir / f"{datestr}.csv"
 
     def observer_update(self):
-        data = {}
+        data = {"stack_count": stack.exec_cnt}
         for observer in self.observables:
             data[observer.name] = observer.value
         df = pd.DataFrame([data])
@@ -121,7 +122,8 @@ class Observable(Generic[T]):
         # [x() for x in self.subscribers]
 
     def run(self):
-        observer_logger.observer_update()
+        if self.log:
+            observer_logger.observer_update()
         for x in self.subscribers:
             stack.add_fn(*x)
         if not stack.lock:
