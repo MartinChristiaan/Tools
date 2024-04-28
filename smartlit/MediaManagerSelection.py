@@ -69,19 +69,26 @@ class Plot(Observable):
 
 class MPLPlotter:
     def __init__(self, plot: Plot) -> None:
-        self.plot = plot
+        self.plotobs = plot
 
     def plot(self):
         exec_cnt = FuncStack().exec_cnt
-        plotdata = self.get_ui_data()
+        plotdata = self.plotobs.get_ui_data()
+
         import matplotlib.pyplot as plt
 
         plt.figure()
         for series in plotdata["series"]:
+            print(series["data"])
+            x = [v[0] for v in series["data"]]
+            y = [v[1] for v in series["data"]]
+            print(len(x))
+            print(len(y))
+
             if plotdata["plot_type"] == "scatter":
-                plt.scatter(series)
+                plt.scatter(x, y)
             if plotdata["plot_type"] == "line":
-                plt.plot(series)
+                plt.plot(x, y)
         plt.savefig(
             ObservableLogger().logdir / f"{self.name}_{FuncStack().exec_cnt}.png"
         )
@@ -125,7 +132,7 @@ class MediaManagerSelection(Container):
         self.data_table_path.options = [
             f"{x.parent.stem}/{x.name}"
             for x in find_result_csv_in_mm_path(self.mm)
-            if not "annotations" in str(x)
+            if not "annotations" in str(x) or "temp" in str(x)
         ]
         self.data_table_path.set_value(self.data_table_path.options[0])
 
@@ -138,7 +145,9 @@ class MediaManagerSelection(Container):
 
 if __name__ == "__main__":
     mm_sel = MediaManagerSelection()
-    mm_sel.videoset.set_value("drone-tracking")
-    # mm_sel.videoset.set_value("drone_detection_dataset_2021")
-
+    # mm_sel.videoset.set_value("drone-tracking")
+    mm_sel.videoset.set_value("drone_detection_dataset_2021")
     print(pd.read_csv(ObservableLogger().logfile).to_markdown())
+
+    plotter = MPLPlotter(mm_sel.data_table)
+    plotter.plot()
