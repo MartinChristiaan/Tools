@@ -3,11 +3,19 @@ from pathlib import Path
 from typing import TypeVar
 import numpy as np
 from loguru import logger
+import pandas as pd
 
 T = TypeVar("T")
 
 from dataclasses import dataclass
 from typing import Callable, Generic
+
+
+def create_logdir(name):
+    datestr = datetime.now().strftime("%Y%m%dT%H%M%S")
+    logdir = Path(f"./data/logs/{name}/{datestr}/")
+    logdir.mkdir(exist_ok=True, parents=True)
+    return logdir
 
 
 class FuncStack:
@@ -16,10 +24,8 @@ class FuncStack:
         self.merger_stack = {}
         self.lock = False
 
-        datestr = datetime.now().strftime("%Y%m%dT%H%M%S")
-        self.logdir = Path(f"./data/logs/funcstack/{datestr}/")
-        self.logdir.mkdir(exist_ok=True, parents=True)
         self.exec_cnt = 0
+        self.logdir = create_logdir("funcstack")
 
     def add_fn(self, fn, merger=False):
         if merger:
@@ -37,15 +43,36 @@ class FuncStack:
             if len(self.stack) > 0:
                 fn = self.stack.pop(0)
                 fn()
+                with open(logfile, "a") as f:
+                    f.write(fn.__name__ + "\n")
             else:
                 key = list(self.merger_stack.keys())[0]
-                fn = self.merger_stack[key]()
-                logger.debug(f"exec {fn} {key}")
+                fn = self.merger_stack[key]
+                fn()
+                with open(logfile, "a") as f:
+                    f.write(fn.__name__ + "\n")
                 del self.merger_stack[key]
         self.lock = False
 
 
+class ObservableLogger:
+    def __init__(self) -> None:
+        self.observables = []
+        self.logdir = Path(f"./data/logs/observables/")
+        self.logdir.mkdir(exist_ok=True, parents=True)
+        datestr = datetime.now().strftime("%Y%m%dT%H%M%S")
+        self.logfile = self.logdir / f"{datestr}.csv"
+
+    def observer_update(self):
+        data = {}
+        for observer in self.observables:
+            data[observer.name] = data[observer.value]
+        df = pd.DataFrame(data)
+        df.to_csv(self.logfile, index=False, columns=self.logfile.exists(), mode="a")
+
+
 stack = FuncStack()
+observer_logger = ObservableLogger()
 
 
 class Observable(Generic[T]):
@@ -58,7 +85,7 @@ class Observable(Generic[T]):
         self.uxprops = uxprops
 
     def set_value(self, new_value):
-        if not new_value is self._value:
+        if not new_value == self._value:
             self._value = new_value
             self.run()
 
