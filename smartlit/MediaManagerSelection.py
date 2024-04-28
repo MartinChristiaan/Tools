@@ -59,10 +59,12 @@ class Plot(Observable):
         return dict(series=series, plot_type=self.plot_type)
 
     def log_state(self, data):
+        print(f"logging {self.name}, special")
         data[f"{self.name}_x_axis_label"] = self.x_axis_label
         data[f"{self.name}_y_axis_label"] = self.y_axis_label
         data[f"{self.name}_pivot_column"] = self.pivot_column
         return data
+        print(data)
 
 
 class MPLPlotter:
@@ -101,11 +103,11 @@ class MediaManagerSelection(Container):
 
         self.videoset.subscribe(self.on_videoset_update)
         self.camera.subscribe(self.on_camera_update)
-        self.data_table_path = SelectBoxObservable("", "time series", options=[])
+        self.data_table_path = SelectBoxObservable("", "data_table_path", options=[])
+        self.data_table = Plot(pd.DataFrame(), "data_table", "timestamp", "bbox_x", "")
+
         self.on_camera_update()
         self.data_table_path._value = self.data_table_path.options[0]
-
-        self.data_table = Plot(pd.DataFrame(), "data_table", "timestamp", "bbox_x", "")
         self.data_table_path.subscribe(self.on_data_table_path_update)
         self.on_data_table_path_update()
         super().__init__("Media Manager Selection")

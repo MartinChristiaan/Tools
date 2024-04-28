@@ -87,8 +87,8 @@ class ObservableLogger:
     def observer_update(self):
         data = {"stack_count": stack.exec_cnt}
         for observer in self.observables:
-            observer.log_state(data)
-            # data[observer.name] = observer.value
+            data = observer.log_state(data)
+        print(data)
         df = pd.DataFrame([data])
         df.to_csv(self.logfile, index=False, header=not self.logfile.exists(), mode="a")
 
@@ -141,7 +141,9 @@ class Observable(Generic[T]):
         self.subscribers.append((fun, merger))
 
     def log_state(self, data):
+        print(f"logging {self.name}")
         data[self.name] = self.value
+        return data
 
     @property
     def value(self) -> T:

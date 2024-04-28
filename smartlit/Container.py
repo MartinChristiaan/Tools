@@ -24,8 +24,9 @@ class Container:
                 state = pickle.load(f)
             observers = self.get_observables()
             for k, v in state.items():
-                observer = [x for x in observers if x.name == k][0]
-                observer._value = v
+                observer = [x for x in observers if x.name == k]
+                for x in observer:
+                    x._value = v
 
     def save_state(self):
         state = {obs.name: obs.value for obs in self.get_observables()}
