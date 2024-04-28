@@ -7,7 +7,7 @@ from SelectBoxObservable import SelectBoxObservable
 from videosets_ii.videosets_ii import VideosetsII
 from pathlib import Path
 
-from state import Observable, ObservableLogger
+from state import FuncStack, Observable, ObservableLogger
 
 basedirpath = Path(r"/diskstation")
 videosets = VideosetsII(basedirpath=basedirpath)  # basedirpath)
@@ -57,6 +57,31 @@ class Plot(Observable):
                 )
             )
         return dict(series=series, plot_type=self.plot_type)
+
+    def log_state(self, data):
+        data[f"{self.name}_x_axis_label"] = self.x_axis_label
+        data[f"{self.name}_y_axis_label"] = self.y_axis_label
+        data[f"{self.name}_pivot_column"] = self.pivot_column
+
+
+class MPLPlotter:
+    def __init__(self, plot: Plot) -> None:
+        self.plot = plot
+
+    def plot(self):
+        exec_cnt = FuncStack().exec_cnt
+        plotdata = self.get_ui_data()
+        import matplotlib.pyplot as plt
+
+        plt.figure()
+        for series in plotdata["series"]:
+            if plotdata["plot_type"] == "scatter":
+                plt.scatter(series)
+            if plotdata["plot_type"] == "line":
+                plt.plot(series)
+        plt.savefig(
+            ObservableLogger().logdir / f"{self.name}_{FuncStack().exec_cnt}.png"
+        )
 
 
 class MediaManagerSelection(Container):

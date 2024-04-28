@@ -87,6 +87,7 @@ class ObservableLogger:
     def observer_update(self):
         data = {"stack_count": stack.exec_cnt}
         for observer in self.observables:
+
             data[observer.name] = observer.value
         df = pd.DataFrame([data])
         df.to_csv(self.logfile, index=False, header=not self.logfile.exists(), mode="a")
@@ -104,7 +105,8 @@ class Observable(Generic[T]):
         self.log = log
         self.runcount = 0
         self.uxprops = uxprops
-        observer_logger.observables.append(self)
+        if log:
+            observer_logger.observables.append(self)
 
     def set_value(self, new_value):
         if not new_value == self._value:
@@ -134,6 +136,9 @@ class Observable(Generic[T]):
     def subscribe(self, fun: Callable, merger=False):
         logger.debug(f"subscribing {fun} to {self.name}")
         self.subscribers.append((fun, merger))
+
+    def log_state(self, data):
+        data[self.name] = self.value
 
     @property
     def value(self) -> T:
