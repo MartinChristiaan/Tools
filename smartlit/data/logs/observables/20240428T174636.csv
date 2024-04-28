@@ -1,0 +1,7 @@
+stack_count,videoset,camera,time series
+0,drone_detection_dataset_2021,IR_DRONE_155,panoptes/detectionsT2-YOLO-MOSAIC_30f.csv
+1,drone_detection_dataset_2021,IR_DRONE_155,panoptes/detectionsT2-YOLO-MOSAIC_30f.csv,timestamp,bbox_x,
+2,drone-tracking,V_DRONE_050,/V_DRONE_050/tyolov8/detections_proposed-20240326.csv,timestamp,bbox_x,
+2,drone-tracking,cam0_video/cam0_video,/V_DRONE_050/tyolov8/detections_proposed-20240326.csv,timestamp,bbox_x,
+2,drone-tracking,cam0_video/cam0_video,cam0/t2-yolov5-virat.temporary.csv,timestamp,bbox_x,
+2,drone-tracking,cam0_video/cam0_video,cam0/t2-yolov5-virat.temporary.csv,timestamp,bbox_x,

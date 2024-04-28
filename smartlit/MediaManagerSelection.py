@@ -36,7 +36,7 @@ class Plot(Observable):
         self.y_axis_label = y_axis_label
         self.pivot_column = pivot_column
         self.plot_type = "scatter"
-        super().__init__(df, name)
+        super().__init__(df, name, check_if_same=False)
 
     def get_ui_data(self):
         base_df = self.value
@@ -62,6 +62,7 @@ class Plot(Observable):
         data[f"{self.name}_x_axis_label"] = self.x_axis_label
         data[f"{self.name}_y_axis_label"] = self.y_axis_label
         data[f"{self.name}_pivot_column"] = self.pivot_column
+        return data
 
 
 class MPLPlotter:
@@ -101,8 +102,12 @@ class MediaManagerSelection(Container):
         self.videoset.subscribe(self.on_videoset_update)
         self.camera.subscribe(self.on_camera_update)
         self.data_table_path = SelectBoxObservable("", "time series", options=[])
-        # self.data_table = Plot(pd.DataFrame(), "data_table", "timestamp", "bbox_x", "")
-        # self.data_table_path.subscribe(self.on_data_table_path_update)
+        self.on_camera_update()
+        self.data_table_path._value = self.data_table_path.options[0]
+
+        self.data_table = Plot(pd.DataFrame(), "data_table", "timestamp", "bbox_x", "")
+        self.data_table_path.subscribe(self.on_data_table_path_update)
+        self.on_data_table_path_update()
         super().__init__("Media Manager Selection")
 
     def get_observables(self) -> List[Observable]:
@@ -116,20 +121,22 @@ class MediaManagerSelection(Container):
     def on_camera_update(self):
         self.mm = videosets[self.videoset.value].get_mediamanager(self.camera.value)
         self.data_table_path.options = [
-            f"{x.parent.stem}/{x.name}" for x in find_result_csv_in_mm_path(self.mm)
+            f"{x.parent.stem}/{x.name}"
+            for x in find_result_csv_in_mm_path(self.mm)
+            if not "annotations" in str(x)
         ]
         self.data_table_path.set_value(self.data_table_path.options[0])
-        # print(self.data_table_path.options)
 
     def on_data_table_path_update(self):
-        print("loading new data")
-
-        self.data_table.set_value(self.mm.load(self.data_table_path.value))
+        print(self.data_table_path.value)
+        df = self.mm.load(self.data_table_path.value)
+        print(df)
+        self.data_table.set_value(df)
 
 
 if __name__ == "__main__":
     mm_sel = MediaManagerSelection()
     mm_sel.videoset.set_value("drone-tracking")
-    mm_sel.videoset.set_value("drone_detection_dataset_2021")
+    # mm_sel.videoset.set_value("drone_detection_dataset_2021")
 
     print(pd.read_csv(ObservableLogger().logfile).to_markdown())
