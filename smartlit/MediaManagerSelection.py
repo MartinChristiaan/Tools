@@ -83,9 +83,6 @@ class MPLPlotter:
         for series in plotdata["series"]:
             xdata = [x for x, y in series["data"]]
             ydata = [y for x, y in series["data"]]
-            print(len(xdata))
-            print(len(ydata))
-
             if plotdata["plot_type"] == "scatter":
                 plt.scatter(xdata, ydata)
             if plotdata["plot_type"] == "line":
@@ -139,9 +136,7 @@ class MediaManagerSelection(Container):
         self.data_table_path.set_value(self.data_table_path.options[0])
 
     def on_data_table_path_update(self):
-        print(self.data_table_path.value)
         df = self.mm.load(self.data_table_path.value)
-        print(df)
         self.data_table.set_value(df)
 
 
@@ -149,7 +144,9 @@ if __name__ == "__main__":
     mm_sel = MediaManagerSelection()
     # mm_sel.videoset.set_value("drone-tracking")
     mm_sel.videoset.set_value("drone_detection_dataset_2021")
+    mm_sel.camera.set_value(mm_sel.camera.options[-1])
+    mm_sel.data_table.pivot_column = "track_id"
+    mm_sel.data_table_path.set_value("tyolov8/tracks_proposed-20240326.csv")
     print(pd.read_csv(ObservableLogger().logfile).to_markdown())
-
     plotter = MPLPlotter(mm_sel.data_table)
     plotter.plot()
