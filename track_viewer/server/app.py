@@ -6,6 +6,7 @@ import cv2
 
 from mm_io_manager import IOData
 
+
 app = Flask(__name__)
 CORS(app)
 
@@ -13,8 +14,8 @@ CORS(app)
 class VideosetAPI:
     def __init__(self):
         self.manager = IOData(
-            "aot",
-            "part1/video0360",
+            "/data/local_diskstation/datasets/drone-tracking/video/",
+            "cam0_video/cam0_video",
             selected_sources=[],
             groupbys=[],
             groupbys_options=[],
@@ -77,7 +78,6 @@ def set_videoset():
     return jsonify(videoset_api.manager.to_dict())
 
 
-
 @app.route("/save/<timestamp_and_comment>", methods=["GET"])
 def save(timestamp_and_comment):
     saves_folder = Path("/data/track-viewer-saves/")
@@ -85,7 +85,7 @@ def save(timestamp_and_comment):
     from datetime import datetime
 
     manager = videoset_api.manager
-    timestamp,comment = timestamp_and_comment.split('___')
+    timestamp, comment = timestamp_and_comment.split("___")
     manager.timestamp = float(timestamp)
     manager.comment = comment
     datestr = datetime.now().strftime("%Y%m%dT%H%M%S")

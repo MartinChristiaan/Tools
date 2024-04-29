@@ -27,8 +27,9 @@ class IOData(du.Pathfinder):
     groupbys_options: List[str] = None
     color = ""
     plotmode: str = "markers"  # can also be set to lines
-    timestamp: float = 0
+    selected_detection: List[float] = None
     comment: str = ""
+    y_axis_label: str = "bbox_x"
 
     @property
     def videoset_obj(self):
@@ -40,8 +41,6 @@ class IOData(du.Pathfinder):
 
     def to_dict(self):
         cached_timestamps = []
-        # if self.logfile_path(0).exists():
-        #     cached_timestamps =
         return dict(
             videoset=self.videoset,
             camera=self.camera,
