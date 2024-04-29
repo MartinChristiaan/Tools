@@ -13,22 +13,21 @@ class API:
         for c in self.containers:
             data.append({c.name: c.ctype})
 
-    def get_ui_data(self):
-        data = {}
-        for c in self.containers:
-            data[c.name] = {x.name: x.get_ui_data() for x in c.get_observables()}
-        return data
+    def get_ui_data(self, name):
+        c = self.container_lut[name]
+        # data = {x.name: x.get_ui_data() for x in c.get_observables()}
+        return c.get_ui_data()
 
-    def set_ui_data(self, data):
-        for k, container in self.container_lut.items():
-            cdata = data[k]
-            should_run = []
-            for observable in container.get_observables():
-                if observable.set_value_delayed_run(cdata[observable.name]["value"]):
-                    should_run.append(observable)
-            for obs in should_run:
-                print(f"running {obs.name}")
-                obs.run()
+    def set_ui_data(self, data, name):
+        container = self.container_lut[name]
+        should_run = []
+        for observable in container.get_observables():
+            if observable.set_value_delayed_run(data[observable.name]["value"]):
+                should_run.append(observable)
+        for obs in should_run:
+            print(f"running {obs.name}")
+            obs.run()
+
         return self.get_ui_data()
 
 
@@ -47,6 +46,11 @@ def create_app(initial_containers: List[Container]):
     @app.route("/get_containers", methods=["GET"])
     def get_ui_data():
         data = server.get_ui_data()
+        return jsonify(data)
+
+    @app.route("/get_container_data/<name>", methods=["GET"])
+    def get_ui_data(name):
+        data = server.get_ui_data(name)
         return jsonify(data)
 
     # Endpoint to get UI data

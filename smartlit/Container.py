@@ -35,6 +35,9 @@ class Container:
         with open(self.cache_file, "wb") as f:
             pickle.dump(state, f)
 
+    def get_ui_data(self):
+        return {x.name: x.get_ui_data() for x in self.get_observables()}
+
 
 # save to diskstation
 # load from diskstation

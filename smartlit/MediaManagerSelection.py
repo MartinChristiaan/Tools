@@ -108,7 +108,9 @@ class MediaManagerSelection(Container):
         self.videoset.subscribe(self.on_videoset_update)
         self.camera.subscribe(self.on_camera_update)
         self.data_table_path = SelectBoxObservable("", "data_table_path", options=[])
-        self.data_table = Plot(pd.DataFrame(), "data_table", "timestamp", "bbox_x", "")
+        self.data_table = Observable(
+            pd.DataFrame(), "data_table"
+        )  # , "timestamp", "bbox_x", "")
 
         self.on_camera_update()
         self.data_table_path._value = self.data_table_path.options[0]
@@ -136,6 +138,15 @@ class MediaManagerSelection(Container):
     def on_data_table_path_update(self):
         df = self.mm.load(self.data_table_path.value)
         self.data_table.set_value(df)
+
+
+class XTPlot(Container):
+    def __init__(self, name, df_source: Observable) -> None:
+        self.df_source = df_source
+        super().__init__(name, "plot")
+
+    def get_ui_data(self):
+        return self.df_source.value.to_dict()
 
 
 if __name__ == "__main__":
