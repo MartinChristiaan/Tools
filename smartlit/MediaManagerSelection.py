@@ -53,7 +53,9 @@ class Plot(Observable):
             series.append(
                 dict(
                     name=group_name,
-                    data=zip(group_df[self.x_axis_label], group_df[self.y_axis_label]),
+                    data=list(
+                        zip(group_df[self.x_axis_label], group_df[self.y_axis_label])
+                    ),
                 )
             )
         return dict(series=series, plot_type=self.plot_type)
@@ -79,18 +81,18 @@ class MPLPlotter:
 
         plt.figure()
         for series in plotdata["series"]:
-            print(series["data"])
-            x = [v[0] for v in series["data"]]
-            y = [v[1] for v in series["data"]]
-            print(len(x))
-            print(len(y))
+            xdata = [x for x, y in series["data"]]
+            ydata = [y for x, y in series["data"]]
+            print(len(xdata))
+            print(len(ydata))
 
             if plotdata["plot_type"] == "scatter":
-                plt.scatter(x, y)
+                plt.scatter(xdata, ydata)
             if plotdata["plot_type"] == "line":
-                plt.plot(x, y)
+                plt.plot(xdata, ydata)
         plt.savefig(
-            ObservableLogger().logdir / f"{self.name}_{FuncStack().exec_cnt}.png"
+            ObservableLogger().logdir
+            / f"{self.plotobs.name}_{FuncStack().exec_cnt}.png"
         )
 
 
