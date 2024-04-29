@@ -6,7 +6,7 @@ import { flask_url } from "../lib/utils";
 import { render_selectbox } from "../lib/selectbox";
 
 
-export default function Control({key}) {
+export default function Control({key,setUpdateCnt, updateCnt}) {
   const [uiData, setUiData] = useState(null);
 
   useEffect(() => {
@@ -33,6 +33,7 @@ export default function Control({key}) {
       .then(response => response.json())
       .then((data) => {
         setUiData(data);
+		setUpdateCnt(updateCnt+=1)
       })
       .catch((error) => {
         console.error("Error updating UI data:", error);

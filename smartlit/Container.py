@@ -5,10 +5,11 @@ import pickle
 
 
 class Container:
-    def __init__(self, name) -> None:
+    def __init__(self, name, ctype="control") -> None:
         self.name = name
         self.cache_file = Path(f"/data/container_caches/{self.name}")
         self.load_cache_state()
+        self.ctype = ctype
 
     def get_observables(self) -> List[Observable]:
         observables = []

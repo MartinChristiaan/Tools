@@ -8,11 +8,15 @@ class API:
         self.containers = containers
         self.container_lut = {x.name: x for x in self.containers}
 
+    def get_container_data(self):
+        data = []
+        for c in self.containers:
+            data.append({c.name: c.ctype})
+
     def get_ui_data(self):
         data = {}
         for c in self.containers:
             data[c.name] = {x.name: x.get_ui_data() for x in c.get_observables()}
-            print(c.name)
         return data
 
     def set_ui_data(self, data):
@@ -39,6 +43,11 @@ def create_app(initial_containers: List[Container]):
     CORS(app)
     # Create an instance of the Server class with some initial containers
     server = API(initial_containers)
+
+    @app.route("/get_containers", methods=["GET"])
+    def get_ui_data():
+        data = server.get_ui_data()
+        return jsonify(data)
 
     # Endpoint to get UI data
     @app.route("/get_ui_data", methods=["GET"])

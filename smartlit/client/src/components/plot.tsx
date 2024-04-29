@@ -11,7 +11,7 @@ export default function TemporalPlot({ plotState, setPlotState,updateCnt }) {
     console.log("Clicked on the plot:", event.points[0].x);
     setPlotState([event.points[0].x,event.point[0].y]);
   };
-  const [dataDict, setDataDict] = React.useState({});
+  const [dataDict, setDataDict] = React.useState([]);
   const [maxY, setMaxY] = React.useState(1080);
 
   useEffect(() => {
@@ -25,18 +25,11 @@ export default function TemporalPlot({ plotState, setPlotState,updateCnt }) {
         // console.log(((data['y'])))
       });
   }, [updateCnt]);
-
   // console.log(dataDict)
-
-  const handleSliderChange = (event) => {
-    console.log("Slider changed:", event);
-    setTimestamp(event.target.value);
-  };
   if (!dataDict[0] || !dataDict[0]["x"]) {
     return <></>;
   }
-
-  console.log(dataDict);
+  const timestamp = plotState[0]
   const auxdatas = [
     {
       x: [timestamp, timestamp],
@@ -48,16 +41,16 @@ export default function TemporalPlot({ plotState, setPlotState,updateCnt }) {
       },
       name: "Vertical Line",
     },
-    {
-      x: timestamps,
-      y: new Array(timestamps.length).fill(0),
-      mode: "lines",
-      line: {
-        color: "black",
-        width: 2,
-      },
-      name: "timestamps",
-    },
+    // {
+    //   x: timestamps,
+    //   y: new Array(timestamps.length).fill(0),
+    //   mode: "lines",
+    //   line: {
+    //     color: "black",
+    //     width: 2,
+    //   },
+    //   name: "timestamps",
+    // },
   ];
   const combined_data = dataDict.concat(auxdatas);
   console.log(combined_data);
@@ -68,8 +61,8 @@ export default function TemporalPlot({ plotState, setPlotState,updateCnt }) {
       <Plot
         data={combined_data}
         layout={{
-          title: "XT : " + source,
-          width: window.innerWidth / num_elements,
+          title: "XT : " ,
+          width: window.innerWidth,
         }}
         config={{ displayModeBar: false }}
         onClick={handleClick}
