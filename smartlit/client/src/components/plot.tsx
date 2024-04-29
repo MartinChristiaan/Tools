@@ -6,41 +6,25 @@ import { flask_url } from "../lib/utils";
 import dynamic from "next/dynamic";
 const Plot = dynamic(() => import("react-plotly.js"), { ssr: false });
 
-export default function TemporalPlot({
-  timestamp,
-  setTimestamp,
-  source,
-  camera,
-  timestamps,
-  groupbys,
-  num_elements,
-}: {
-  timestamp: number;
-  setTimestamp: (timestamp: number) => void;
-  source: string;
-  camera: string;
-  timestamps: number[];
-  groupbys: string[];
-  num_elements: number;
-}) {
+export default function TemporalPlot({ plotState, setPlotState,updateCnt }) {
   const handleClick = (event) => {
     console.log("Clicked on the plot:", event.points[0].x);
-    setTimestamp(event.points[0].x);
+    setPlotState([event.points[0].x,event.point[0].y]);
   };
   const [dataDict, setDataDict] = React.useState({});
   const [maxY, setMaxY] = React.useState(1080);
 
   useEffect(() => {
-    fetch(flask_url + "/plotdata/" + source.replaceAll("/", "DASH"))
+    fetch(flask_url + "/plotdata/")
       .then((response) => response.json())
       .then((data) => {
         setDataDict(data);
-        setTimestamp(data[0]["x"][0]);
+        setPlotState([data[0]["x"][0],data[0]["y"][0]]);
         const floats = data[0]["y"].map((y: string) => parseFloat(y));
         setMaxY(Math.max(...floats));
         // console.log(((data['y'])))
       });
-  }, [camera, source,groupbys]);
+  }, [updateCnt]);
 
   // console.log(dataDict)
 
@@ -49,11 +33,10 @@ export default function TemporalPlot({
     setTimestamp(event.target.value);
   };
   if (!dataDict[0] || !dataDict[0]["x"]) {
-
-    return(<></>);
+    return <></>;
   }
 
-  console.log(dataDict)
+  console.log(dataDict);
   const auxdatas = [
     {
       x: [timestamp, timestamp],
@@ -76,19 +59,21 @@ export default function TemporalPlot({
       name: "timestamps",
     },
   ];
-  const combined_data = dataDict.concat(auxdatas)
-  console.log(combined_data)
-
+  const combined_data = dataDict.concat(auxdatas);
+  console.log(combined_data);
 
   return (
     <>
       (
-        <Plot
-          data={combined_data}
-          layout={{ title: "XT : " + source, width: window.innerWidth/num_elements}}
-          config={{ displayModeBar: false }}
-          onClick={handleClick}
-        />
+      <Plot
+        data={combined_data}
+        layout={{
+          title: "XT : " + source,
+          width: window.innerWidth / num_elements,
+        }}
+        config={{ displayModeBar: false }}
+        onClick={handleClick}
+      />
       )
       {/* {dataDict['x'] && (
         <input
