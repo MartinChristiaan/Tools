@@ -12,6 +12,7 @@ class API:
         data = {}
         for c in self.containers:
             data[c.name] = {x.name: x.get_ui_data() for x in c.get_observables()}
+            print(c.name)
         return data
 
     def set_ui_data(self, data):
@@ -64,4 +65,4 @@ if __name__ == "__main__":
         media_manager_selection
     ]  # Define your initial containers here
     app = create_app(initial_containers)
-    app.run()
+    app.run(debug=True)

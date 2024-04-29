@@ -4,6 +4,7 @@ import { Card, Box, Heading, Form } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { flask_url } from "../lib/utils";
 import { render_selectbox } from "../lib/selectbox";
+import { render_plot } from "@/lib/plot";
 
 
 export default function Home() {
@@ -42,10 +43,12 @@ export default function Home() {
 
 
   const renderFormElement = (outerKey,innerkey,data) => {
-    const datastr = data.toString()
+    console.log(data.uimode)
     switch (data.uimode) {
       case "selectbox":
         return render_selectbox(innerkey, data, onUpdate, outerKey);
+      case "plot":
+        return render_plot(innerkey, data, onUpdate, outerKey);
       default:
         return null;
     }

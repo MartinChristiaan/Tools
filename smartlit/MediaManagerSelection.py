@@ -58,15 +58,13 @@ class Plot(Observable):
                     ),
                 )
             )
-        return dict(series=series, plot_type=self.plot_type)
+        return dict(series=series, plot_type=self.plot_type, uimode="plot")
 
     def log_state(self, data):
-        print(f"logging {self.name}, special")
         data[f"{self.name}_x_axis_label"] = self.x_axis_label
         data[f"{self.name}_y_axis_label"] = self.y_axis_label
         data[f"{self.name}_pivot_column"] = self.pivot_column
         return data
-        print(data)
 
 
 class MPLPlotter:
@@ -119,7 +117,7 @@ class MediaManagerSelection(Container):
         super().__init__("Media Manager Selection")
 
     def get_observables(self) -> List[Observable]:
-        return [self.videoset, self.camera, self.data_table_path]
+        return [self.videoset, self.camera, self.data_table_path, self.data_table]
 
     def on_videoset_update(self):
         cur_vset = self.videoset.value
