@@ -17,8 +17,8 @@ class VideosetAPI:
             "/data/local_diskstation/datasets/drone-tracking/video/",
             "cam0_video/cam0_video",
             selected_sources=[],
-            groupbys=[],
-            groupbys_options=[],
+            pivot_columns=[],
+            pivot_column_options=[],
         )
         self.manager.update_mm()
 
