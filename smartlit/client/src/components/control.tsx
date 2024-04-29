@@ -6,15 +6,14 @@ import { flask_url } from "../lib/utils";
 import { render_selectbox } from "../lib/selectbox";
 
 
-export default function Home() {
+export default function Control({key}) {
   const [uiData, setUiData] = useState(null);
 
   useEffect(() => {
-    fetch(flask_url+'/get_ui_data')
+    fetch(flask_url+'/get_ui_data/'+name)
       .then(response => response.json())
       .then(data => setUiData(data));
   }, []);
-
 
   function onUpdate(cardKey, innerKey, value) {
     // Make a copy of uiData
@@ -46,36 +45,23 @@ export default function Home() {
     switch (data.uimode) {
       case "selectbox":
         return render_selectbox(innerkey, data, onUpdate, outerKey);
-      case "plot":
-        return render_plot(innerkey, data, onUpdate, outerKey);
       default:
         return null;
     }
   };
 
 
-const renderCard = (key, innerData) => {
   return (
     <Card key={key} my={3}>
       <Box p={4}>
         <Heading as="h2" size="md" mb={4}>
           {key}
         </Heading>
-          {Object.entries(innerData).map(([innerKey, innerData]) =>
+          {Object.entries(uiData).map(([innerKey, innerData]) =>
             renderFormElement(key, innerKey, innerData)
           )}
       </Box>
     </Card>
   );
 };
-
-  return (
-    <div>
-      {uiData &&
-        Object.entries(uiData).map(([outerKey, innerData]) =>
-          renderCard(outerKey, innerData)
-        )}
-    </div>
-  );
-}
 
