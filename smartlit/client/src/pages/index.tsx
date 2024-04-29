@@ -4,76 +4,33 @@ import { Card, Box, Heading, Form } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { flask_url } from "../lib/utils";
 import { render_selectbox } from "../lib/selectbox";
-
+import Control from "@/components/control";
 
 export default function Home() {
-  const [uiData, setUiData] = useState(null);
+  const [containers, setContainers] = useState(null);
 
   useEffect(() => {
-    fetch(flask_url+'/get_ui_data')
+    fetch(flask_url+'/get_cards')
       .then(response => response.json())
-      .then(data => setUiData(data));
+      .then(data => setContainers(data));
   }, []);
 
-
-  function onUpdate(cardKey, innerKey, value) {
-    // Make a copy of uiData
-    console.log("updating",cardKey,innerKey,value)
-    let newUiData = { ...uiData };
-    // Update the value in the local state
-    newUiData[cardKey][innerKey].value = value;
-
-    // Perform the POST request to update the server
-    fetch(flask_url + "/set_ui_data", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(newUiData),
-    })
-      .then(response => response.json())
-      .then((data) => {
-        setUiData(data);
-      })
-      .catch((error) => {
-        console.error("Error updating UI data:", error);
-      });
-  }
-
-
-  const renderFormElement = (outerKey,innerkey,data) => {
-    console.log(data.uimode)
-    switch (data.uimode) {
-      case "selectbox":
-        return render_selectbox(innerkey, data, onUpdate, outerKey);
+  function renderContainer(key,containertype){
+    switch (containertype){
+      case "card":
+        return <Control key={key}></Control>
       case "plot":
-        return render_plot(innerkey, data, onUpdate, outerKey);
+        return null
       default:
-        return null;
+        return null
     }
-  };
-
-
-const renderCard = (key, innerData) => {
-  return (
-    <Card key={key} my={3}>
-      <Box p={4}>
-        <Heading as="h2" size="md" mb={4}>
-          {key}
-        </Heading>
-          {Object.entries(innerData).map(([innerKey, innerData]) =>
-            renderFormElement(key, innerKey, innerData)
-          )}
-      </Box>
-    </Card>
-  );
-};
+  }
 
   return (
     <div>
-      {uiData &&
-        Object.entries(uiData).map(([outerKey, innerData]) =>
-          renderCard(outerKey, innerData)
+      {containers &&
+        Object.entries(containers).map(([outerKey, innerData]) =>
+          renderContainer(outerKey, innerData)
         )}
     </div>
   );

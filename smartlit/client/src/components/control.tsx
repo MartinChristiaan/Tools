@@ -39,7 +39,6 @@ export default function Control({key}) {
       });
   }
 
-
   const renderFormElement = (outerKey,innerkey,data) => {
     console.log(data.uimode)
     switch (data.uimode) {
