@@ -35,6 +35,11 @@ class VideosetAPI:
         self.current_videoset = None
         self.media_manager = None
 
+        self.videoset_lut = {}
+
+        for videoset_name, videoset in videosets.videosets_by_name.items():
+            self.videoset_lut[videoset_name] = [camera for camera in videoset.cameras]
+
     def get_videosets(self):
         videoset_data = []
         for videoset_name, videoset in videosets.videosets_by_name.items():
@@ -53,13 +58,21 @@ class VideosetAPI:
         return Response(encoded_frame, content_type="image/jpeg")
 
     def _set_manager(self, videoset, camera):
+        if videoset not in self.videoset_lut:
+            return False
+        if camera not in self.videoset_lut[videoset]:
+            return False
+
         if self.current_videoset != videoset + camera:
             self.current_videoset = videoset + camera
             self.media_manager = videosets[videoset].get_mediamanager(camera)
+            return True
 
     def get_detections_options(self, videoset, camera):
-        self._set_manager(videoset, camera)
-        return [str(x) for x in find_result_csv_in_mm_path(self.media_manager)]
+        if self._set_manager(videoset, camera):
+            return [str(x) for x in find_result_csv_in_mm_path(self.media_manager)]
+        else:
+            return []
 
     def get_detection_data(self, videoset, camera, detections_path):
         self._set_manager(videoset, camera)

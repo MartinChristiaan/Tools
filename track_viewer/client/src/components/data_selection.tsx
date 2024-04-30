@@ -7,25 +7,48 @@ import { AutoComplete, AutoCompleteInput, AutoCompleteItem, AutoCompleteList } f
 import { use, useEffect,useState } from "react";
 
 
-function get_autocomplete_box(label:string,value:string,options:string[],onSelect:any){
-	return (
-	<FormControl w="200">
-        <FormLabel>{label}</FormLabel>
-        <AutoComplete openOnFocus onSelectOption={(x) => onSelect(x.item.value)}>
-          <AutoCompleteInput variant="filled" placeholder={value} />
-          <AutoCompleteList>
-            {options.map((options, cid) => (
-              <AutoCompleteItem
-                key={`option-${cid}`}
-                value={options}
-              >
-                {options}
-              </AutoCompleteItem>
-            ))}
-          </AutoCompleteList>
-        </AutoComplete>
-      </FormControl>
-	)
+function get_autocomplete_box(label:string,value:any,options:string[],onSelect:any,multiple=false){
+
+	const autoCompleteOptions = (
+		<div>
+			<AutoCompleteInput variant="filled" placeholder={value} />
+			<AutoCompleteList>
+				{options.map((option, cid) => (
+					<AutoCompleteItem
+						key={`option-${cid}`}
+						value={option}
+					>
+						{option}
+					</AutoCompleteItem>
+				))}
+			</AutoCompleteList>
+		</div>
+	);
+	if (multiple)
+	{
+		return (
+			<FormControl w="200">
+				<FormLabel>{label}</FormLabel>
+				<AutoComplete openOnFocus onSelectOption={(x) => onSelect(x.item.value)} multiple>
+					{autoCompleteOptions}
+				</AutoComplete>
+			</FormControl>
+		);
+
+	}
+	else{
+		return (
+			<FormControl w="200">
+				<FormLabel>{label}</FormLabel>
+				<AutoComplete openOnFocus onSelectOption={(x) => onSelect(x.item.value)}>
+					{autoCompleteOptions}
+				</AutoComplete>
+			</FormControl>
+		);
+
+	}
+
+
 }
 
 
@@ -62,12 +85,9 @@ export default function VideosetSelector({videoset,SetVideoset}:{videoset:Videos
 	const videoset_names = videosetOptions.map(videoset=>videoset.videoset)
 	const cameras = videosetOptions.find(x=>x.videoset==videoset.name)?.cameras || []
 
-
-
-
-
 	return <>
 		{get_autocomplete_box('Videoset',videoset.name,videoset_names,(value:string)=>{SetVideoset({...videoset,name:value})})}
 		{get_autocomplete_box('Camera',videoset.camera,cameras,(value:string)=>{SetVideoset({...videoset,camera:value})})}
+		{get_autocomplete_box('detections',videoset.detection_paths,cameras,(value:string)=>{SetVideoset({...videoset,detection_paths:value})},true)}
 	</>
 }
