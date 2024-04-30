@@ -6,66 +6,13 @@ import { FormControl, FormLabel } from "@chakra-ui/react";
 import { AutoComplete, AutoCompleteInput, AutoCompleteItem, AutoCompleteList, AutoCompleteTag } from "@choc-ui/chakra-autocomplete";
 import { use, useEffect,useState } from "react";
 
+//A class to select videoset and camera in the server. use bootstrap-react for styling
+import { Form } from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { Typeahead } from 'react-bootstrap-typeahead'; // ES
 
-function AutocompleteBox({ label, value, options, onSelect }: { label: string, value: any, options: string[], onSelect: (value: string) => void }) {
-	const autoCompleteOptions = (
-		<div>
-			<AutoCompleteInput variant="filled" placeholder={value}/>
-			<AutoCompleteList>
-				{options.map((option, cid) => (
-					<AutoCompleteItem
-						key={`option-${cid}`}
-						value={option}
-					>
-						{option}
-					</AutoCompleteItem>
-				))}
-			</AutoCompleteList>
-		</div>
-	);
 
-	return (
-		<FormControl w="200">
-			<FormLabel>{label}</FormLabel>
-			<AutoComplete openOnFocus onSelectOption={(x) => onSelect(x.item.value)} onChange={vals => console.log(vals)}>
-				{autoCompleteOptions}
-			</AutoComplete>
-		</FormControl>
-	);
-}
 
-function MultipleAutocompleteBox({ label, value, options, onSelect }: { label: string, value: any, options: string[], onSelect: (value: string[]) => void }) {
-	return (
-		<FormControl w="200">
-			<FormLabel>{label}</FormLabel>
-			<AutoComplete openOnFocus multiple onChange={vals => onSelect(vals)} value={value}>
-				<AutoCompleteInput variant="filled">
-					{({ tags }) =>
-						tags.map((tag, tid) => (
-							<AutoCompleteTag
-								key={tid}
-								label={tag.label}
-								onRemove={tag.onRemove}
-							/>
-						))
-					}
-				</AutoCompleteInput>
-				<AutoCompleteList>
-					{options.map((option, cid) => (
-						<AutoCompleteItem
-							key={`option-${cid}`}
-							value={option}
-							_selected={{ bg: "whiteAlpha.50" }}
-							_focus={{ bg: "whiteAlpha.100" }}
-						>
-							{option}
-						</AutoCompleteItem>
-					))}
-				</AutoCompleteList>
-			</AutoComplete>
-		</FormControl>
-	);
-}
 
 export default function VideosetSelector({videoset,SetVideoset}:{videoset:Videoset,SetVideoset:any}){
 	const [videosetOptions,setVideosetOptions] = useState<VideosetOption[]>([]);
@@ -100,8 +47,99 @@ export default function VideosetSelector({videoset,SetVideoset}:{videoset:Videos
 	const cameras = videosetOptions.find(x=>x.videoset==videoset.name)?.cameras || []
 
 	return <>
-		<AutocompleteBox label="Videoset" value={videoset.name} options={videoset_names} onSelect={(value: string) => SetVideoset({ ...videoset, name: value })} />
-		<AutocompleteBox label="Camera" key={videoset.name} value={videoset.camera} options={cameras} onSelect={(value: string) => SetVideoset({ ...videoset, camera: value })} />
-		<MultipleAutocompleteBox label="Detections" key={videoset.name+videoset.camera} value={videoset.detection_paths} options={detectionOptions} onSelect={(value: string[]) => SetVideoset({ ...videoset, detection_paths: value })} />
+		<Form.Group>
+			<Form.Label>Data Selection</Form.Label>
+			<div style={{ display: 'flex' }}>
+			<div style={{ flex: 1 }}>
+				<Form.Label>Videoset</Form.Label>
+				<Typeahead
+				id="basic-typeahead-videoset"
+				labelKey="Videoset"
+				onChange={ x=> SetVideoset({...videoset,name:x})}
+				options={videoset_names}
+				placeholder={videoset.name}
+				// selected={selectionsVideoset}
+				/>
+			</div>
+			{/* <div style={{ flex: 1 }}>
+				<Form.Label>Camera</Form.Label>
+				<Typeahead
+				id="basic-typeahead-camera"
+				labelKey="camera"
+				// onChange={setSelectionsCamera}
+				// options={serverData.cameras}
+				// placeholder={serverData.camera}
+				// selected={SelectionsCamera}
+				/>
+			</div> */}
+			</div>
+		</Form.Group>
+		{/* <AutocompleteBox label="Videoset" value={videoset.name} options={videoset_names} onSelect={(value: string) => SetVideoset({ ...videoset, name: value })} />
+		<AutocompleteBox label="Camera" value={videoset.camera} options={cameras} onSelect={(value: string) => SetVideoset({ ...videoset, camera: value })} />
+		<MultipleAutocompleteBox label="Detections" key={videoset.name+videoset.camera} value={videoset.detection_paths} options={detectionOptions} onSelect={(value: string[]) => SetVideoset({ ...videoset, detection_paths: value })} /> */}
 	</>
 }
+
+
+
+
+// function AutocompleteBox({ label, value, options, onSelect }: { label: string, value: any, options: string[], onSelect: (value: string) => void }) {
+// 	const autoCompleteOptions = (
+// 		<div>
+// 			<AutoCompleteInput variant="filled" placeholder={value}/>
+// 			<AutoCompleteList>
+// 				{options.map((option, cid) => (
+// 					<AutoCompleteItem
+// 						key={`option-${cid}`}
+// 						value={option}
+// 					>
+// 						{option}
+// 					</AutoCompleteItem>
+// 				))}
+// 			</AutoCompleteList>
+// 		</div>
+// 	);
+
+// 	return (
+// 		<FormControl w="200">
+// 			<FormLabel>{label}</FormLabel>
+// 			<AutoComplete openOnFocus onSelectOption={(x) => onSelect(x.item.value)} onChange={vals => console.log(vals)}>
+// 				{autoCompleteOptions}
+// 			</AutoComplete>
+// 		</FormControl>
+// 	);
+// }
+
+// function MultipleAutocompleteBox({ label, value, options, onSelect }: { label: string, value: any, options: string[], onSelect: (value: string[]) => void }) {
+// 	return (
+// 		<FormControl w="200">
+// 			<FormLabel>{label}</FormLabel>
+// 			<AutoComplete openOnFocus multiple onChange={vals => onSelect(vals)} value={value}>
+// 				<AutoCompleteInput variant="filled">
+// 					{({ tags }) =>
+// 						tags.map((tag, tid) => (
+// 							<AutoCompleteTag
+// 								key={tid}
+// 								label={tag.label}
+// 								onRemove={tag.onRemove}
+// 							/>
+// 						))
+// 					}
+// 				</AutoCompleteInput>
+// 				<AutoCompleteList>
+// 					{options.map((option, cid) => (
+// 						<AutoCompleteItem
+// 							key={`option-${cid}`}
+// 							value={option}
+// 							_selected={{ bg: "whiteAlpha.50" }}
+// 							_focus={{ bg: "whiteAlpha.100" }}
+// 						>
+// 							{option}
+// 						</AutoCompleteItem>
+// 					))}
+// 				</AutoCompleteList>
+// 			</AutoComplete>
+// 		</FormControl>
+// 	);
+// }
+
