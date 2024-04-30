@@ -104,7 +104,7 @@ class VideosetAPI:
     def load_ux_state(self):
         save_path = self.snapshot_dir / f"uxstate.pkl"
         if save_path.exists():
-            with open(save_path, "r") as f:
+            with open(save_path, "rb") as f:
                 return pickle.load(f)
         else:
             return {}
@@ -167,6 +167,11 @@ def save_ux_state():
     state_dict = request.json
     videoset_api.save_ux_state(state_dict)
     return "ux saved successfully"
+
+
+@app.route("/load_ux_state", methods=["GET"])
+def load_ux_state():
+    return jsonify(videoset_api.load_ux_state())
 
 
 if __name__ == "__main__":

@@ -12,15 +12,21 @@ import axios from "axios";
 
 export default function Home() {
   const [videoset, setVideoset] = useState<Videoset>(defaultVideoset);
-  useEffect(() => {
-    //save ux state to server by posting videoset data
-
-    
-    
-  }, [videoset]);
 
   useEffect(() => {
-    const saveVideosetData = async () => {
+    fetch(flask_url + '/load_ux_state')
+    .then(response => response.json())
+    .then(data => {
+      setVideoset(new Videoset(data));
+    })
+    .catch(error => {
+      console.error("Error loading videoset data:", error);
+    });
+  }, []);
+
+
+  useEffect(() => {
+  const saveVideosetData = async () => {
       try {
         await axios.post(flask_url+"/save_ux_state", videoset);
         console.log("Videoset data saved successfully!");
@@ -35,3 +41,4 @@ export default function Home() {
     <VideosetSelector videoset={videoset} SetVideoset={setVideoset}/>
   </>
 }
+
