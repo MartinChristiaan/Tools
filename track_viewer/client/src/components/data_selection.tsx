@@ -50,29 +50,66 @@ export default function VideosetSelector({videoset,SetVideoset}:{videoset:Videos
 
 		<AutocompleteBox label="Videoset" value={videoset.name} options={videoset_names} onSelect={(value: string) => SetVideoset({ ...videoset, name: value })} />
 		<AutocompleteBox label="Camera" value={videoset.camera} options={cameras} onSelect={(value: string) => SetVideoset({ ...videoset, camera: value })} />
-		{/* <MultipleAutocompleteBox label="Detections" key={videoset.name+videoset.camera} value={videoset.detection_paths} options={detectionOptions} onSelect={(value: string[]) => SetVideoset({ ...videoset, detection_paths: value })} /> */} */}
+		<MultipleAutocompleteBox label="Detections" key={videoset.name+videoset.camera} value={videoset.detection_paths} options={detectionOptions} onSelect={(value: string[]) => SetVideoset({ ...videoset, detection_paths: value })} /> */}
 	</>
 }
-
-
-
-
 
 function AutocompleteBox({ label, value, options, onSelect }: { label: string, value: any, options: string[], onSelect: (value: string) => void }) {
 	if (value == undefined) {
 		value = ''
 	}
+
+	function filteredSelect(selected: string) {
+		console.log('selected:', selected)
+		if (selected === undefined) {
+			return
+		}
+		onSelect(selected)
+	}
+
 	return <div style={{ flex: 1 }}>
 		<Form.Label>{label}</Form.Label>
 		<Typeahead
 			id={"basic-typeahead-" + label}
 			labelKey="Videoset"
-			onChange={(selected)=>onSelect(selected[0])}
+			onChange={(selected)=>filteredSelect(selected[0])}
 			options={options}
-			// placeholder={value}
-			selected={[value]} />
+			placeholder={value}
+			// selected={[value]}
+			 />
 	</div>;
 }
+
+function MultiAutocompleteBox({ label, value, options, onSelect }: { label: string, value: any, options: string[], onSelect: (value: string[]) => void }) {
+	if (value == undefined) {
+		value = ''
+	}
+
+	function filteredSelect(selected: string[]) {
+		console.log('selected:', selected)
+		if (selected === undefined) {
+			return
+		}
+		onSelect(selected)
+	}
+
+	return <div style={{ flex: 1 }}>
+		<Form.Label>{label}</Form.Label>
+		<Typeahead
+			id={"basic-typeahead-" + label}
+			labelKey="Videoset"
+			onChange={(selected)=>filteredSelect(selected)}
+			options={options}
+			placeholder={value}
+			multiple
+			// selected={[value]}
+			 />
+	</div>;
+}
+
+
+
+
 // function AutocompleteBox({ label, value, options, onSelect }: { label: string, value: any, options: string[], onSelect: (value: string) => void }) {
 // 	const autoCompleteOptions = (
 // 		<div>
