@@ -8,11 +8,9 @@ import { use, useEffect,useState } from "react";
 
 
 function get_autocomplete_box(label:string,value:any,options:string[],onSelect:any){
-	const [internalValue, setInternalValue] = useState(value);
-
 	const autoCompleteOptions = (
 		<div>
-				<AutoCompleteInput variant="filled" value={internalValue} onChange={(val:any)=>console.log(val)} />
+				<AutoCompleteInput variant="filled"/>
 				<AutoCompleteList>
 					{options.map((option, cid) => (
 						<AutoCompleteItem
@@ -28,7 +26,7 @@ function get_autocomplete_box(label:string,value:any,options:string[],onSelect:a
 	return (
 		<FormControl w="200">
 			<FormLabel>{label}</FormLabel>
-			<AutoComplete openOnFocus onSelectOption={(x) => onSelect(x.item.value)}>
+			<AutoComplete openOnFocus onSelectOption={(x) => onSelect(x.item.value) }  onChange={vals => console.log(vals)}>
 				{autoCompleteOptions}
 			</AutoComplete>
 		</FormControl>
