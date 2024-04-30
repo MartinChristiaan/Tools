@@ -2,6 +2,7 @@ import json
 from datetime import datetime
 import os
 from pathlib import Path
+import pickle
 from flask import Flask, Response, jsonify, request
 from flask_cors import CORS
 import cv2
@@ -79,15 +80,34 @@ class VideosetAPI:
         data = self.media_manager.load(detections_path)
         return data.to_json()
 
-    def save_snapshot(self, state_dict):
+    @property
+    def snapshot_dir(self):
         snapshot_dir = Path("/data/track_viewer_shapshots/")
         snapshot_dir.mkdir(exist_ok=True, parents=True)
+        return snapshot_dir
+
+    def save_snapshot(self, state_dict):
         videoset = state_dict["videoset"]
         camera = state_dict["camera"]
         datestr = datetime.now().strftime("%Y%m%dT%H%M%S")
-        save_path = snapshot_dir / f"{datestr}_{videoset}_{camera.replace('/','_')}.pkl"
+        save_path = (
+            self.snapshot_dir / f"{datestr}_{videoset}_{camera.replace('/','_')}.pkl"
+        )
         with open(save_path, "w") as f:
             json.dump(state_dict, f)
+
+    def save_ux_state(self, state_dict):
+        save_path = self.snapshot_dir / f"uxstate.pkl"
+        with open(save_path, "wb") as f:
+            pickle.dump(state_dict, f)
+
+    def load_ux_state(self):
+        save_path = self.snapshot_dir / f"uxstate.pkl"
+        if save_path.exists():
+            with open(save_path, "r") as f:
+                return pickle.load(f)
+        else:
+            return {}
 
 
 videoset_api = VideosetAPI()
@@ -140,6 +160,13 @@ def save_snapshot():
     videoset_api.save_snapshot(state_dict)
 
     return "Snapshot saved successfully"
+
+
+@app.route("/save_ux_state", methods=["POST"])
+def save_ux_state():
+    state_dict = request.json
+    videoset_api.save_ux_state(state_dict)
+    return "ux saved successfully"
 
 
 if __name__ == "__main__":
