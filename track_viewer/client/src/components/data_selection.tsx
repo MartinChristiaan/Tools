@@ -3,7 +3,7 @@
 import { Videoset,defaultVideoset,VideosetOption, fetchVideosetOptions } from "@/lib/ServerData";
 import { flask_url } from "@/lib/utils";
 import { FormControl, FormLabel } from "@chakra-ui/react";
-import { AutoComplete, AutoCompleteInput, AutoCompleteItem, AutoCompleteList } from "@choc-ui/chakra-autocomplete";
+import { AutoComplete, AutoCompleteInput, AutoCompleteItem, AutoCompleteList, AutoCompleteTag } from "@choc-ui/chakra-autocomplete";
 import { use, useEffect,useState } from "react";
 
 
@@ -24,32 +24,51 @@ function get_autocomplete_box(label:string,value:any,options:string[],onSelect:a
 			</AutoCompleteList>
 		</div>
 	);
-	if (multiple)
-	{
-		return (
-			<FormControl w="200">
-				<FormLabel>{label}</FormLabel>
-				<AutoComplete openOnFocus onSelectOption={(x) => onSelect(x.item.value)} multiple>
-					{autoCompleteOptions}
-				</AutoComplete>
-			</FormControl>
-		);
-
-	}
-	else{
-		return (
-			<FormControl w="200">
-				<FormLabel>{label}</FormLabel>
-				<AutoComplete openOnFocus onSelectOption={(x) => onSelect(x.item.value)}>
-					{autoCompleteOptions}
-				</AutoComplete>
-			</FormControl>
-		);
-
-	}
-
+	return (
+		<FormControl w="200">
+			<FormLabel>{label}</FormLabel>
+			<AutoComplete openOnFocus onSelectOption={(x) => onSelect(x.item.value)}>
+				{autoCompleteOptions}
+			</AutoComplete>
+		</FormControl>
+	);
 
 }
+
+
+function getMultipleAutocompleteBox(label:string,value:any,options:string[],onSelect:any){
+	return (
+		<FormControl w="200">
+			<FormLabel>{label}</FormLabel>
+			<AutoComplete openOnFocus multiple onChange={vals => console.log(vals)}>
+				<AutoCompleteInput variant="filled">
+					{({ tags }) =>
+						tags.map((tag, tid) => (
+							<AutoCompleteTag
+								key={tid}
+								label={tag.label}
+								onRemove={tag.onRemove}
+							/>
+						))
+					}
+				</AutoCompleteInput>
+				<AutoCompleteList>
+					{options.map((option, cid) => (
+						<AutoCompleteItem
+							key={`option-${cid}`}
+							value={option}
+							_selected={{ bg: "whiteAlpha.50" }}
+							_focus={{ bg: "whiteAlpha.100" }}
+						>
+							{option}
+						</AutoCompleteItem>
+					))}
+				</AutoCompleteList>
+			</AutoComplete>
+		</FormControl>
+	);
+}
+
 
 
 // @app.route("/detections_options", methods=["GET"])
@@ -76,10 +95,14 @@ export default function VideosetSelector({videoset,SetVideoset}:{videoset:Videos
 		fetchVideosetOptions(setVideosetOptions)
 	}, []);
 
+	useEffect(() => {
+		SetVideoset({...videoset,camera:videosetOptions.find(x=>x.videoset==videoset.name)?.cameras[0] || ''})
+		console.log('videoset:',videoset)	
+	}, [videoset.name]);
 
 	useEffect(() => {
 		fetch_detections_options()
-	}, [videoset]);
+	}, [videoset.name,videoset.camera]);
 
 
 	const videoset_names = videosetOptions.map(videoset=>videoset.videoset)
@@ -88,6 +111,6 @@ export default function VideosetSelector({videoset,SetVideoset}:{videoset:Videos
 	return <>
 		{get_autocomplete_box('Videoset',videoset.name,videoset_names,(value:string)=>{SetVideoset({...videoset,name:value})})}
 		{get_autocomplete_box('Camera',videoset.camera,cameras,(value:string)=>{SetVideoset({...videoset,camera:value})})}
-		{get_autocomplete_box('detections',videoset.detection_paths,cameras,(value:string)=>{SetVideoset({...videoset,detection_paths:value})},true)}
+		{getMultipleAutocompleteBox('detections',videoset.detection_paths,detectionOptions,(value:string)=>{SetVideoset({...videoset,detection_paths:value})})}
 	</>
 }
