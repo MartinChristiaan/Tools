@@ -2,12 +2,9 @@ import json
 from datetime import datetime
 import os
 from pathlib import Path
-import pickle
 from flask import Flask, Response, jsonify, request
 from flask_cors import CORS
 import cv2
-
-from mm_io_manager import IOData
 
 
 app = Flask(__name__)
@@ -15,12 +12,8 @@ CORS(app)
 
 
 from pathlib import Path
-from loguru import logger
 
 from videosets_ii.videosets_ii import VideosetsII
-from trackertoolbox.detections import Detections
-from trackertoolbox.tracks import Tracks, TrackUpdates
-import pandas as pd
 
 basedirpath = Path(r"/diskstation")
 videosets = VideosetsII(basedirpath=basedirpath)  # basedirpath)
@@ -44,8 +37,8 @@ class VideosetAPI:
 
     def get_videosets(self):
         videoset_data = []
-        for videoset in videosets:
-            videoset_data += [dict(videoset=videoset.name, cameras=videoset.cameras)]
+        for videoset_name, videoset in videosets.videosets_by_name.items():
+            videoset_data += [dict(videoset=videoset_name, cameras=videoset.cameras)]
         return videoset_data
 
     def get_frame(self, videoset, camera, timestamp):
@@ -102,9 +95,9 @@ def get_videosets():
 def get_frame():
     videoset = request.args.get("videoset")
     camera = request.args.get("camera")
-    timestamp = int(request.args.get("timestamp"))
-
-    frame = videoset_api.get_frame(videoset, camera, timestamp)
+    timestamp = float(request.args.get("timestamp"))
+    with lock:
+        frame = videoset_api.get_frame(videoset, camera, timestamp)
     return Response(frame, content_type="image/jpeg")
 
 
