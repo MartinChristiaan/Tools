@@ -7,35 +7,34 @@ import { AutoComplete, AutoCompleteInput, AutoCompleteItem, AutoCompleteList, Au
 import { use, useEffect,useState } from "react";
 
 
-function get_autocomplete_box(label:string,value:any,options:string[],onSelect:any){
+function AutocompleteBox({ label, value, options, onSelect }: { label: string, value: any, options: string[], onSelect: (value: string) => void }) {
 	const autoCompleteOptions = (
 		<div>
-				<AutoCompleteInput variant="filled"/>
-				<AutoCompleteList>
-					{options.map((option, cid) => (
-						<AutoCompleteItem
-							key={`option-${cid}`}
-							value={option}
-						>
-							{option}
-						</AutoCompleteItem>
-					))}
-				</AutoCompleteList>
-			</div>
+			<AutoCompleteInput variant="filled" placeholder={value}/>
+			<AutoCompleteList>
+				{options.map((option, cid) => (
+					<AutoCompleteItem
+						key={`option-${cid}`}
+						value={option}
+					>
+						{option}
+					</AutoCompleteItem>
+				))}
+			</AutoCompleteList>
+		</div>
 	);
+
 	return (
 		<FormControl w="200">
 			<FormLabel>{label}</FormLabel>
-			<AutoComplete openOnFocus onSelectOption={(x) => onSelect(x.item.value) }  onChange={vals => console.log(vals)}>
+			<AutoComplete openOnFocus onSelectOption={(x) => onSelect(x.item.value)} onChange={vals => console.log(vals)}>
 				{autoCompleteOptions}
 			</AutoComplete>
 		</FormControl>
 	);
-
 }
 
-
-function getMultipleAutocompleteBox(label:string,value:any,options:string[],onSelect:any){
+function MultipleAutocompleteBox({ label, value, options, onSelect }: { label: string, value: any, options: string[], onSelect: (value: string[]) => void }) {
 	return (
 		<FormControl w="200">
 			<FormLabel>{label}</FormLabel>
@@ -101,15 +100,23 @@ export default function VideosetSelector({videoset,SetVideoset}:{videoset:Videos
 
 	useEffect(() => {
 		fetch_detections_options()
+		if(videoset.detection_paths.length==0 || !detectionOptions.includes(videoset.detection_paths[0])){
+			console.log('setting detection path')
+			SetVideoset({...videoset,detection_paths:[detectionOptions[0]]})
+		}
 	}, [videoset.name,videoset.camera]);
 
 
 	const videoset_names = videosetOptions.map(videoset=>videoset.videoset)
 	const cameras = videosetOptions.find(x=>x.videoset==videoset.name)?.cameras || []
 
+		{/* {get_autocomplete_box('Videoset',videoset.name,videoset_names,(value:string)=>{SetVideoset({...videoset,name:value})})}
+		{get_autocomplete_box('Camera',videoset.camera,cameras,(value:string)=>{SetVideoset({...videoset,camera:value})},keys= )}
+		{getMultipleAutocompleteBox('detections',videoset.detection_paths,detectionOptions,(value:string)=>{SetVideoset({...videoset,detection_paths:value})})} */}
+
 	return <>
-		{get_autocomplete_box('Videoset',videoset.name,videoset_names,(value:string)=>{SetVideoset({...videoset,name:value})})}
-		{get_autocomplete_box('Camera',videoset.camera,cameras,(value:string)=>{SetVideoset({...videoset,camera:value})})}
-		{getMultipleAutocompleteBox('detections',videoset.detection_paths,detectionOptions,(value:string)=>{SetVideoset({...videoset,detection_paths:value})})}
+		<AutocompleteBox label="Videoset" value={videoset.name} options={videoset_names} onSelect={(value: string) => SetVideoset({ ...videoset, name: value })} />
+		<AutocompleteBox label="Camera" key={videoset.name} value={videoset.camera} options={cameras} onSelect={(value: string) => SetVideoset({ ...videoset, camera: value })} />
+		<MultipleAutocompleteBox label="Detections" key={videoset.name+videoset.camera} value={videoset.detection_paths} options={detectionOptions} onSelect={(value: string[]) => SetVideoset({ ...videoset, detection_paths: value })} />
 	</>
 }
