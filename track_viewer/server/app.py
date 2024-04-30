@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 import pickle
 from flask import Flask, Response, jsonify, request
@@ -11,30 +12,64 @@ app = Flask(__name__)
 CORS(app)
 
 
-class VideosetAPI:
-    def __init__(self):
-        self.manager = IOData(
-            "/data/local_diskstation/datasets/drone-tracking/video/",
-            "cam0_video/cam0_video",
-            selected_sources=[],
-            pivot_columns=[],
-            pivot_column_options=[],
-        )
-        self.manager.update_mm()
+from pathlib import Path
+from loguru import logger
 
-    def get_frame(self, timestamp):
+from videosets_ii.videosets_ii import VideosetsII
+from trackertoolbox.detections import Detections
+from trackertoolbox.tracks import Tracks, TrackUpdates
+import pandas as pd
+
+basedirpath = Path(r"/diskstation")
+videosets = VideosetsII(basedirpath=basedirpath)  # basedirpath)
+
+
+def get_modified_date(path):
+    return os.path.getmtime(path)
+
+
+def find_result_csv_in_mm_path(self, mm):
+    paths = list(mm.result_dirpath.rglob("*.csv"))
+    sorted_paths = sorted(paths, key=get_modified_date)[::-1]
+    path_options = [f"{x.parent.stem}/{x.name}" for x in sorted_paths]
+    return path_options
+
+
+class VideosetAPI:
+    def __init__(self) -> None:
+        self.current_videoset = None
+        self.media_manager = None
+
+    def get_videosets(self):
+        videoset_data = []
+        for videoset in videosets:
+            videoset_data += [dict(videoset=videoset.name, cameras=videoset.cameras)]
+        return videoset_data
+
+    def get_frame(self, videoset, camera, timestamp):
+        self.set_manager(videoset, camera)
+
         if timestamp == 0:
-            timestamp = self.manager.timestamps[0]
-        frame = self.manager.get_frame(timestamp, 0)
+            timestamp = self.media_manager.timestamps[0]
+
+        frame = self.media_manager.get_frame(timestamp)
         _, encoded_frame = cv2.imencode(".jpeg", frame)
         encoded_frame = encoded_frame.tobytes()
         return Response(encoded_frame, content_type="image/jpeg")
 
+    def set_manager(self, videoset, camera):
+        if self.current_videoset != videoset + camera:
+            self.current_videoset = videoset + camera
+            self.media_manager = videosets[videoset].get_mediamanager(camera)
+
+    def get_detections_options(self, videoset, camera, timestamp):
+        self.set_manager(videoset, camera)
+        return find_result_csv_in_mm_path(self.media_manager)
+
     def get_detections(self, timestamp, source):
         if timestamp == 0:
-            timestamp = self.manager.timestamps[0]
-
-        data = self.manager.get_detections(timestamp)
+            timestamp = self.media_manager.timestamps[0]
+        data = self.media_manager.get_detections(timestamp)
         data = data[data.source == source]
         # TODO check if works with len(0)
         return data.to_json(orient="records")
@@ -63,19 +98,19 @@ def get_detections(source_and_timstamps):
 @app.route("/plotdata/<source>", methods=["GET"])
 def get_xt_plot(source):
     source = source.replace("DASH", "/")
-    return jsonify(videoset_api.manager.get_xt_plot(source))
+    return jsonify(videoset_api.media_manager.get_xt_plot(source))
 
 
 @app.route("/videoset", methods=["GET"])
 def get_videoset():
-    return jsonify(videoset_api.manager.to_dict())
+    return jsonify(videoset_api.media_manager.to_dict())
 
 
 @app.route("/videoset", methods=["POST"])
 def set_videoset():
     data = request.json  # JSON data sent in the request
-    videoset_api.manager.set_videoset_data(data)
-    return jsonify(videoset_api.manager.to_dict())
+    videoset_api.media_manager.set_videoset_data(data)
+    return jsonify(videoset_api.media_manager.to_dict())
 
 
 @app.route("/save/<timestamp_and_comment>", methods=["GET"])
@@ -84,7 +119,7 @@ def save(timestamp_and_comment):
     saves_folder.mkdir(exist_ok=True)
     from datetime import datetime
 
-    manager = videoset_api.manager
+    manager = videoset_api.media_manager
     timestamp, comment = timestamp_and_comment.split("___")
     manager.timestamp = float(timestamp)
     manager.comment = comment
