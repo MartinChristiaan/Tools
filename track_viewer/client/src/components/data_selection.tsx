@@ -67,17 +67,6 @@ function MultipleAutocompleteBox({ label, value, options, onSelect }: { label: s
 	);
 }
 
-
-
-// @app.route("/detections_options", methods=["GET"])
-// def get_detections_options():
-//     videoset = request.args.get("videoset")
-//     camera = request.args.get("camera")
-
-//     options = videoset_api.get_detections_options(videoset, camera)
-//     return jsonify(options)
-
-
 export default function VideosetSelector({videoset,SetVideoset}:{videoset:Videoset,SetVideoset:any}){
 	const [videosetOptions,setVideosetOptions] = useState<VideosetOption[]>([]);
 	const [detectionOptions,setDetectionOptions] = useState<string[]>([]);
@@ -104,15 +93,11 @@ export default function VideosetSelector({videoset,SetVideoset}:{videoset:Videos
 			console.log('setting detection path')
 			SetVideoset({...videoset,detection_paths:[detectionOptions[0]]})
 		}
-	}, [videoset.name,videoset.camera]);
+	}, [videoset.camera]);
 
 
 	const videoset_names = videosetOptions.map(videoset=>videoset.videoset)
 	const cameras = videosetOptions.find(x=>x.videoset==videoset.name)?.cameras || []
-
-		{/* {get_autocomplete_box('Videoset',videoset.name,videoset_names,(value:string)=>{SetVideoset({...videoset,name:value})})}
-		{get_autocomplete_box('Camera',videoset.camera,cameras,(value:string)=>{SetVideoset({...videoset,camera:value})},keys= )}
-		{getMultipleAutocompleteBox('detections',videoset.detection_paths,detectionOptions,(value:string)=>{SetVideoset({...videoset,detection_paths:value})})} */}
 
 	return <>
 		<AutocompleteBox label="Videoset" value={videoset.name} options={videoset_names} onSelect={(value: string) => SetVideoset({ ...videoset, name: value })} />
