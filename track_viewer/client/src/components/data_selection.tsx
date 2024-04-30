@@ -7,22 +7,23 @@ import { AutoComplete, AutoCompleteInput, AutoCompleteItem, AutoCompleteList, Au
 import { use, useEffect,useState } from "react";
 
 
-function get_autocomplete_box(label:string,value:any,options:string[],onSelect:any,multiple=false){
+function get_autocomplete_box(label:string,value:any,options:string[],onSelect:any){
+	const [internalValue, setInternalValue] = useState(value);
 
 	const autoCompleteOptions = (
 		<div>
-			<AutoCompleteInput variant="filled" placeholder={value} />
-			<AutoCompleteList>
-				{options.map((option, cid) => (
-					<AutoCompleteItem
-						key={`option-${cid}`}
-						value={option}
-					>
-						{option}
-					</AutoCompleteItem>
-				))}
-			</AutoCompleteList>
-		</div>
+				<AutoCompleteInput variant="filled" value={internalValue} onChange={(val:any)=>console.log(val)} />
+				<AutoCompleteList>
+					{options.map((option, cid) => (
+						<AutoCompleteItem
+							key={`option-${cid}`}
+							value={option}
+						>
+							{option}
+						</AutoCompleteItem>
+					))}
+				</AutoCompleteList>
+			</div>
 	);
 	return (
 		<FormControl w="200">
@@ -40,7 +41,7 @@ function getMultipleAutocompleteBox(label:string,value:any,options:string[],onSe
 	return (
 		<FormControl w="200">
 			<FormLabel>{label}</FormLabel>
-			<AutoComplete openOnFocus multiple onChange={vals => console.log(vals)}>
+			<AutoComplete openOnFocus multiple onChange={vals => onSelect(vals)} value={value}>
 				<AutoCompleteInput variant="filled">
 					{({ tags }) =>
 						tags.map((tag, tid) => (
