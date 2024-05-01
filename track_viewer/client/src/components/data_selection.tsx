@@ -8,8 +8,9 @@ import { use, useEffect,useState } from "react";
 
 //A class to select videoset and camera in the server. use bootstrap-react for styling
 import { Form } from 'react-bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import { Typeahead } from 'react-bootstrap-typeahead'; // ES
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'react-bootstrap-typeahead/css/Typeahead.css';
 
 
 
@@ -48,9 +49,11 @@ export default function VideosetSelector({videoset,SetVideoset}:{videoset:Videos
 
 	return <>
 
+	  <Form.Group>
 		<AutocompleteBox label="Videoset" value={videoset.name} options={videoset_names} onSelect={(value: string) => SetVideoset({ ...videoset, name: value })} />
 		<AutocompleteBox label="Camera" value={videoset.camera} options={cameras} onSelect={(value: string) => SetVideoset({ ...videoset, camera: value })} />
 		<MultipleAutocompleteBox label="Detections" key={videoset.name+videoset.camera} value={videoset.detection_paths} options={detectionOptions} onSelect={(value: string[]) => SetVideoset({ ...videoset, detection_paths: value })} /> */}
+	</Form.Group>
 	</>
 }
 
@@ -80,7 +83,7 @@ function AutocompleteBox({ label, value, options, onSelect }: { label: string, v
 	</div>;
 }
 
-function MultiAutocompleteBox({ label, value, options, onSelect }: { label: string, value: any, options: string[], onSelect: (value: string[]) => void }) {
+function MultipleAutocompleteBox({ label, value, options, onSelect }: { label: string, value: any, options: string[], onSelect: (value: string[]) => void }) {
 	if (value == undefined) {
 		value = ''
 	}

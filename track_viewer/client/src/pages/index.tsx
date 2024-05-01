@@ -7,6 +7,7 @@ import { Videoset,defaultVideoset } from "@/lib/ServerData";
 import VideosetSelector from "@/components/data_selection";
 import { flask_url } from "@/lib/utils";
 import axios from "axios";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 
