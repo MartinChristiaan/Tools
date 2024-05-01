@@ -6,7 +6,7 @@ import { Form } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Typeahead } from 'react-bootstrap-typeahead'; // ES2015
 import 'react-bootstrap-typeahead/css/Typeahead.css';
-import { ServerData } from './ServerData';
+import { ServerData } from '../lib/ServerData';
 
 export default function InputSelector({serverData, setServerData} : {serverData:ServerData,setServerData:any})
 {
