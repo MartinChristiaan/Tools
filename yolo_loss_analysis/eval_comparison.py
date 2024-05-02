@@ -1,4 +1,5 @@
 # %%
+from cv2 import rotate
 import scienceplots
 from hmac import new
 from pathlib import Path
@@ -99,9 +100,9 @@ for modelname in models:
         & (latest_data_df["model"] == modelname)
     ].mAP.mean()
 
-    air_means.append(int(air_mean * 100))
-    naval_means.append(int(naval_mean * 100))
-    ground_means.append(int(ground_mean * 100))
+    air_means.append(air_mean)
+    naval_means.append(naval_mean)
+    ground_means.append(ground_mean)
 
 # Create a dataframe to store the mean mAP values
 mean_mAP_df = pd.DataFrame(
@@ -125,22 +126,24 @@ r2 = [x + bar_width for x in r1]
 r3 = [x + bar_width for x in r2]
 
 # Create the bar chart
-plt.figure(figsize=(5, 4))
+plt.figure(figsize=(3, 3))
 colors = plt.cm.tab20.colors
 plt.bar(r1, air_means, width=bar_width, label="Air data", color=colors[0])
 plt.bar(r2, naval_means, width=bar_width, label="Naval data", color=colors[1])
 plt.bar(r3, ground_means, width=bar_width, label="Ground data", color=colors[2])
 
 # Add labels, title, and legend
+plt.ylim(0, 1.5)
 plt.xlabel("Model")
 plt.ylabel("mAP")
-plt.title("mAP per Model and Dataset")
-plt.xticks([r + bar_width for r in range(len(models))], models)
+plt.xticks(
+    [r + bar_width for r in range(len(models))], models, rotation=45
+)  # Rotate xtick labels by 45 degrees
 plt.legend()
 plt.grid(1)
 # Show the bar chart
 
-plt.savefig("mAP_per_model_and_dataset.pdf", dpi=300)
+plt.savefig("/home/leeuwenmcv/git/T-Noise-Yolo/mAP_per_model_and_dataset.pdf", dpi=300)
 plt.savefig("mAP_per_model_and_dataset.png", dpi=300, transparent=True)
 
 
