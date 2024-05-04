@@ -32,7 +32,7 @@ for summary in summaries:
 
     videoset_name = [x for x in names if x in str(summary.stem)][0]
     cameras = videosets[videoset_name].cameras
-    camera_str = str(summary.parent.stem).replace(videoset_name + "_", "")
+    camera_str = str(summary.stem).replace(videoset_name + "_", "")
     camera = [x for x in cameras if x.replace("/", "_") == camera_str][0]
 
     def mouse_callback(event, x, y, flags, param):
