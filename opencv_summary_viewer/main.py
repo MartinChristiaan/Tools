@@ -1,6 +1,9 @@
 # %%
 #
 from pathlib import Path
+import time
+import cv2
+import numpy as np
 
 
 summaries = (
@@ -8,12 +11,13 @@ summaries = (
 )
 summaries = Path(summaries).rglob("*.webm")
 
-for summary in summaries:
-    print(summary)
-
 # %% Read summaries with opencv and show content to the user
-import cv2
-import numpy as np
+
+
+def mouse_callback(event, x, y, flags, param):
+    if event == cv2.EVENT_LBUTTONDOWN:
+        print("Clicked at coordinates:", x, y)
+
 
 next_video = False
 should_exit = False
@@ -22,6 +26,7 @@ for summary in summaries:
         break
     next_video = False
     while not next_video and not should_exit:
+        print("opening video", summary)
         cap = cv2.VideoCapture(str(summary))
         while cap.isOpened():
             ret, frame = cap.read()
@@ -30,11 +35,15 @@ for summary in summaries:
                 ret, frame = cap.read()
 
             cv2.imshow("summary", frame)
+            cv2.setMouseCallback("summary", mouse_callback)
             k = cv2.waitKey(1)
 
             if k == ord("n"):
                 next_video = True
+                break
             if k == ord("q"):
                 should_exit = True
+                break
+            time.sleep(1 / 30)
 
 cv2.destroyAllWindows()
