@@ -31,7 +31,7 @@ next_video = False
 should_exit = False
 
 
-for summary in summaries:
+for summary in list(summaries)[::-1]:
     metadata = pickle.load(open(summary, "rb"))
     summary_video = summary.with_suffix(".webm")
     name = f"{metadata['videoset']}_{metadata['camera'].replace('/', '_')}"
