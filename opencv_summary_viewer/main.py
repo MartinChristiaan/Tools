@@ -11,7 +11,8 @@ import numpy as np
 summaries = (
     "/mnt/dl-41/data/leeuwenmcv/general/ablation_tyolo/proposed-20240326/summaries"
 )
-summaries = list(Path(summaries).rglob("*.pkl"))
+summaries = sorted(list(Path(summaries).rglob("*.pkl")))
+summaries = [x for x in summaries if "leusderheide" in x.stem]
 import os
 from pathlib import Path
 from loguru import logger
@@ -22,7 +23,7 @@ import pandas as pd
 basedirpath = Path(r"/diskstation")
 videosets = VideosetsII(basedirpath=basedirpath)  # basedirpath)
 names = list(videosets.to_pandas()["name"])
-mantis = [x for x in names if "mantis" in x]
+# mantis = [x for x in names if "mantis" in x]
 
 
 # %% Read summaries with opencv and show content to the user
@@ -30,7 +31,7 @@ mantis = [x for x in names if "mantis" in x]
 next_video = False
 should_exit = False
 
-video_idx = 20
+video_idx = 60
 
 # for summary in list(summaries)[::-1]:
 while True:
