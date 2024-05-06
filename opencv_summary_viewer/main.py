@@ -12,7 +12,7 @@ summaries = (
     "/mnt/dl-41/data/leeuwenmcv/general/ablation_tyolo/proposed-20240326/summaries"
 )
 summaries = sorted(list(Path(summaries).rglob("*.pkl")))
-summaries = [x for x in summaries if "leusderheide" in x.stem]
+summaries = [x for x in summaries if "TIE" in x.stem]
 import os
 from pathlib import Path
 from loguru import logger
@@ -31,7 +31,7 @@ names = list(videosets.to_pandas()["name"])
 next_video = False
 should_exit = False
 
-video_idx = 60
+video_idx = 10
 
 # for summary in list(summaries)[::-1]:
 while True:
@@ -39,7 +39,7 @@ while True:
     metadata = pickle.load(open(summary, "rb"))
     summary_video = summary.with_suffix(".webm")
     name = f"{metadata['videoset']}_{metadata['camera'].replace('/', '_')}"
-    track_ids = summary.stem.replace(name, "")[1:].split("_")
+    track_ids = metadata["track_ids"]
 
     if should_exit:
         break
@@ -65,6 +65,7 @@ while True:
                     x_idx = x // 200
                     y_idx = y // 200
                     idx = x_idx + y_idx * rows
+                    print(idx)
                     if idx < len(track_ids):
                         track_id = track_ids[idx]
                         data = dict(
