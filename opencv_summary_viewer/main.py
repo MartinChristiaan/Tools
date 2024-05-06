@@ -12,7 +12,7 @@ summaries = (
     "/mnt/dl-41/data/leeuwenmcv/general/ablation_tyolo/proposed-20240326/summaries"
 )
 summaries = sorted(list(Path(summaries).rglob("*.pkl")))
-summaries = [x for x in summaries if "TIE" in x.stem]
+summaries = [x for x in summaries if "leusderheide" in x.stem]
 import os
 from pathlib import Path
 from loguru import logger
@@ -31,7 +31,7 @@ names = list(videosets.to_pandas()["name"])
 next_video = False
 should_exit = False
 
-video_idx = 10
+video_idx = 100
 
 # for summary in list(summaries)[::-1]:
 while True:
