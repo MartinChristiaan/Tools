@@ -12,7 +12,7 @@ summaries = (
     "/mnt/dl-41/data/leeuwenmcv/general/ablation_tyolo/proposed-20240326/summaries"
 )
 summaries = sorted(list(Path(summaries).rglob("*.pkl")))
-summaries = [x for x in summaries if "500" in x.stem and "_W_" in x.stem]
+summaries = [x for x in summaries if "UAV" in x.stem and "_W_" in x.stem]
 import os
 from pathlib import Path
 from loguru import logger
