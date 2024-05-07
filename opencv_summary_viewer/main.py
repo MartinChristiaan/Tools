@@ -12,7 +12,7 @@ summaries = (
     "/mnt/dl-41/data/leeuwenmcv/general/ablation_tyolo/proposed-20240326/summaries"
 )
 summaries = sorted(list(Path(summaries).rglob("*.pkl")))
-summaries = [x for x in summaries if "leusderheide" in x.stem]
+summaries = [x for x in summaries if "500" in x.stem and "_W_" in x.stem]
 import os
 from pathlib import Path
 from loguru import logger
@@ -31,7 +31,7 @@ names = list(videosets.to_pandas()["name"])
 next_video = False
 should_exit = False
 
-video_idx = 332
+video_idx = 0
 
 # for summary in list(summaries)[::-1]:
 while True:
@@ -98,3 +98,5 @@ while True:
             time.sleep(1 / 30)
 
 cv2.destroyAllWindows()
+
+# %%
