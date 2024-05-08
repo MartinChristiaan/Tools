@@ -1,30 +1,37 @@
+from matplotlib import pyplot as plt
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 
-# Example of using Pillow to write text on an image
-# Create a NumPy array as the image source
+
+def add_text_to_image(image_array, text, font_path, font_size, position, color):
+    # Convert the NumPy array to a Pillow image
+    image = Image.fromarray(image_array)
+
+    # Create a drawing object
+    draw = ImageDraw.Draw(image)
+
+    # Define the font style and size
+    font = ImageFont.truetype(font_path, size=font_size)
+
+    # Write the text on the image
+    draw.text(position, text, font=font, fill=color)
+
+    # Convert the Pillow image back to a NumPy array
+    modified_image_array = np.array(image)
+
+    return modified_image_array
+
+
+# Example usage
 image_array = np.zeros((1080, 1920, 3), dtype=np.uint8)
-
-# Convert the NumPy array to a Pillow image
-image = Image.fromarray(image_array)
-
-# Create a drawing object
-draw = ImageDraw.Draw(image)
-
-# Define the text to be written
-text = "Hello, World!"
-
-# Define the font style and size
-font = ImageFont.truetype("path/to/font.ttf", size=30)
-
-# Define the position where the text should be written
+text = "Hello, World!\nThis is a test message."
+font_path = "./basic_sans_serif_7.ttf"
+font_size = 30
 position = (10, 10)
-
-# Define the color of the text
 color = (255, 0, 0)  # red color
 
-# Write the text on the image
-draw.text(position, text, font=font, fill=color)
-
-# Save the modified image
-image.save("result.jpg")
+modified_image_array = add_text_to_image(
+    image_array, text, font_path, font_size, position, color
+)
+plt.figure()
+plt.imshow(modified_image_array)
