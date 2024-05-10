@@ -10,7 +10,7 @@ summaries = (
     "/mnt/dl-41/data/leeuwenmcv/general/ablation_tyolo/proposed-20240326/summaries"
 )
 summaries = sorted(list(Path(summaries).rglob("*.pkl")))
-summaries = [x for x in summaries if "drone_" in x.stem]
+summaries = [x for x in summaries if "drone-" in x.stem]
 from pathlib import Path
 
 from videosets_ii.videosets_ii import VideosetsII
