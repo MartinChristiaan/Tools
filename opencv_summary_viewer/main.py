@@ -1,21 +1,17 @@
 # %%
 #
-from math import pi
 from pathlib import Path
 import pickle
 import time
 import cv2
-import numpy as np
 
 
 summaries = (
     "/mnt/dl-41/data/leeuwenmcv/general/ablation_tyolo/proposed-20240326/summaries"
 )
 summaries = sorted(list(Path(summaries).rglob("*.pkl")))
-summaries = [x for x in summaries if "mantis" in x.stem]
-import os
+summaries = [x for x in summaries if "drone_" in x.stem]
 from pathlib import Path
-from loguru import logger
 
 from videosets_ii.videosets_ii import VideosetsII
 import pandas as pd
