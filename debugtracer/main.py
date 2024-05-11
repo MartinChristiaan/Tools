@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 import types
 import pickle
 from math import pi
@@ -6,6 +7,7 @@ from pathlib import Path
 import time
 
 from loguru import logger
+import pandas as pd
 
 # from function_data import FunctionData
 import library
@@ -14,7 +16,7 @@ import inspect
 import sys
 
 exec_data = {}
-fn_name_counter_lut = {}
+function_logger_lut = {}
 
 
 # TODO manually specify functions to test!!! Use GUI???
@@ -61,11 +63,31 @@ class TestTracer:
                 ):
                     setattr(module, name, self.debug_trace_decorator(obj))
 
-    def get_getpath(self, function_name, iteration, varname, is_input, ext):
+    def debug_trace_decorator(self, f, is_method=False):
+        def wrapper(*args, **kwargs):
+            fnname = (f.__name__,)
+            if fnname not in function_logger_lut:
+                function_logger_lut[fnname] = FunctionLogger(fnname, self.data_path)
+
+        return wrapper
+
+
+@dataclass
+class FunctionLogger:
+    name: str
+    data_path: str
+    iteration: int = 0
+
+    def get_getpath(self, varname, is_input, ext, cross_iter=False):
         iostr = "input" if is_input else "output"
-        path = Path(
-            f"{self.data_path}/{function_name}/{iteration}/{iostr}_{varname}{ext}"
-        )
+        if cross_iter:
+            path = Path(
+                f"{self.data_path}/{self.function_name}//{iostr}_{varname}{ext}"
+            )
+        else:
+            path = Path(
+                f"{self.data_path}/{self.function_name}/{self.iteration}/{iostr}_{varname}{ext}"
+            )
         path.parent.mkdir(exist_ok=True, parents=True)
         return path
 
@@ -79,41 +101,29 @@ class TestTracer:
         for key, value in items.items():
             if type(value) in primitive_types:
                 primitives.append((key, value))
-        print(primitives, "primitives")
+        path = self.get_getpath("primives", True, ".yaml")
 
-    def debug_trace_decorator(self, f, is_method=False):
-        def wrapper(*args, **kwargs):
-            fnname = (f.__name__,)
-            if fnname not in fn_name_counter_lut:
-                fn_name_counter_lut[fnname] = 0
-            elif fn_name_counter_lut[fnname] == self.max_traced_executions:
-                return f(*args, **kwargs)
-            else:
-                fn_name_counter_lut[fnname] += 1
-            inputs = kwargs.copy()
-            for i, arg in enumerate(args):
-                inputs[f"arg{i}"] = arg
-            self.serialize_primitives(inputs)
+    def log_function(self, fn, *args, **kwargs):
+        inputs = kwargs.copy()
+        for i, arg in enumerate(args):
+            inputs[f"arg{i}"] = arg
+        self.serialize_primitives(inputs)
+        t0 = time.time()
+        result = f(*args, **kwargs)
+        t1 = time.time()
+        print(t1 - t0)
 
-            t0 = time.time()
-
-            result = f(*args, **kwargs)
-            t1 = time.time()
-            print(t1 - t0)
-
-            # function_data = FunctionData(
-            #     args=args,
-            #     kwargs=kwargs,
-            #     result=result,
-            #     execution_time=t1 - t0,
-            #     module=f.__module__,
-            #     name=f.__name__,
-            #     is_method=is_method,
-            # )
-            # exec_data[name].append(function_data)
-            return result
-
-        return wrapper
+        # function_data = FunctionData(
+        #     args=args,
+        #     kwargs=kwargs,
+        #     result=result,
+        #     execution_time=t1 - t0,
+        #     module=f.__module__,
+        #     name=f.__name__,
+        #     is_method=is_method,
+        # )
+        # exec_data[name].append(function_data)
+        return result
 
 
 if __name__ == "__main__":
