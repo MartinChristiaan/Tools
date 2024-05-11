@@ -16,7 +16,6 @@ import inspect
 import sys
 
 exec_data = {}
-function_logger_lut = {}
 
 
 # TODO manually specify functions to test!!! Use GUI???
@@ -38,6 +37,7 @@ class TestTracer:
 
         self.data_path = Path(data_path) / (self.name)
         self.data_path.mkdir(parents=True, exist_ok=True)
+        self.function_logger_lut = {}
         self.max_traced_executions = 5
 
     def decorate_all_in_modules(self):
@@ -65,9 +65,12 @@ class TestTracer:
 
     def debug_trace_decorator(self, f, is_method=False):
         def wrapper(*args, **kwargs):
-            fnname = (f.__name__,)
-            if fnname not in function_logger_lut:
-                function_logger_lut[fnname] = FunctionLogger(fnname, self.data_path)
+            fnname = f.__name__
+            if fnname not in self.function_logger_lut:
+                self.function_logger_lut[fnname] = FunctionLogger(
+                    fnname, self.data_path
+                )
+            return self.function_logger_lut[fnname].log_function(f, *args, **kwargs)
 
         return wrapper
 
@@ -81,12 +84,10 @@ class FunctionLogger:
     def get_getpath(self, varname, is_input, ext, cross_iter=False):
         iostr = "input" if is_input else "output"
         if cross_iter:
-            path = Path(
-                f"{self.data_path}/{self.function_name}//{iostr}_{varname}{ext}"
-            )
+            path = Path(f"{self.data_path}/{self.name}/{iostr}_{varname}{ext}")
         else:
             path = Path(
-                f"{self.data_path}/{self.function_name}/{self.iteration}/{iostr}_{varname}{ext}"
+                f"{self.data_path}/{self.name}/{self.iteration}_{iostr}_{varname}{ext}"
             )
         path.parent.mkdir(exist_ok=True, parents=True)
         return path
@@ -95,24 +96,27 @@ class FunctionLogger:
 
     # def get_extention(self,name,value):
 
-    def serialize_primitives(self, items):
-        primitives = []
-        primitive_types = [int, str, float, bool]
-        for key, value in items.items():
-            if type(value) in primitive_types:
-                primitives.append((key, value))
-        path = self.get_getpath("primives", True, ".yaml")
+    def serialize(self, items, is_input):
+        path = self.get_getpath("inputs", is_input, ".pkl")
+        with open(path, "wb") as f:
+            pickle.dump(items, f)
+        # primitives = []
+        # primitive_types = [int, str, float, bool]
+        # for key, value in items.items():
+        #     if type(value) in primitive_types:
+        #         primitives.append((key, value))
 
     def log_function(self, fn, *args, **kwargs):
         inputs = kwargs.copy()
         for i, arg in enumerate(args):
             inputs[f"arg{i}"] = arg
-        self.serialize_primitives(inputs)
-        t0 = time.time()
-        result = f(*args, **kwargs)
-        t1 = time.time()
-        print(t1 - t0)
+        self.serialize(inputs, True)
 
+        t0 = time.time()
+        result = fn(*args, **kwargs)
+        t1 = time.time()
+        result = dict(fn_output=result, dt=t1 - t0)
+        self.serialize(result, False)
         # function_data = FunctionData(
         #     args=args,
         #     kwargs=kwargs,
