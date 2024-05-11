@@ -81,14 +81,12 @@ class FunctionLogger:
     data_path: str
     iteration: int = 0
 
-    def get_getpath(self, varname, is_input, ext, cross_iter=False):
+    def get_getpath(self, is_input, ext, cross_iter=False):
         iostr = "input" if is_input else "output"
         if cross_iter:
-            path = Path(f"{self.data_path}/{self.name}/{iostr}_{varname}{ext}")
+            path = Path(f"{self.data_path}/{self.name}/{iostr}{ext}")
         else:
-            path = Path(
-                f"{self.data_path}/{self.name}/{self.iteration}_{iostr}_{varname}{ext}"
-            )
+            path = Path(f"{self.data_path}/{self.name}/{self.iteration}_{iostr}{ext}")
         path.parent.mkdir(exist_ok=True, parents=True)
         return path
 
@@ -133,8 +131,9 @@ class FunctionLogger:
 if __name__ == "__main__":
     tracer = TestTracer([library, library.sub_library])
     library.sub_library.my_sum(2, 3, mode="test")
+
     # obj = library.sub_library.ObjectExample(6, 8)
     # obj.do_sum(mode="eval")
-
     # tracer.generate()
+
     import pickle
