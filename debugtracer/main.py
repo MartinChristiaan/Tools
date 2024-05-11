@@ -61,6 +61,26 @@ class TestTracer:
                 ):
                     setattr(module, name, self.debug_trace_decorator(obj))
 
+    def get_getpath(self, function_name, iteration, varname, is_input, ext):
+        iostr = "input" if is_input else "output"
+        path = Path(
+            f"{self.data_path}/{function_name}/{iteration}/{iostr}_{varname}{ext}"
+        )
+        path.parent.mkdir(exist_ok=True, parents=True)
+        return path
+
+    # def serialize(self,name,value,path):
+
+    # def get_extention(self,name,value):
+
+    def serialize_primitives(self, items):
+        primitives = []
+        primitive_types = [int, str, float, bool]
+        for key, value in items.items():
+            if type(value) in primitive_types:
+                primitives.append((key, value))
+        print(primitives, "primitives")
+
     def debug_trace_decorator(self, f, is_method=False):
         def wrapper(*args, **kwargs):
             fnname = (f.__name__,)
@@ -70,6 +90,10 @@ class TestTracer:
                 return f(*args, **kwargs)
             else:
                 fn_name_counter_lut[fnname] += 1
+            inputs = kwargs.copy()
+            for i, arg in enumerate(args):
+                inputs[f"arg{i}"] = arg
+            self.serialize_primitives(inputs)
 
             t0 = time.time()
 
@@ -94,8 +118,9 @@ class TestTracer:
 
 if __name__ == "__main__":
     tracer = TestTracer([library, library.sub_library])
-    library.sub_library.my_sum(2, 3)
-    obj = library.sub_library.ObjectExample(6, 8)
-    obj.do_sum()
+    library.sub_library.my_sum(2, 3, mode="test")
+    # obj = library.sub_library.ObjectExample(6, 8)
+    # obj.do_sum(mode="eval")
+
     # tracer.generate()
     import pickle
