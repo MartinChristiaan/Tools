@@ -52,16 +52,14 @@ class TestTracer:
                         setattr(
                             obj,
                             method.__name__,
-                            self.debug_trace_decorator(method, True, name=self.name),
+                            self.debug_trace_decorator(method, True),
                         )
                         print(obj, name, method)
 
                 if isinstance(obj, types.FunctionType) or isinstance(
                     obj, types.MethodType
                 ):
-                    setattr(
-                        module, name, self.debug_trace_decorator(obj, name=self.name)
-                    )
+                    setattr(module, name, self.debug_trace_decorator(obj))
 
     def debug_trace_decorator(self, f, is_method=False):
         def wrapper(*args, **kwargs):
@@ -77,6 +75,7 @@ class TestTracer:
 
             result = f(*args, **kwargs)
             t1 = time.time()
+            print(t1 - t0)
 
             # function_data = FunctionData(
             #     args=args,
@@ -98,7 +97,5 @@ if __name__ == "__main__":
     library.sub_library.my_sum(2, 3)
     obj = library.sub_library.ObjectExample(6, 8)
     obj.do_sum()
-    tracer.generate()
+    # tracer.generate()
     import pickle
-
-    os.system("pytest")

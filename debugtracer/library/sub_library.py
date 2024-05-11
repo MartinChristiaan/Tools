@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 import time
-from function_data import FunctionData
 
 
 def my_sum(a, b):
