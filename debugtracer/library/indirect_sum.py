@@ -1,2 +1,2 @@
 def sum_component(result):
-    return result + 4
+    return result + 2

@@ -1,15 +1,13 @@
 import imp
-import os
 import pickle
-import sys
 from attr import dataclass
 from click import getchar, clear
 from pathlib import Path
 
 from sympy import python
 
+from reloader import ModuleReloader
 from fzf_utils import prompt
-import importlib
 
 previous_state_path = Path("/data/trace_data/previous_state.pkl")
 
@@ -25,39 +23,6 @@ def load_previous_state():
     else:
         debugger = Debugger()
     return debugger
-
-
-class ModuleReloader:
-    def __init__(self) -> None:
-        self.module_timestamps = {}
-        self.get_timestamps_modules_last_changed()
-        self.imported_modules = {}
-
-    def get_timestamps_modules_last_changed(self):
-        python_files = list(Path(os.getcwd()).glob("**/*.py"))
-        for python_file in python_files:
-            self.module_timestamps[python_file] = python_file.stat().st_mtime
-
-    def reload_is_needed(self):
-        should_reload = False
-        for module, timestamp in self.module_timestamps.items():
-            if timestamp != module.stat().st_mtime:
-                should_reload = True
-                self.module_timestamps[module] = module.stat().st_mtime
-        return should_reload
-
-    def import_or_reload_module(self, module):
-        if module in self.imported_modules:
-            if self.reload_is_needed():
-                print("reloading")
-                for key, module in sys.modules.items():
-                    print(key)
-                    importlib.reload(module)
-            imported_module = self.imported_modules[module]
-        else:
-            imported_module = importlib.import_module(module)
-            self.imported_modules[module] = imported_module
-        return imported_module
 
 
 class Debugger:
