@@ -13,5 +13,5 @@ class ObjectExample:
     b: float
 
     def do_sum(self, mode="test"):
-        print("Doing sum...")
+        print(f"Doing sum... {mode}")
         return my_sum(self.a, self.b)

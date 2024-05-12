@@ -137,9 +137,7 @@ class FunctionLogger:
 if __name__ == "__main__":
     tracer = TestTracer([library, library.sub_library])
     library.sub_library.my_sum(2, 3, mode="test")
-
-    # obj = library.sub_library.ObjectExample(6, 8)
-    # obj.do_sum(mode="eval")
+    obj = library.sub_library.ObjectExample(6, 8)
+    obj.do_sum(mode="eval")
     # tracer.generate()
-
     import pickle

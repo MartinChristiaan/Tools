@@ -89,8 +89,9 @@ def prompt(
     result = prompter.prompt(
         choices, multi, prompt_text, return_idx, extra_options=extra_options
     )
-    for item in result:
-        write_to_cache(cachename, item, 100)
+    if not cachename is None:
+        for item in result:
+            write_to_cache(cachename, item, 100)
     if len(result) == 0:
         return None
     if not multi:

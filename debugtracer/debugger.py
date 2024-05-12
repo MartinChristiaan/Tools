@@ -1,5 +1,6 @@
 import imp
 import pickle
+import time
 from attr import dataclass
 from click import getchar, clear
 from pathlib import Path
@@ -20,6 +21,7 @@ def load_previous_state():
     if previous_state_path.exists():
         with open(previous_state_path, "rb") as f:
             debugger = pickle.load(f)
+        debugger.reloader = ModuleReloader()
     else:
         debugger = Debugger()
     return debugger
@@ -44,7 +46,7 @@ class Debugger:
     def set_function(self):
         function_options = list(map(str, self.script.glob("*")))
         self.function = Path(prompt(function_options, False, "Select function"))
-        self.set_iteration()
+        # self.set_iteration()
 
     def set_iteration(self):
         self.iteration = int(input("Enter iteration: "))
@@ -61,10 +63,15 @@ class Debugger:
 
         module = meta["module"]
         imported_module = self.reloader.import_or_reload_module(module)
-        # run the function
+        inputs = read_pickle(Path(f"{self.function}/{self.iteration}_inputs.pkl"))
         function_name = meta["name"]
-        function = getattr(imported_module, function_name)
-        inputs = read_pickle(Path(f"{self.function}/{self.iteration}_input.pkl"))
+        is_method = meta["is_method"]
+        if not is_method:
+            function = getattr(imported_module, function_name)
+        else:
+            typename = type(inputs["arg0"]).__name__
+            object_type = getattr(imported_module, typename)
+            function = getattr(object_type, function_name)
         args = []
         kwargs = {}
         for k, v in inputs.items():
@@ -72,8 +79,14 @@ class Debugger:
                 args.append(v)
             else:
                 kwargs[k] = v
+        t0 = time.time()
         result = function(*args, **kwargs)
-        print(result)
+        t1 = time.time()
+        dt = t1 - t0
+        fps = 1 / dt
+        print(f"result : {result}, dt : {dt*1000:.2f}ms, fps : {fps:.2f}")
+
+        return result
 
     def run(self):
         while True:
