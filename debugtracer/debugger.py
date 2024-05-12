@@ -80,7 +80,12 @@ class Debugger:
             else:
                 kwargs[k] = v
         t0 = time.time()
-        result = function(*args, **kwargs)
+        try:
+            result = function(*args, **kwargs)
+        except Exception as e:
+            # TODO log full traceback
+            print(f"error : {e}")
+            result = None
         t1 = time.time()
         dt = t1 - t0
         fps = 1 / dt
@@ -104,7 +109,7 @@ r : run function
 q : quit
 			"""
             print(ui_str)
-            char = getchar()
+
             action_lut = {
                 "s": self.set_script,
                 "f": self.set_function,
@@ -112,6 +117,9 @@ q : quit
                 "r": self.run_function,
                 "q": exit,
             }
+            char = getchar()
+            if not char in action_lut:
+                continue
             action_lut[char]()
 
 

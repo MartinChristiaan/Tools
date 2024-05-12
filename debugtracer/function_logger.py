@@ -119,8 +119,8 @@ class FunctionLogger:
         t0 = time.time()
         result = fn(*args, **kwargs)
         t1 = time.time()
-        result = dict(fn_output=result, dt=t1 - t0)
-        self.serialize(result, "outputs")
+        logger_result = dict(fn_output=result, dt=t1 - t0)
+        self.serialize(logger_result, "outputs")
         # function_data = FunctionData(
         #     args=args,
         #     kwargs=kwargs,
@@ -139,5 +139,9 @@ if __name__ == "__main__":
     library.sub_library.my_sum(2, 3, mode="test")
     obj = library.sub_library.ObjectExample(6, 8)
     obj.do_sum(mode="eval")
+    # obj.do_sum_exception()
+    img = obj.generate_test_image()
+    obj.process_test_image(img)
     # tracer.generate()
+
     import pickle
