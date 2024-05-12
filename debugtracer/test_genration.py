@@ -1,5 +1,5 @@
+from pathlib import Path
 from pydoc import doc
-
 
 method_call_template = """
 obj = function_data.args[0]
@@ -36,7 +36,10 @@ def {testname}():
 
 
 class TestGenerator:
-    def _generate_test_from_function_data(
+    def __init__(self) -> None:
+        self.test_dir = Path("./tests")
+
+    def generate_test_from_function_data(
         self,
         name,
         module,
@@ -59,34 +62,26 @@ class TestGenerator:
         else:
             docstring = docstring_template.format(description=description)
 
-        return test_template.format(
+        test_code = test_template.format(
             module=module,
             testname=testname,
             docstring=docstring,
             input_data_path=input_data_path,
             fn_call=fn_call,
         )
+        test_file = self.get_test_file(name)
+        with open(test_file, "a") as f:
+            f.write(test_code)
 
-    def generate(self):
-        test_file = Path(self.test_code_dir) / f"test_{self.name}.py"
+    def get_test_file(self, name):
+        test_file = Path(self.test_dir) / f"test_{name}.py"
+        if test_file.exists():
+            return test_file
         test_file.parent.mkdir(parents=True, exist_ok=True)
-
-        python_code = f"""
+        base_code = f"""
 import pickle
 import pandas as pd
 		"""
-
-        for i, function_data in enumerate(exec_data[self.name]):
-            try:
-                pickle.dump(function_data, open(self.test_data_dir / f"{i}.pkl", "wb"))
-                python_code += self._generate_test_from_function_data(function_data, i)
-            except Exception as e:
-                logger.error(f"failed at {function_data.name}")
-                logger.error(str(e))
-
         with open(test_file, "w") as f:
-            f.write(python_code)
-
-        # logger.info(
-        #     f"Generated tests in {test_file}$, test data in {test_data_file} with size {test_data_file.stat().st_size//1024} kbytes"
-        # )
+            f.write(base_code)
+        return test_file
