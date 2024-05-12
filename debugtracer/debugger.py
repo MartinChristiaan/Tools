@@ -7,8 +7,10 @@ from pathlib import Path
 
 from sympy import python
 
+from function_data import FunctionData
 from reloader import ModuleReloader
 from fzf_utils import prompt
+from test_genration import TestGenerator
 
 previous_state_path = Path("/data/trace_data/previous_state.pkl")
 
@@ -33,6 +35,7 @@ class Debugger:
         self.function = function
         self.iteration = iteration
         self.reloader = ModuleReloader()
+        self.test_generator = TestGenerator()
         if self.script is None:
             self.set_script()
         if self.function is None:
@@ -56,22 +59,23 @@ class Debugger:
         with open(previous_state_path, "wb") as f:
             pickle.dump(self, f)
 
-    def run_function(self):
-        # import the function and run it
-        with open(Path(f"{self.function}/meta.pkl"), "rb") as f:
-            meta = pickle.load(f)
+    def generate_test(self):
+        fndata = self.function_data
+        testname = input("name : ")
+        description = input("description : [default = auto]")
+        if len(description == ""):
+            description = "auto"
+        self.test_generator.generate_test_from_function_data(
+            function_name,
+            module,
+            is_method,
+            testname,
+        )
 
-        module = meta["module"]
-        imported_module = self.reloader.import_or_reload_module(module)
+    @property
+    def function_data(self):
+        module, is_method, function_name = self.load_metadata()
         inputs = read_pickle(Path(f"{self.function}/{self.iteration}_inputs.pkl"))
-        function_name = meta["name"]
-        is_method = meta["is_method"]
-        if not is_method:
-            function = getattr(imported_module, function_name)
-        else:
-            typename = type(inputs["arg0"]).__name__
-            object_type = getattr(imported_module, typename)
-            function = getattr(object_type, function_name)
         args = []
         kwargs = {}
         for k, v in inputs.items():
@@ -79,9 +83,24 @@ class Debugger:
                 args.append(v)
             else:
                 kwargs[k] = v
+        results = read_pickle(Path(f"{self.function}/{self.iteration}_outputs.pkl"))[
+            "fn_output"
+        ]
+        return FunctionData(args, kwargs, results, 1, module, function_name, is_method)
+
+    def run_function(self):
+        # import the function and run it
+        fndata = self.function_data
+        imported_module = self.reloader.import_or_reload_module(fndata.module)
+        if not fndata.is_method:
+            function = getattr(imported_module, fndata.is_method)
+        else:
+            typename = type(inputs["arg0"]).__name__
+            object_type = getattr(imported_module, typename)
+            function = getattr(object_type, fndata.name)
         t0 = time.time()
         try:
-            result = function(*args, **kwargs)
+            result = function(*fndata.args, **fndata.kwargs)
         except Exception as e:
             # TODO log full traceback
             print(f"error : {e}")
@@ -90,8 +109,15 @@ class Debugger:
         dt = t1 - t0
         fps = 1 / dt
         print(f"result : {result}, dt : {dt*1000:.2f}ms, fps : {fps:.2f}")
-
         return result
+
+    def load_metadata(self):
+        with open(Path(f"{self.function}/meta.pkl"), "rb") as f:
+            meta = pickle.load(f)
+        module = meta["module"]
+        is_method = meta["is_method"]
+        function_name = meta["name"]
+        return module, is_method, function_name
 
     def run(self):
         while True:
