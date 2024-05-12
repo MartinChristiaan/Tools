@@ -3,7 +3,7 @@ import time
 
 
 def my_sum(a, b, mode="test"):
-    return a + b
+    return a + b + 4
 
 
 @dataclass
