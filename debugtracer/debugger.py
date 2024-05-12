@@ -4,6 +4,7 @@ from click import getchar, clear
 from pathlib import Path
 
 from fzf_utils import prompt
+import importlib
 
 previous_state_path = Path("/data/trace_data/previous_state.pkl")
 
@@ -44,10 +45,20 @@ class Debugger:
     def save(self):
         with open(previous_state_path, "wb") as f:
             pickle.dump(self, f)
-	
-    def run_function(self):
-		# import the function and run it
 
+    def run_function(self):
+        # import the function and run it
+        with open(Path(f"{self.function}/meta.pkl"), "rb") as f:
+            meta = pickle.load(f)
+        module = meta["module"]
+        # import module with importlib
+        imported_module = importlib.import_module(module)
+        # run the function
+        function_name = meta["name"]
+        function = getattr(imported_module, function_name)
+        function()
+
+        print(module)
 
     def run(self):
         while True:
@@ -78,4 +89,4 @@ q : quit
 
 if __name__ == "__main__":
     debugger = load_previous_state()
-    debugger.run()
+    debugger.run_function()

@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from operator import is_
 import types
 import pickle
 from math import pi
@@ -68,7 +69,7 @@ class TestTracer:
             fnname = f.__name__
             if fnname not in self.function_logger_lut:
                 self.function_logger_lut[fnname] = FunctionLogger(
-                    fnname, self.data_path
+                    fnname, self.data_path, is_method
                 )
             return self.function_logger_lut[fnname].log_function(f, *args, **kwargs)
 
@@ -79,25 +80,24 @@ class TestTracer:
 class FunctionLogger:
     name: str
     data_path: str
+    is_method: bool
     iteration: int = 0
 
-    def get_getpath(self, is_input, ext, cross_iter=False):
-        iostr = "input" if is_input else "output"
+    def get_getpath(self, name="input", ext=".pkl", cross_iter=False):
         if cross_iter:
-            path = Path(f"{self.data_path}/{self.name}/{iostr}{ext}")
+            path = Path(f"{self.data_path}/{self.name}/{name}{ext}")
         else:
-            path = Path(f"{self.data_path}/{self.name}/{self.iteration}_{iostr}{ext}")
+            path = Path(f"{self.data_path}/{self.name}/{self.iteration}_{name}{ext}")
         path.parent.mkdir(exist_ok=True, parents=True)
         return path
 
     # def serialize(self,name,value,path):
-
     # def get_extention(self,name,value):
 
-    def serialize(self, items, is_input):
-        path = self.get_getpath(is_input, ".pkl")
+    def serialize(self, data, name="input", ext=".pkl", cross_iter=False):
+        path = self.get_getpath(name, ext, cross_iter)
         with open(path, "wb") as f:
-            pickle.dump(items, f)
+            pickle.dump(data, f)
         # primitives = []
         # primitive_types = [int, str, float, bool]
         # for key, value in items.items():
@@ -108,13 +108,19 @@ class FunctionLogger:
         inputs = kwargs.copy()
         for i, arg in enumerate(args):
             inputs[f"arg{i}"] = arg
-        self.serialize(inputs, True)
 
+        function_data = dict(
+            module=fn.__module__,
+            name=fn.__name__,
+            is_method=self.is_method,
+        )
+        self.serialize(function_data, "meta", cross_iter=True)
+        self.serialize(inputs, "inputs")
         t0 = time.time()
         result = fn(*args, **kwargs)
         t1 = time.time()
         result = dict(fn_output=result, dt=t1 - t0)
-        self.serialize(result, False)
+        self.serialize(result, "outputs")
         # function_data = FunctionData(
         #     args=args,
         #     kwargs=kwargs,
