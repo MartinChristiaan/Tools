@@ -1,9 +1,10 @@
 from dataclasses import dataclass
 import time
+from library.indirect_sum import sum_component
 
 
 def my_sum(a, b, mode="test"):
-    return a + b + 4
+    return sum_component(a + b)
 
 
 @dataclass

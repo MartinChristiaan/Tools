@@ -1,6 +1,7 @@
 import imp
 import os
 import pickle
+import sys
 from attr import dataclass
 from click import getchar, clear
 from pathlib import Path
@@ -48,11 +49,14 @@ class ModuleReloader:
     def import_or_reload_module(self, module):
         if module in self.imported_modules:
             if self.reload_is_needed():
-                imported_module = importlib.reload(self.imported_modules[module])
-            else:
-                return self.imported_modules[module]
+                print("reloading")
+                for key, module in sys.modules.items():
+                    print(key)
+                    importlib.reload(module)
+            imported_module = self.imported_modules[module]
         else:
             imported_module = importlib.import_module(module)
+            self.imported_modules[module] = imported_module
         return imported_module
 
 
@@ -61,11 +65,11 @@ class Debugger:
         self.script = script
         self.function = function
         self.iteration = iteration
+        self.reloader = ModuleReloader()
         if self.script is None:
             self.set_script()
         if self.function is None:
             self.set_function()
-        self.reloader = ModuleReloader()
 
     def set_script(self):
         script_options = list(map(str, Path("/data/trace_data").glob("*")))
