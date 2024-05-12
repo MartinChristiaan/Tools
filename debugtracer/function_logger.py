@@ -95,7 +95,7 @@ class FunctionLogger:
     # def get_extention(self,name,value):
 
     def serialize(self, items, is_input):
-        path = self.get_getpath("inputs", is_input, ".pkl")
+        path = self.get_getpath(is_input, ".pkl")
         with open(path, "wb") as f:
             pickle.dump(items, f)
         # primitives = []
