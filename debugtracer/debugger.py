@@ -1,6 +1,6 @@
 import pickle
 from attr import dataclass
-from click import getchar
+from click import getchar, clear
 from pathlib import Path
 
 from fzf_utils import prompt
@@ -44,9 +44,15 @@ class Debugger:
     def save(self):
         with open(previous_state_path, "wb") as f:
             pickle.dump(self, f)
+	
+    def run_function(self):
+		# import the function and run it
+
 
     def run(self):
-        ui_str = f"""
+        while True:
+            clear()
+            ui_str = f"""
 current state:
 script: {self.script.stem}
 function: {self.function.stem}
@@ -56,9 +62,20 @@ s : select script
 f : select function
 i : select iteration	
 r : run function
-"""
-        print(ui_str)
+q : quit
+			"""
+            print(ui_str)
+            char = getchar()
+            action_lut = {
+                "s": self.set_script,
+                "f": self.set_function,
+                "i": self.set_iteration,
+                "r": self.run_function,
+                "q": exit,
+            }
+            action_lut[char]()
 
 
 if __name__ == "__main__":
     debugger = load_previous_state()
+    debugger.run()
