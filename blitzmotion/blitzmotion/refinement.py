@@ -198,7 +198,7 @@ class HierarchicalMotionEstimator:
         return mvf, sad
 
 
-path = "/media/martin/DeepLearning/mantis_drone_2023/raw/mantis_drone_2023/DJI_202309101443_008_wide_hd/0/1694357059368.jpg"
+path = "/data/sod_cache/raw/leusderheide_20230706/visual_halfres_CPFS7_0318/0/1688625896620.jpg"
 if __name__ == "__main__":
     frame = cv2.imread(path, 0)
     frame0 = np.zeros_like(frame)
@@ -217,7 +217,6 @@ if __name__ == "__main__":
     # plt.figure()
     # plt.imshow(out_sad[:, :])
     plt.show()
-
 
 # %%
 
