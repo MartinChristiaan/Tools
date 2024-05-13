@@ -1,5 +1,5 @@
 from pathlib import Path
-from pydoc import doc
+from function_data import FunctionData
 
 method_call_template = """
 obj = function_data.args[0]
@@ -26,7 +26,7 @@ test_template = """
 from {module} import *
 def {testname}():
 	{docstring}
-	function_data = pickle.load(open("{input_data_path}", "rb"))
+	function_data = pickle.load(open("{data_path}", "rb"))
 
 	{fn_call}
 	if type(result) == pd.DataFrame:
@@ -38,38 +38,37 @@ def {testname}():
 class TestGenerator:
     def __init__(self) -> None:
         self.test_dir = Path("./tests")
+        self.test_data_dir = Path("/data/testdata/")
 
     def generate_test_from_function_data(
         self,
-        name,
-        module,
-        is_method,
         testname,
-        args,
-        kwargs,
-        result,
-        input_data_path,
+        fndata: FunctionData,
         description="auto",
     ):
-        if is_method:
-            fn_call = method_call_template.format(name=name)
+
+        if fndata.is_method:
+            fn_call = method_call_template.format(name=fndata.name)
         else:
-            fn_call = fn_call_template.format(name=name)
+            fn_call = fn_call_template.format(name=fndata.name)
         if description == "auto":
             docstring = auto_docstring_template.format(
-                args=args, kwargs=kwargs, result=result
+                args=fndata.args, kwargs=fndata.kwargs, result=fndata.result
             )
         else:
             docstring = docstring_template.format(description=description)
 
+        test_data_path = self.test_data_dir / fndata.name / (testname + ".pkl")
+        test_data_path.mkdir(exist_ok=True, parents=True)
+
         test_code = test_template.format(
-            module=module,
+            module=fndata.module,
             testname=testname,
             docstring=docstring,
-            input_data_path=input_data_path,
+            data_path=test_data_path,
             fn_call=fn_call,
         )
-        test_file = self.get_test_file(name)
+        test_file = self.get_test_file(fndata.name)
         with open(test_file, "a") as f:
             f.write(test_code)
 

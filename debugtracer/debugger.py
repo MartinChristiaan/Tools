@@ -66,10 +66,7 @@ class Debugger:
         if len(description == ""):
             description = "auto"
         self.test_generator.generate_test_from_function_data(
-            function_name,
-            module,
-            is_method,
-            testname,
+            testname, fndata, description
         )
 
     @property
@@ -95,7 +92,7 @@ class Debugger:
         if not fndata.is_method:
             function = getattr(imported_module, fndata.is_method)
         else:
-            typename = type(inputs["arg0"]).__name__
+            typename = type(fndata.args[0]).__name__
             object_type = getattr(imported_module, typename)
             function = getattr(object_type, fndata.name)
         t0 = time.time()
@@ -132,6 +129,7 @@ s : select script
 f : select function
 i : select iteration	
 r : run function
+t : generate test
 q : quit
 			"""
             print(ui_str)
