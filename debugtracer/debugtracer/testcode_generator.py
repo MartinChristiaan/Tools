@@ -1,6 +1,12 @@
+import os
 from pathlib import Path
 import pickle
-from function_data import FunctionData
+from debugtracer.function_data import FunctionData
+
+base_code = """
+import pickle
+import pandas as pd
+"""
 
 method_call_template = """
     obj = function_data.args[0]
@@ -80,10 +86,7 @@ class TestGenerator:
         if test_file.exists():
             return test_file
         test_file.parent.mkdir(parents=True, exist_ok=True)
-        base_code = f"""
-import pickle
-import pandas as pd
-		"""
         with open(test_file, "w") as f:
             f.write(base_code)
+        os.system(f"touch {self.test_dir}/__init__.py")
         return test_file

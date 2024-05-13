@@ -1,16 +1,12 @@
-import imp
 import pickle
 import time
-from attr import dataclass
-from click import getchar, clear
+from click import getchar
 from pathlib import Path
 
-from sympy import python
-
-from function_data import FunctionData
-from reloader import ModuleReloader
-from fzf_utils import prompt
-from testcode_generator import TestGenerator
+from debugtracer.function_data import FunctionData
+from debugtracer.reloader import ModuleReloader
+from debugtracer.fzf_utils import prompt
+from debugtracer.testcode_generator import TestGenerator
 
 previous_state_path = Path("/data/trace_data/previous_state.pkl")
 
@@ -60,17 +56,20 @@ class Debugger:
         with open(previous_state_path, "wb") as f:
             pickle.dump(self, f)
 
-    def generate_test(self):
+    def generate_test(self, testname=None, description=None):
+
         fndata = self.function_data
-        testname = "example"  # input("name : ")
-        description = ""  # input("description : [default = auto]")
-        if (
-            len(description) == 0
-            or description == "auto"
-            or description == "default"
-            or description == "d"
-        ):
-            description = "auto"
+        if testname is None:
+            testname = input("name : ")
+        if description is None:
+            description = input("description : [default = auto]")
+            if (
+                len(description) == 0
+                or description == "auto"
+                or description == "default"
+                or description == "d"
+            ):
+                description = "auto"
         self.test_generator.generate_test_from_function_data(
             testname, description, fndata
         )
