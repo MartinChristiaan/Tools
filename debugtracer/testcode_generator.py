@@ -1,37 +1,35 @@
 from pathlib import Path
+import pickle
 from function_data import FunctionData
 
 method_call_template = """
-obj = function_data.args[0]
-rem_args = function_data.args[1:]
-result = obj.{name}(*rem_args, **function_data.kwargs)
+    obj = function_data.args[0]
+    rem_args = function_data.args[1:]
+    result = obj.{name}(*rem_args, **function_data.kwargs)
 """
 
 fn_call_template = """
-result = {name}(*function_data.args, **function_data.kwargs)
+    result = {name}(*function_data.args, **function_data.kwargs)
 """
 
 auto_docstring_template = """
-	\"\"\"
-	Tests if {name}({args},**{kwargs}) == {result}
-	\"\"\"
-
-"""
+    \"\"\"
+    Tests if {name}({args},**{kwargs}) == {result}
+    \"\"\""""
 docstring_template = """
-	\"\"\"
-	{description}
-	\"\"\"
+    \"\"\"
+    {description}
+    \"\"\"
 """
 test_template = """
 from {module} import *
-def {testname}():
-	{docstring}
-	function_data = pickle.load(open("{data_path}", "rb"))
-
-	{fn_call}
-	if type(result) == pd.DataFrame:
-		function_data.result = function_data.result.reset_index(drop=True, inplace=True)
-	assert result == function_data.result
+def test_{testname}():
+    {docstring}
+    function_data = pickle.load(open("{data_path}", "rb"))
+    {fn_call}
+    if type(result) == pd.DataFrame:
+        function_data.result = function_data.result.reset_index(drop=True, inplace=True)
+    assert result == function_data.result
 """
 
 
@@ -43,8 +41,8 @@ class TestGenerator:
     def generate_test_from_function_data(
         self,
         testname,
+        description,
         fndata: FunctionData,
-        description="auto",
     ):
 
         if fndata.is_method:
@@ -53,13 +51,18 @@ class TestGenerator:
             fn_call = fn_call_template.format(name=fndata.name)
         if description == "auto":
             docstring = auto_docstring_template.format(
-                args=fndata.args, kwargs=fndata.kwargs, result=fndata.result
+                args=fndata.args,
+                kwargs=fndata.kwargs,
+                result=fndata.result,
+                name=fndata.name,
             )
         else:
             docstring = docstring_template.format(description=description)
 
         test_data_path = self.test_data_dir / fndata.name / (testname + ".pkl")
-        test_data_path.mkdir(exist_ok=True, parents=True)
+        test_data_path.parent.mkdir(exist_ok=True, parents=True)
+        with open(test_data_path, "wb") as f:
+            pickle.dump(fndata, f)
 
         test_code = test_template.format(
             module=fndata.module,

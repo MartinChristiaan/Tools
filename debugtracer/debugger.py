@@ -10,7 +10,7 @@ from sympy import python
 from function_data import FunctionData
 from reloader import ModuleReloader
 from fzf_utils import prompt
-from test_genration import TestGenerator
+from testcode_generator import TestGenerator
 
 previous_state_path = Path("/data/trace_data/previous_state.pkl")
 
@@ -24,6 +24,7 @@ def load_previous_state():
         with open(previous_state_path, "rb") as f:
             debugger = pickle.load(f)
         debugger.reloader = ModuleReloader()
+        debugger.test_generator = TestGenerator()
     else:
         debugger = Debugger()
     return debugger
@@ -61,12 +62,17 @@ class Debugger:
 
     def generate_test(self):
         fndata = self.function_data
-        testname = input("name : ")
-        description = input("description : [default = auto]")
-        if len(description == ""):
+        testname = "example"  # input("name : ")
+        description = ""  # input("description : [default = auto]")
+        if (
+            len(description) == 0
+            or description == "auto"
+            or description == "default"
+            or description == "d"
+        ):
             description = "auto"
         self.test_generator.generate_test_from_function_data(
-            testname, fndata, description
+            testname, description, fndata
         )
 
     @property
@@ -139,6 +145,7 @@ q : quit
                 "f": self.set_function,
                 "i": self.set_iteration,
                 "r": self.run_function,
+                "t": self.generate_test,
                 "q": exit,
             }
             char = getchar()
