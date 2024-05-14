@@ -139,6 +139,7 @@ class FunctionLogger:
 
 
 def main():
+    print(sys.argv)
     python_module_path = sys.argv[1]
     from debugtracer.reloader import ModuleReloader
 
@@ -147,7 +148,7 @@ def main():
     modules = [
         x
         for x in reloader.get_imported_modules()
-        if not "function_logger" in str(x) and not "reloader" in str(x)
+        if str(x).endswith("tracer") and not "reloader" in str(x)
     ]
     name = python_module_path.split(".")[-1]
     tracer = TestTracer(modules, name=name)

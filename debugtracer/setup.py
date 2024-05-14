@@ -10,4 +10,9 @@ setup(
     install_requires=[
         # Add your dependencies here
     ],
+    entry_points={
+        "console_scripts": [
+            "tracer=debugtracer.tracer:main",
+        ],
+    },
 )
