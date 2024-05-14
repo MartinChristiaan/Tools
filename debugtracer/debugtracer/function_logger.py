@@ -134,70 +134,17 @@ class FunctionLogger:
         return result
 
 
-def import_wrapper(module, package=None):
-    from importlib import _bootstrap
-
-    name = module
-    print("importing module:", module)
-    """Import a module.
-
-	The 'package' argument is required when performing a relative import. It
-	specifies the package to use as the anchor point from which to resolve the
-	relative import to an absolute import.
-
-	"""
-    level = 0
-    if name.startswith("."):
-        if not package:
-            msg = (
-                "the 'package' argument is required to perform a relative "
-                "import for {!r}"
-            )
-            raise TypeError(msg.format(name))
-        for character in name:
-            if character != ".":
-                break
-            level += 1
-    return _bootstrap._gcd_import(name[level:], package, level)
-
-
 def main():
     python_module_path = sys.argv[1]
-    # # get all python files in current path
-    # current_path = Path(os.getcwd())
-    # python_files = list(current_path.rglob("*.py"))
-    # # convert to module names
-    # python_modules = [
-    #     str(file).replace(os.getcwd(), "").replace("/", ".").replace(".py", "")[1:]
-    #     for file in python_files
-    #     if "__init__" not in str(file) and "setup" not in str(file)
-    # ]
+    from debugtracer.reloader import ModuleReloader
 
-    # target_module = None
-    # modules = []
-
-    # for module in python_modules:
-    #     print(module)
-    #     mod = importlib.import_module(module)
-    #     modules.append(mod)
-    #     logger.info(f"imported module: {module}")
-    #     if module == python_module_path:
-    #         target_module = mod
-    setattr(importlib, "import_module", import_wrapper)
     module = importlib.import_module(python_module_path)
-
-    # tracer = TestTracer(python_modules)
+    reloader = ModuleReloader()
+    modules = reloader.get_imported_modules()
+    tracer = TestTracer(modules)
+    print(tracer.function_logger_lut)
     module.main()
 
 
 if __name__ == "__main__":
     main()
-    # library.sub_library.my_sum(2, 3, mode="test")
-    # obj = library.sub_library.ObjectExample(6, 8)
-    # obj.do_sum(mode="eval")
-    # # obj.do_sum_exception()
-    # img = obj.generate_test_image()
-    # obj.process_test_image(img)
-    # # tracer.generate()
-
-    # import pickle
