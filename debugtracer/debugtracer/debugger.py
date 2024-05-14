@@ -44,6 +44,7 @@ class Debugger:
             self.set_function()
         self._fndata_cache = {}
         self.max_iteration = 0
+        self.stopped = False
 
     def set_script(self):
         script_options = list(map(str, Path("/data/trace_data").glob("*")))
@@ -157,8 +158,11 @@ class Debugger:
             self.iteration = 0
         self.save()
 
+    def stop(self):
+        self.stopped = True
+
     def run(self):
-        while True:
+        while not self.stopped:
             inputs = {f"arg{i}": arg for i, arg in enumerate(self.function_data.args)}
             inputs.update(self.function_data.kwargs)
             # clear()
@@ -202,7 +206,7 @@ current state:
                 "r": self.run_function,
                 "t": self.generate_test,
                 "p": self.run_pytest,
-                "q": exit,
+                "q": self.stop,
                 "j": self.decrement_iteration,
                 "k": self.increment_iteration,
             }

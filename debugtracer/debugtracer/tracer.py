@@ -1,4 +1,5 @@
 import traceback
+from click import getchar
 from icecream import ic
 from loguru import logger
 from dataclasses import dataclass
@@ -127,17 +128,23 @@ class FunctionLogger:
         self.serialize(function_data, "meta", cross_iter=True)
         self.serialize(inputs, "inputs")
         t0 = time.time()
-        while True:
-            try:
-                result = fn(*args, **kwargs)
-                break
-            except Exception as e:
-                logger.error(f"An error occured during execution of {fn.__name__}")
-                traceback.print_exc()
-                debugger = Debugger(self.data_path, self.data_path / f"{fn.__name__}")
-                debugger.reloader = reloader
-                debugger.iteration = self.iteration
-                debugger.run()
+        try:
+            result = fn(*args, **kwargs)
+        except Exception as e:
+            traceback.print_exc()
+            debugger = Debugger(self.data_path, self.data_path / f"{fn.__name__}")
+            debugger.reloader = reloader
+            debugger.iteration = self.iteration
+            while True:
+                logger.error(
+                    f"An error occured during execution of {fn.__name__}, please enter key to try and fix the function"
+                )
+                getchar()
+                try:
+                    result = debugger.run_function()
+                    break
+                except Exception as e:
+                    traceback.print_exc()
 
         t1 = time.time()
         logger_result = dict(fn_output=result, dt=t1 - t0)
@@ -157,7 +164,6 @@ class FunctionLogger:
 
 
 def main():
-    print(sys.argv)
     python_module_path = sys.argv[1]
     module = importlib.import_module(python_module_path)
     modules = [
@@ -169,7 +175,6 @@ def main():
         and not "fzf_utils" in str(x)
         and not "testcode_generator" in str(x)
     ]
-    print(modules)
     name = python_module_path.split(".")[-1]
     tracer = TestTracer(modules, name=name)
     # return

@@ -12,3 +12,4 @@ def main():
     img = obj.generate_test_image()
     obj.process_test_image(img)
     obj.do_sum_exception()
+    print("executing the remainder of the script")
