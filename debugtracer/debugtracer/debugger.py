@@ -39,6 +39,7 @@ class Debugger:
             self.set_script()
         if self.function is None:
             self.set_function()
+        self._fndata_cache = {}
 
     def set_script(self):
         script_options = list(map(str, Path("/data/trace_data").glob("*")))
@@ -77,20 +78,25 @@ class Debugger:
         )
 
     @property
-    def function_data(self):
-        module, is_method, function_name = self.load_metadata()
-        inputs = read_pickle(Path(f"{self.function}/{self.iteration}_inputs.pkl"))
-        args = []
-        kwargs = {}
-        for k, v in inputs.items():
-            if k.startswith("arg"):
-                args.append(v)
-            else:
-                kwargs[k] = v
-        results = read_pickle(Path(f"{self.function}/{self.iteration}_outputs.pkl"))[
-            "fn_output"
-        ]
-        return FunctionData(args, kwargs, results, 1, module, function_name, is_method)
+    def function_data(self) -> FunctionData:
+        key = str(self.function) + str(self.iteration)
+        if not key in self._fndata_cache:
+            module, is_method, function_name = self.load_metadata()
+            inputs = read_pickle(Path(f"{self.function}/{self.iteration}_inputs.pkl"))
+            args = []
+            kwargs = {}
+            for k, v in inputs.items():
+                if k.startswith("arg"):
+                    args.append(v)
+                else:
+                    kwargs[k] = v
+            results = read_pickle(
+                Path(f"{self.function}/{self.iteration}_outputs.pkl")
+            )["fn_output"]
+            self._fndata_cache[key] = FunctionData(
+                args, kwargs, results, 1, module, function_name, is_method
+            )
+        return self._fndata_cache[key]
 
     def run_function(self):
         # import the function and run it
@@ -128,10 +134,17 @@ class Debugger:
 
     def run(self):
         while True:
+            inputs = {f"arg{i}": arg for i, arg in enumerate(self.function_data.args)}
+            inputs.update(self.function_data.kwargs)
             # clear()
             state_table = PrettyTable()
-            state_table.field_names = ["script", "function", "iteration"]
-            state_table.add_row([self.script.stem, self.function.stem, self.iteration])
+            state_table.field_names = ["script", "function", "iteration"] + list(
+                inputs.keys()
+            )
+            state_table.add_row(
+                [self.script.stem, self.function.stem, self.iteration]
+                + list(str(x)[:10] for x in inputs.values())
+            )
 
             state_str = f"""
 current state:
