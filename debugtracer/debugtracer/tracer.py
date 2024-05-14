@@ -149,36 +149,36 @@ def main():
     modules = [
         x
         for x in reloader.get_imported_modules()
-        if not str(x).endswith("tracer") and not "reloader" in str(x)
+        if not x.__name__.endswith("tracer") and not "reloader" in str(x)
     ]
-    print(modules)
-    # name = python_module_path.split(".")[-1]
-    # tracer = TestTracer(modules, name=name)
-    # failed = False
-    # try:
-    #     t0 = time.time()
-    #     module.main()
-    #     t1 = time.time()
-    #     dt = t1 - t0
-    # except Exception as e:
-    #     logger.error(e)
-    #     failed = True
+    name = python_module_path.split(".")[-1]
+    tracer = TestTracer(modules, name=name)
+    failed = False
+    try:
+        t0 = time.time()
+        module.main()
+        t1 = time.time()
+        dt = t1 - t0
+    except Exception as e:
+        logger.error(e)
+        failed = True
 
-    # if not failed:
-    #     logger.info(f"Tracing completed succesfully in {dt:.2f} sec, starting debugger")
+    if not failed:
+        logger.info(f"Tracing completed succesfully in {dt:.2f} sec, starting debugger")
 
-    # tracer.active = False
-    # from debugtracer.debugger import Debugger
+    tracer.active = False
+    from debugtracer.debugger import Debugger
 
-    # # print(tracer.function_logger_lut.keys())
+    # print(tracer.function_logger_lut.keys())
 
-    # last_function = tracer.function_logger_lut[
-    #     list(tracer.function_logger_lut.keys())[-1]
-    # ]
+    last_function = tracer.function_logger_lut[
+        list(tracer.function_logger_lut.keys())[-1]
+    ]
 
-    # Debugger(
-    #     Path(tracer.data_path, tracer.data_path / f"{last_function.name}"),
-    # ).run()
+    Debugger(
+        tracer.data_path,
+        tracer.data_path / f"{last_function.name}",
+    ).run()
 
 
 if __name__ == "__main__":

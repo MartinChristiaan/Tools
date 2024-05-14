@@ -1,7 +1,7 @@
 import os
 import pickle
 import time
-from click import getchar
+from click import clear, getchar
 from pathlib import Path
 
 from debugtracer.function_data import FunctionData
@@ -128,21 +128,18 @@ class Debugger:
     def run(self):
         while True:
             # clear()
-            ui_str = f"""
+            state_str = f"""
 current state:
-script: {self.script.stem}
-function: {self.function.stem}
-iteration: {self.iteration}
----------------------------------------------
-s : select script
-f : select function
-i : select iteration	
-r : run function
-t : generate test
-p : run pytest
-q : quit
+------------------------
+script: {self.script.stem} | function: {self.function.stem} | iteration: {self.iteration}
+"""
+
+            option_menu = f"""
+s : select script | f : select function | i : select iteration	
+r : run function | t : generate test  | p : run pytest
+q : quit         |                    |                    
 			"""
-            print(ui_str)
+            print(state_str + "\n" + option_menu)
 
             action_lut = {
                 "s": self.set_script,
@@ -154,6 +151,7 @@ q : quit
                 "q": exit,
             }
             char = getchar()
+            clear()
             if not char in action_lut:
                 continue
             action_lut[char]()
