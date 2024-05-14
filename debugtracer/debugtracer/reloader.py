@@ -38,13 +38,19 @@ class ModuleReloader:
             keys.append(key)
         return keys
 
+    def get_imported_modules(self):
+        modules = []
+        for key, mod in list(sys.modules.items()):
+            if key in self.module_keys:
+                modules.append(mod)
+        return modules
+
     def import_or_reload_module(self, module_key):
         if module_key in self.imported_modules:
             if self.reload_is_needed():
-                for key, mod in list(sys.modules.items()):
-                    if key in self.module_keys:
-                        print("reloading", key)
-                        importlib.reload(mod)
+                imported_modules = self.get_imported_modules()
+                for m in imported_modules:
+                    importlib.reload(m)
             imported_module = self.imported_modules[module_key]
         else:
             imported_module = importlib.import_module(module_key)
