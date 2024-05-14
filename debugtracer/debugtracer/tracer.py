@@ -1,3 +1,4 @@
+import traceback
 from icecream import ic
 from loguru import logger
 from dataclasses import dataclass
@@ -160,7 +161,8 @@ def main():
         t1 = time.time()
         dt = t1 - t0
     except Exception as e:
-        logger.error(e)
+        logger.error("an error occured during execution")
+        traceback.print_exc()
         failed = True
 
     if not failed:
@@ -175,10 +177,12 @@ def main():
         list(tracer.function_logger_lut.keys())[-1]
     ]
 
-    Debugger(
+    debugger = Debugger(
         tracer.data_path,
         tracer.data_path / f"{last_function.name}",
-    ).run()
+    )
+    debugger.reloader = reloader
+    debugger.run()
 
 
 if __name__ == "__main__":

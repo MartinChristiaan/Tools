@@ -4,11 +4,14 @@ import time
 from click import clear, getchar
 from pathlib import Path
 
+from sympy import re
+
 from debugtracer.function_data import FunctionData
 from debugtracer.reloader import ModuleReloader
 from debugtracer.fzf_utils import prompt
 from debugtracer.testcode_generator import TestGenerator
 from prettytable import PrettyTable
+import traceback
 
 previous_state_path = Path("/data/trace_data/previous_state.pkl")
 
@@ -90,9 +93,13 @@ class Debugger:
                     args.append(v)
                 else:
                     kwargs[k] = v
-            results = read_pickle(
-                Path(f"{self.function}/{self.iteration}_outputs.pkl")
-            )["fn_output"]
+
+            results_path = Path(f"{self.function}/{self.iteration}_outputs.pkl")
+            results = (
+                read_pickle(results_path)["fn_output"]
+                if results_path.exists()
+                else None
+            )
             self._fndata_cache[key] = FunctionData(
                 args, kwargs, results, 1, module, function_name, is_method
             )
@@ -112,7 +119,7 @@ class Debugger:
         try:
             result = function(*fndata.args, **fndata.kwargs)
         except Exception as e:
-            # TODO log full traceback
+            traceback.print_exc()
             print(f"error : {e}")
             result = None
         t1 = time.time()
@@ -132,6 +139,14 @@ class Debugger:
     def run_pytest(self):
         os.system("pytest")
 
+    def decrement_iteration(self):
+        self.iteration -= 1
+        self.save()
+
+    def increment_iteration(self):
+        self.iteration += 1
+        self.save()
+
     def run(self):
         while True:
             inputs = {f"arg{i}": arg for i, arg in enumerate(self.function_data.args)}
@@ -143,7 +158,7 @@ class Debugger:
             )
             state_table.add_row(
                 [self.script.stem, self.function.stem, self.iteration]
-                + list(str(x)[:10] for x in inputs.values())
+                + list(str(x)[:100] for x in inputs.values())
             )
 
             state_str = f"""
@@ -153,7 +168,7 @@ current state:
 
             option_menu = PrettyTable()
 
-            keys = ["key : ", "s", "f", "i", "r", "t", "p", "q"]
+            keys = ["key : ", "s", "f", "i", "r", "t", "p", "q", "j", "k"]
             actions = [
                 "Action :",
                 "Select script",
@@ -163,6 +178,8 @@ current state:
                 "Generate test",
                 "Run pytest",
                 "Quit",
+                "decrement iteration",
+                "increment iteration",
             ]
             option_menu.field_names = keys
             option_menu.add_row(actions)
@@ -176,6 +193,8 @@ current state:
                 "t": self.generate_test,
                 "p": self.run_pytest,
                 "q": exit,
+                "j": self.decrement_iteration,
+                "k": self.increment_iteration,
             }
             char = getchar()
             clear()

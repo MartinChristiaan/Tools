@@ -20,6 +20,7 @@ class ObjectExample:
 
     def do_sum_exception(self):
         # pass
+        # print("Doing sum exception")
         raise Exception("test exception")
 
     def generate_test_image(self):
