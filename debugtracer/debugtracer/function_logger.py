@@ -1,3 +1,4 @@
+from icecream import ic
 from loguru import logger
 from dataclasses import dataclass
 import importlib
@@ -31,16 +32,13 @@ class TestTracer:
     ) -> types.NoneType:
         self.name = name
         self.modules = modules
-        # self.test_code_dir = test_code_dir
-        # self.test_data_dir = test_data_dir
         exec_data[name] = []
-        self.decorate_all_in_modules()
-
         self.data_path = Path(data_path) / (self.name)
         self.data_path.mkdir(parents=True, exist_ok=True)
         self.function_logger_lut = {}
         self.max_traced_executions = 5
         self.active = True
+        self.decorate_all_in_modules()
 
     def decorate_all_in_modules(self):
         for module in self.modules:
@@ -56,27 +54,29 @@ class TestTracer:
                         setattr(
                             obj,
                             method.__name__,
-                            self.debug_trace_decorator(method, True),
+                            debug_trace_decorator(self, method, True),
                         )
-                        print(obj, name, method)
+
+                        ic(obj, name, method, module)
 
                 if isinstance(obj, types.FunctionType) or isinstance(
                     obj, types.MethodType
                 ):
-                    setattr(module, name, self.debug_trace_decorator(obj))
+                    setattr(module, name, debug_trace_decorator(self, obj))
 
-    def debug_trace_decorator(self, f, is_method=False):
-        def wrapper(*args, **kwargs):
-            if self.active:
-                fnname = f.__name__
-                if fnname not in self.function_logger_lut:
-                    self.function_logger_lut[fnname] = FunctionLogger(
-                        fnname, self.data_path, is_method
-                    )
-                return self.function_logger_lut[fnname].log_function(f, *args, **kwargs)
-            return f(*args, **kwargs)
 
-        return wrapper
+def debug_trace_decorator(tracer: TestTracer, f, is_method=False):
+    def wrapper(*args, **kwargs):
+        if tracer.active:
+            fnname = f.__name__
+            if fnname not in tracer.function_logger_lut:
+                tracer.function_logger_lut[fnname] = FunctionLogger(
+                    fnname, tracer.data_path, is_method
+                )
+            return tracer.function_logger_lut[fnname].log_function(f, *args, **kwargs)
+        return f(*args, **kwargs)
+
+    return wrapper
 
 
 @dataclass
@@ -143,7 +143,11 @@ def main():
 
     module = importlib.import_module(python_module_path)
     reloader = ModuleReloader()
-    modules = reloader.get_imported_modules()
+    modules = [
+        x
+        for x in reloader.get_imported_modules()
+        if not "debugtracer" in str(x) and not "reloader" in str(x)
+    ]
     print(modules)
     tracer = TestTracer(modules, name=python_module_path.split(".")[-1])
     print(tracer.function_logger_lut)

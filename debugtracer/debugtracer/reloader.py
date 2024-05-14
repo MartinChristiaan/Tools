@@ -8,7 +8,6 @@ class ModuleReloader:
     def __init__(self) -> None:
         self.module_timestamps = {}
         self.module_keys = self.get_module_keys()
-        print(self.module_keys)
         self.get_timestamps_modules_last_changed()
         self.imported_modules = {}
 
