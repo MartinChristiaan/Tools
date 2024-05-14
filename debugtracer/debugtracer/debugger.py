@@ -1,3 +1,4 @@
+import os
 import pickle
 import time
 from click import getchar
@@ -121,6 +122,9 @@ class Debugger:
         function_name = meta["name"]
         return module, is_method, function_name
 
+    def run_pytest(self):
+        os.system("pytest")
+
     def run(self):
         while True:
             # clear()
@@ -135,6 +139,7 @@ f : select function
 i : select iteration	
 r : run function
 t : generate test
+p : run pytest
 q : quit
 			"""
             print(ui_str)
@@ -145,6 +150,7 @@ q : quit
                 "i": self.set_iteration,
                 "r": self.run_function,
                 "t": self.generate_test,
+                "p": self.run_pytest,
                 "q": exit,
             }
             char = getchar()

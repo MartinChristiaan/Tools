@@ -8,6 +8,7 @@ import pickle
 from pathlib import Path
 import time
 
+from pytest import fail
 from zmq import has
 
 
@@ -57,7 +58,7 @@ class TestTracer:
                             debug_trace_decorator(self, method, True),
                         )
 
-                        # ic(obj, name, method, module)
+                        ic(obj, name, method, module)
 
                 if isinstance(obj, types.FunctionType) or isinstance(
                     obj, types.MethodType
@@ -148,19 +149,36 @@ def main():
     modules = [
         x
         for x in reloader.get_imported_modules()
-        if str(x).endswith("tracer") and not "reloader" in str(x)
+        if not str(x).endswith("tracer") and not "reloader" in str(x)
     ]
-    name = python_module_path.split(".")[-1]
-    tracer = TestTracer(modules, name=name)
-    try:
-        module.main()
-    except Exception as e:
-        logger.error(e)
-        pass
-    tracer.active = False
-    from debugtracer.debugger import Debugger
+    print(modules)
+    # name = python_module_path.split(".")[-1]
+    # tracer = TestTracer(modules, name=name)
+    # failed = False
+    # try:
+    #     t0 = time.time()
+    #     module.main()
+    #     t1 = time.time()
+    #     dt = t1 - t0
+    # except Exception as e:
+    #     logger.error(e)
+    #     failed = True
 
-    Debugger(Path(f"/data/trace_data/{name}")).run()
+    # if not failed:
+    #     logger.info(f"Tracing completed succesfully in {dt:.2f} sec, starting debugger")
+
+    # tracer.active = False
+    # from debugtracer.debugger import Debugger
+
+    # # print(tracer.function_logger_lut.keys())
+
+    # last_function = tracer.function_logger_lut[
+    #     list(tracer.function_logger_lut.keys())[-1]
+    # ]
+
+    # Debugger(
+    #     Path(tracer.data_path, tracer.data_path / f"{last_function.name}"),
+    # ).run()
 
 
 if __name__ == "__main__":

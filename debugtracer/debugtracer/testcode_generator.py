@@ -6,6 +6,7 @@ from debugtracer.function_data import FunctionData
 base_code = """
 import pickle
 import pandas as pd
+from debugtracer.function_data import FunctionData
 """
 
 method_call_template = """
