@@ -14,12 +14,15 @@ from zmq import has
 
 
 # from function_data import FunctionData
+from debugtracer.debugger import Debugger
+from debugtracer.reloader import ModuleReloader
 import library
 import library.sub_library
 import inspect
 import sys
 
 exec_data = {}
+reloader = ModuleReloader()
 
 
 # TODO manually specify functions to test!!! Use GUI???
@@ -124,7 +127,18 @@ class FunctionLogger:
         self.serialize(function_data, "meta", cross_iter=True)
         self.serialize(inputs, "inputs")
         t0 = time.time()
-        result = fn(*args, **kwargs)
+        while True:
+            try:
+                result = fn(*args, **kwargs)
+                break
+            except Exception as e:
+                logger.error(f"An error occured during execution of {fn.__name__}")
+                traceback.print_exc()
+                debugger = Debugger(self.data_path, self.data_path / f"{fn.__name__}")
+                debugger.reloader = reloader
+                debugger.iteration = self.iteration
+                debugger.run()
+
         t1 = time.time()
         logger_result = dict(fn_output=result, dt=t1 - t0)
         self.serialize(logger_result, "outputs")
@@ -145,30 +159,28 @@ class FunctionLogger:
 def main():
     print(sys.argv)
     python_module_path = sys.argv[1]
-    from debugtracer.reloader import ModuleReloader
-
     module = importlib.import_module(python_module_path)
-    reloader = ModuleReloader()
     modules = [
         x
         for x in reloader.get_imported_modules()
-        if not x.__name__.endswith("tracer") and not "reloader" in str(x)
+        if not x.__name__.endswith("tracer")
+        and not "reloader" in str(x)
+        and not "debugger" in str(x)
+        and not "fzf_utils" in str(x)
+        and not "testcode_generator" in str(x)
     ]
+    print(modules)
     name = python_module_path.split(".")[-1]
     tracer = TestTracer(modules, name=name)
+    # return
     failed = False
-    try:
-        t0 = time.time()
-        module.main()
-        t1 = time.time()
-        dt = t1 - t0
-    except Exception as e:
-        logger.error("an error occured during execution")
-        traceback.print_exc()
-        failed = True
+    t0 = time.time()
+    module.main()
+    t1 = time.time()
+    dt = t1 - t0
 
-    if not failed:
-        logger.info(f"Tracing completed succesfully in {dt:.2f} sec, starting debugger")
+    # if not failed:
+    #     logger.info(f"Tracing completed succesfully in {dt:.2f} sec, starting debugger")
 
     tracer.active = False
     from debugtracer.debugger import Debugger
