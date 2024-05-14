@@ -40,6 +40,7 @@ class TestTracer:
         self.data_path.mkdir(parents=True, exist_ok=True)
         self.function_logger_lut = {}
         self.max_traced_executions = 5
+        self.active = True
 
     def decorate_all_in_modules(self):
         for module in self.modules:
@@ -66,12 +67,14 @@ class TestTracer:
 
     def debug_trace_decorator(self, f, is_method=False):
         def wrapper(*args, **kwargs):
-            fnname = f.__name__
-            if fnname not in self.function_logger_lut:
-                self.function_logger_lut[fnname] = FunctionLogger(
-                    fnname, self.data_path, is_method
-                )
-            return self.function_logger_lut[fnname].log_function(f, *args, **kwargs)
+            if self.active:
+                fnname = f.__name__
+                if fnname not in self.function_logger_lut:
+                    self.function_logger_lut[fnname] = FunctionLogger(
+                        fnname, self.data_path, is_method
+                    )
+                return self.function_logger_lut[fnname].log_function(f, *args, **kwargs)
+            return f(*args, **kwargs)
 
         return wrapper
 
@@ -141,9 +144,17 @@ def main():
     module = importlib.import_module(python_module_path)
     reloader = ModuleReloader()
     modules = reloader.get_imported_modules()
-    tracer = TestTracer(modules)
+    print(modules)
+    tracer = TestTracer(modules, name=python_module_path.split(".")[-1])
     print(tracer.function_logger_lut)
-    module.main()
+    try:
+        module.main()
+    except:
+        pass
+    tracer.active = False
+    from debugtracer.debugger import Debugger
+
+    Debugger(python_module_path.split(".")[-1]).run()
 
 
 if __name__ == "__main__":
