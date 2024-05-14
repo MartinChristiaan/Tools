@@ -43,6 +43,7 @@ class Debugger:
         if self.function is None:
             self.set_function()
         self._fndata_cache = {}
+        self.max_iteration = 0
 
     def set_script(self):
         script_options = list(map(str, Path("/data/trace_data").glob("*")))
@@ -52,10 +53,14 @@ class Debugger:
     def set_function(self):
         function_options = list(map(str, self.script.glob("*")))
         self.function = Path(prompt(function_options, False, "Select function"))
+        self.iteration = 0
         # self.set_iteration()
 
     def set_iteration(self):
         self.iteration = int(input("Enter iteration: "))
+        while self.iteration > self.max_iteration:
+            print(f"iteration {self.iteration} does not exist")
+            self.iteration = int(input("Enter iteration: "))
         self.save()
 
     def save(self):
@@ -134,6 +139,7 @@ class Debugger:
         module = meta["module"]
         is_method = meta["is_method"]
         function_name = meta["name"]
+        self.max_iteration = meta["iteration"]
         return module, is_method, function_name
 
     def run_pytest(self):
@@ -141,10 +147,14 @@ class Debugger:
 
     def decrement_iteration(self):
         self.iteration -= 1
+        if self.iteration < 0:
+            self.iteration = self.max_iteration
         self.save()
 
     def increment_iteration(self):
         self.iteration += 1
+        if self.iteration > self.max_iteration:
+            self.iteration = 0
         self.save()
 
     def run(self):

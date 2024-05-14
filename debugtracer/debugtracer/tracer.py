@@ -119,6 +119,7 @@ class FunctionLogger:
             module=fn.__module__,
             name=fn.__name__,
             is_method=self.is_method,
+            iteration=self.iteration,
         )
         self.serialize(function_data, "meta", cross_iter=True)
         self.serialize(inputs, "inputs")
@@ -137,6 +138,7 @@ class FunctionLogger:
         #     is_method=is_method,
         # )
         # exec_data[name].append(function_data)
+        self.iteration += 1
         return result
 
 
