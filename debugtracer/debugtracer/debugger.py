@@ -8,6 +8,7 @@ from debugtracer.function_data import FunctionData
 from debugtracer.reloader import ModuleReloader
 from debugtracer.fzf_utils import prompt
 from debugtracer.testcode_generator import TestGenerator
+from prettytable import PrettyTable
 
 previous_state_path = Path("/data/trace_data/previous_state.pkl")
 
@@ -128,18 +129,31 @@ class Debugger:
     def run(self):
         while True:
             # clear()
+            state_table = PrettyTable()
+            state_table.field_names = ["script", "function", "iteration"]
+            state_table.add_row([self.script.stem, self.function.stem, self.iteration])
+
             state_str = f"""
 current state:
-------------------------
-script: {self.script.stem} | function: {self.function.stem} | iteration: {self.iteration}
-"""
+{state_table}
+            """
 
-            option_menu = f"""
-s : select script | f : select function | i : select iteration	
-r : run function | t : generate test  | p : run pytest
-q : quit         |                    |                    
-			"""
-            print(state_str + "\n" + option_menu)
+            option_menu = PrettyTable()
+
+            keys = ["key : ", "s", "f", "i", "r", "t", "p", "q"]
+            actions = [
+                "Action :",
+                "Select script",
+                "Select function",
+                "Select iteration",
+                "Run function",
+                "Generate test",
+                "Run pytest",
+                "Quit",
+            ]
+            option_menu.field_names = keys
+            option_menu.add_row(actions)
+            print(state_str + "\n" + str(option_menu))
 
             action_lut = {
                 "s": self.set_script,
