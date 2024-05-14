@@ -1,8 +1,12 @@
 from dataclasses import dataclass
+import importlib
+import os
 import types
 import pickle
 from pathlib import Path
 import time
+
+from zmq import has
 
 
 # from function_data import FunctionData
@@ -129,14 +133,40 @@ class FunctionLogger:
         return result
 
 
-if __name__ == "__main__":
-    tracer = TestTracer([library, library.sub_library])
-    library.sub_library.my_sum(2, 3, mode="test")
-    obj = library.sub_library.ObjectExample(6, 8)
-    obj.do_sum(mode="eval")
-    # obj.do_sum_exception()
-    img = obj.generate_test_image()
-    obj.process_test_image(img)
-    # tracer.generate()
+def main():
+    python_module_path = sys.argv[1]
+    # get all python files in current path
+    current_path = Path(os.getcwd())
+    python_files = list(current_path.rglob("*.py"))
+    # convert to module names
+    python_modules = [
+        str(file).replace(os.getcwd(), "").replace("/", ".").replace(".py", "")[1:]
+        for file in python_files
+        if "__init__" not in str(file)
+    ]
+    print(python_modules)
 
-    import pickle
+    target_module = None
+    modules = []
+
+    for module in python_modules:
+        mod = importlib.import_module(module)
+        modules.append(mod)
+        if module == python_module_path:
+            target_module = mod
+
+    tracer = TestTracer(python_modules)
+    target_module.main()
+
+
+if __name__ == "__main__":
+    main()
+    # library.sub_library.my_sum(2, 3, mode="test")
+    # obj = library.sub_library.ObjectExample(6, 8)
+    # obj.do_sum(mode="eval")
+    # # obj.do_sum_exception()
+    # img = obj.generate_test_image()
+    # obj.process_test_image(img)
+    # # tracer.generate()
+
+    # import pickle
