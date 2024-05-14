@@ -95,7 +95,7 @@ class Debugger:
         fndata = self.function_data
         imported_module = self.reloader.import_or_reload_module(fndata.module)
         if not fndata.is_method:
-            function = getattr(imported_module, fndata.is_method)
+            function = getattr(imported_module, fndata.name)
         else:
             typename = type(fndata.args[0]).__name__
             object_type = getattr(imported_module, typename)

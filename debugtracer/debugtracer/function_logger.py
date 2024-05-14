@@ -57,7 +57,7 @@ class TestTracer:
                             debug_trace_decorator(self, method, True),
                         )
 
-                        ic(obj, name, method, module)
+                        # ic(obj, name, method, module)
 
                 if isinstance(obj, types.FunctionType) or isinstance(
                     obj, types.MethodType
@@ -69,6 +69,7 @@ def debug_trace_decorator(tracer: TestTracer, f, is_method=False):
     def wrapper(*args, **kwargs):
         if tracer.active:
             fnname = f.__name__
+            ic(fnname, f.__module__)
             if fnname not in tracer.function_logger_lut:
                 tracer.function_logger_lut[fnname] = FunctionLogger(
                     fnname, tracer.data_path, is_method
@@ -146,19 +147,19 @@ def main():
     modules = [
         x
         for x in reloader.get_imported_modules()
-        if not "debugtracer" in str(x) and not "reloader" in str(x)
+        if not "function_logger" in str(x) and not "reloader" in str(x)
     ]
-    print(modules)
-    tracer = TestTracer(modules, name=python_module_path.split(".")[-1])
-    print(tracer.function_logger_lut)
+    name = python_module_path.split(".")[-1]
+    tracer = TestTracer(modules, name=name)
     try:
         module.main()
-    except:
+    except Exception as e:
+        logger.error(e)
         pass
     tracer.active = False
     from debugtracer.debugger import Debugger
 
-    Debugger(python_module_path.split(".")[-1]).run()
+    Debugger(Path(f"/data/trace_data/{name}")).run()
 
 
 if __name__ == "__main__":
