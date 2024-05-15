@@ -1,0 +1,6 @@
+train dataset,mAP
+Proposed,.84
+Virat-mixed,.70
+Visdrone-mixed,.66
+Virat-only,.37
+Visdrone-only,.25
