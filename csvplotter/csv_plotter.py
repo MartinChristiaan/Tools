@@ -32,58 +32,62 @@ menu = [
 	s.MenuItemFloat('y_min',0),
 	s.MenuItemFloat('y_max',1.1),
 ]
+while True:
+	config = s.Menu(menu, "Plot CSV file").run(False)[0]
 
-config = s.Menu(menu, "Plot CSV file").run(False)[0]
+	@dataclass
+	class PlotConfig:
+		x: str
+		y: str
+		pivot_column: str
+		facet_row:str
+		x_label: str
+		y_label: str
+		fig_size_x: int
+		fig_size_y: int
+		x_min : float
+		y_min : float
+		x_max : float
+		y_max : float
 
-@dataclass
-class PlotConfig:
-	x: str
-	y: str
-	pivot_column: str
-	facet_row:str
-	x_label: str
-	y_label: str
-	fig_size_x: int
-	fig_size_y: int
-	x_min : float
-	y_min : float
-	x_max : float
-	y_max : float
+	configs = PlotConfig(**config)
 
-configs = PlotConfig(**config)
-
-groups_facet = []
-if configs.facet_row == "":
-	groups_facet = [("",df)]
-else:
-	groups_facet = df.groupby(configs.facet_row)
-
-fig,axs= plt.subplots(len(groups_facet),1,figsize=(configs.fig_size_x,configs.fig_size_y*len(groups_facet)))
-
-for (groupname,df_facet_group),ax in zip(groups_facet,axs):
-	groups_pivot = []
-	if configs.pivot_column == "":
-		groups_pivot = [("",)]
+	groups_facet = []
+	if configs.facet_row == "":
+		groups_facet = [("",df)]
 	else:
-		groups_pivot = df.groupby(configs.pivot_column)
+		groups_facet = df.groupby(configs.facet_row)
 
-	for groupname,group_df in groups_pivot:
-		ax.plot(group_df[configs.x],group_df[configs.y],label=groupname)
+	fig,axs= plt.subplots(1,len(groups_facet),figsize=(configs.fig_size_x*len(groups_facet),configs.fig_size_y))
 
-	if configs.x_label == "auto":
-		ax.set_xlabel(configs.x)
-	else:
-		ax.set_xlabel(configs.x_label)
+	for (groupname,df_facet_group),ax in zip(groups_facet,axs):
+		if groupname != "":
+			ax.set_title(groupname)
+		groups_pivot = []
+		if configs.pivot_column == "":
+			groups_pivot = [("",df_facet_group)]
+		else:
+			groups_pivot = df_facet_group.groupby(configs.pivot_column)
 
-	if configs.y_label == "auto":
-		plt.set_ylabel(configs.y)
-	else:
-		plt.set_ylabel(configs.y_label)
-	# plt.xlim(configs.x_min,configs.x_max)
-	# plt.ylim(configs.y_min,configs.y_max)
-plt.legend()
-plt.grid(1)
-plt.show()
+		for groupname,group_df in groups_pivot:
+			ax.plot(group_df[configs.x],group_df[configs.y],label=groupname)
+
+		if configs.x_label == "auto":
+			ax.set_xlabel(configs.x)
+		else:
+			ax.set_xlabel(configs.x_label)
+
+		if configs.y_label == "auto":
+			ax.set_ylabel(configs.y)
+		else:
+			ax.set_ylabel(configs.y_label)
+		
+		# plt.xlim(configs.x_min,configs.x_max)
+		# plt.ylim(configs.y_min,configs.y_max)
+		ax.legend()
+		ax.grid(1)
+	plt.savefig(args.csv_path.replace(".csv",".png"),dpi=500,transparent=True)
+	plt.savefig(args.csv_path.replace(".csv",".pdf"),dpi=500,transparent=True)
 
 
 
