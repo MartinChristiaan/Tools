@@ -155,11 +155,12 @@ class Menu:
         with open(self.cache_file, "wb") as f:
             pickle.dump(state, f)
 
-    def run(self):
+    def run(self,debug=False):
         pass
 
         selected_idx = 0
-        while True:
+        configs = {x.name: x.selected for x in self.menu_items}
+        while not debug:
             click.clear()
             print(self.name)
             print("")
