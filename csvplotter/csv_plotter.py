@@ -1,3 +1,4 @@
+import numpy as np
 import scienceplots
 from dataclasses import dataclass
 import argparse
@@ -18,6 +19,7 @@ args = argparser.parse_args()
 
 df = pd.read_csv(args.csv_path)
 columns = list(df.columns)
+
 
 menu = [
     # s.MenuItemStr("csv_path",args.csv_path),
@@ -79,14 +81,20 @@ while True:
         else:
             groups_pivot = df_facet_group.groupby(configs.pivot_column)
 
-        for groupname, group_df in groups_pivot:
+        for i, (groupname, group_df) in enumerate(groups_pivot):
             if configs.plot_type == "line":
                 ax.plot(group_df[configs.x], group_df[configs.y], label=groupname)
             elif configs.plot_type == "scatter":
                 ax.scatter(group_df[configs.x], group_df[configs.y], label=groupname)
             elif configs.plot_type == "bar":
-				xpositions = range(len(group_df[configs.x]))
-                ax.bar(group_df[configs.x], group_df[configs.y], label=groupname)
+                xpositions = np.arange(len(group_df[configs.x])) + 0.4 * i
+                width = 0.8 / len(groups_pivot)
+                ax.bar(xpositions, group_df[configs.y], width=width, label=groupname)
+
+        if configs.plot_type == "bar":
+            xpositions = np.arange(len(group_df[configs.x]))  # + 0.4 * 0.5 * len(
+            ax.set_xticks(xpositions + width / 2, group_df[configs.x])
+
             # ax.plot(group_df[configs.x], group_df[configs.y], label=groupname)
 
         if configs.x_label == "auto":
@@ -101,6 +109,7 @@ while True:
 
         # plt.xlim(configs.x_min,configs.x_max)
         # plt.ylim(configs.y_min,configs.y_max)
+        ax.set_ylim(configs.y_min, configs.y_max)
         ax.legend()
         ax.grid(1)
     plt.savefig(args.csv_path.replace(".csv", ".png"), dpi=500, transparent=True)
