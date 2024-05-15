@@ -25,6 +25,8 @@ import click
 
 import fnmatch
 
+from fzf_utils import prompt
+
 
 def flatten_list(list_of_lists):
     result = []
@@ -96,6 +98,19 @@ def print_grid(strings):
     for i in range(0, len(padded_strings), num_columns):
         row = padded_strings[i : i + num_columns]
         print("".join(row))
+
+@dataclass
+class MenuItemSelectStr(MenuItem):
+    options: List = None
+    single_value: bool = True
+
+    def select(self):
+        print("selecting")
+        self._selected = prompt(self.options, multi=not self.single_value,cachename="menu_cache")
+        return self._selected
+        
+
+
 
 
 @dataclass
