@@ -25,7 +25,6 @@ import sys
 exec_data = {}
 reloader = ModuleReloader()
 
-
 # TODO manually specify functions to test!!! Use GUI???
 
 
