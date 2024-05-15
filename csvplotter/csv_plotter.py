@@ -93,7 +93,8 @@ while True:
 
         if configs.plot_type == "bar":
             xpositions = np.arange(len(group_df[configs.x]))  # + 0.4 * 0.5 * len(
-            ax.set_xticks(xpositions + width / 2, group_df[configs.x])
+            ax.set_xticks(xpositions + width / 2)
+            ax.set_xticklabels(group_df[configs.x], rotation=45)
 
             # ax.plot(group_df[configs.x], group_df[configs.y], label=groupname)
 
