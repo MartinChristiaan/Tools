@@ -177,6 +177,7 @@ def main():
     name = python_module_path.split(".")[-1]
     tracer = TestTracer(modules, name=name)
     # return
+    # return
     failed = False
     t0 = time.time()
     module.main()

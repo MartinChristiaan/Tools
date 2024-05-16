@@ -287,7 +287,6 @@ class QueueControl(MenuItem):
 @dataclass
 class MenuItemReturnGlob(MenuItem):
     options: List = None
-    single_value: bool = False
 
     def select(self):
         print("selecting")
