@@ -4,6 +4,7 @@ from typing import List
 import dlutils_ii as du
 from dlutils_ii.dataset_cache.writer import LabelConfig
 from dlutils_ii.dataset_config import DatasetConfig
+import pandas as pd
 
 
 def get_modified_date(path):
@@ -41,4 +42,24 @@ class PreAnnotationWriter(du.Writer):
             path.replace("_supra/", ""), from_supra
         )
         print(data)
+        return data
+
+
+class MixedSourceWriter(du.Writer):
+    def __init__(
+        self,
+        config: DatasetConfig,
+        sources: List[str],
+        frame_offsets: List[int],
+        labelconfig: LabelConfig = LabelConfig(),
+        # source="tyolov8/detections_tyolov8m-30112023.csv",
+    ):
+        self.sources = sources
+        super().__init__(config, frame_offsets, labelconfig)
+
+    def load_annotation_source(self):
+        for source in self.sources:
+            df = pd.read_csv(source)
+            df["source"] = source
+
         return data

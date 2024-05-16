@@ -23,8 +23,8 @@ videoset_names = list(videosets.to_pandas()["name"])
 def find_result_csv_in_mm_path(self, mm):
     paths = list(mm.result_dirpath.rglob("*.csv"))
     # sorted_paths = sorted(paths, key=get_modified_date)
-    path_options = [f"{x.parent.stem}/{x.name}" for x in paths]
-    return path_options
+    # path_options = [f"{x.parent.stem}/{x.name}" for x in paths]
+    return paths
 
 
 def get_cameras(videoset_names):
@@ -63,6 +63,15 @@ camera_selector = CameraSelector(
     "camera", _selected=[], options=None, videoset_selector=videoset_selector
 )
 
+
+def filter_items(videosets, items):
+    items_filtered = []
+    for item in items:
+        if item["camera"] not in videosets[item["videoset"]].cameras:
+            items_filtered.append(item)
+    return items_filtered
+
+
 if __name__ == "__main__":
     # from termlit.selection import TaskProcessor
 
@@ -82,10 +91,7 @@ if __name__ == "__main__":
     ]
     while True:
         items = Menu(menu_items, "processing_app").run()
-        items_filtered = []
-        for item in items:
-            if item["camera"] not in videosets[item["videoset"]].cameras:
-                items_filtered.append(item)
+        items_filtered = filter_items(videosets, items)
         import pandas as pd
 
         df = pd.DataFrame(items_filtered)
