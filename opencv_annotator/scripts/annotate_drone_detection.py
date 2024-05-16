@@ -13,7 +13,6 @@ from config.dataset import drone_detection_dataset,drone_tracking_dataset
 
 
 datasets =  drone_detection_dataset()
-
 du.Writer.export_multiprocessed(datasets,[0,-15,15],labelconfig=get_sod_label_config())
 #%%
 index =11
