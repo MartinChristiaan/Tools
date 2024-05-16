@@ -1,9 +1,11 @@
+import fnmatch
 import os
 from typing import List
 
 import dlutils_ii as du
 from dlutils_ii.dataset_cache.writer import LabelConfig
 from dlutils_ii.dataset_config import DatasetConfig
+from loguru import logger
 import pandas as pd
 
 
@@ -49,17 +51,33 @@ class MixedSourceWriter(du.Writer):
     def __init__(
         self,
         config: DatasetConfig,
-        sources: List[str],
+        source_glob_pattern: str,
         frame_offsets: List[int],
         labelconfig: LabelConfig = LabelConfig(),
         # source="tyolov8/detections_tyolov8m-30112023.csv",
     ):
-        self.sources = sources
+        self.source_glob_pattern = source_glob_pattern
         super().__init__(config, frame_offsets, labelconfig)
 
     def load_annotation_source(self):
-        for source in self.sources:
-            df = pd.read_csv(source)
-            df["source"] = source
-
-        return data
+        data = []
+        mm = self.pathfinder.media_manager
+        paths = list(map(str, mm.result_dirpath.rglob("*.csv")))
+        paths = list(
+            set(
+                [
+                    fnmatch.filter(paths, pattern)
+                    for pattern in self.source_glob_pattern.split("+")
+                ]
+            )
+        )
+        for path in paths:
+            df = pd.read_csv(path)
+            name = path.replace(str(mm.result_dirpath, ""))
+            df["source"] = [name] * len(df)
+            if not "confidence" in df.colums:
+                df["confidence"] = [1] * len(df)
+            data.append(df)
+        if len(data) == 0:
+            logger.error(f"no data found for {self.pathfinder.name}")
+        return pd.concat(df)

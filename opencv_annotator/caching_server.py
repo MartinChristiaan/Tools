@@ -29,12 +29,18 @@ items_filtered = filter_items(videosets, items)
 mm = videosets[items_filtered[0]["videoset"]].get_mediamanager(
     items_filtered[0]["camera"]
 )
-data_options = find_result_csv_in_mm_path(mm)
-selected_options = st.Menu(st.MenuItemMultiStr("data", options=data_options))
 
+data_options = list(map(str, find_result_csv_in_mm_path(mm)))
+selected_options = st.Menu([st.MenuItemMultiStr("data_glob", options=data_options),
+							st.MenuItemInt('max_samples',1000),
+							st.MenuItemFloat('min_temporal_offset',2)
+                            ])
+from opencv_annotator.pre_annotation_writer import MixedSourceWriter
 for item in filter_items:
-
-
+	pathfinder = du.Pathfinder(**item)
+	train_config = du.TrainOptions(False,[0,-15,15],max_samples=)
+	
+    
 
 
 # then select

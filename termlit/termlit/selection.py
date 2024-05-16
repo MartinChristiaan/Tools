@@ -1,3 +1,4 @@
+from ast import pattern
 from itertools import product
 from multiprocessing import Process
 import os
@@ -99,6 +100,7 @@ def print_grid(strings):
         row = padded_strings[i : i + num_columns]
         print("".join(row))
 
+
 @dataclass
 class MenuItemSelectStr(MenuItem):
     options: List = None
@@ -106,11 +108,10 @@ class MenuItemSelectStr(MenuItem):
 
     def select(self):
         print("selecting")
-        self._selected = prompt(self.options, multi=not self.single_value,cachename="menu_cache")
+        self._selected = prompt(
+            self.options, multi=not self.single_value, cachename="menu_cache"
+        )
         return self._selected
-        
-
-
 
 
 @dataclass
@@ -170,7 +171,7 @@ class Menu:
         with open(self.cache_file, "wb") as f:
             pickle.dump(state, f)
 
-    def run(self,debug=False):
+    def run(self, debug=False):
         pass
 
         selected_idx = 0
@@ -281,3 +282,31 @@ class QueueControl(MenuItem):
                 self.processer.queue = []
             if c == "\x1b":  # esc
                 return
+
+
+@dataclass
+class MenuItemReturnGlob(MenuItem):
+    options: List = None
+    single_value: bool = False
+
+    def select(self):
+        print("selecting")
+        current_pattern = ""
+        while True:
+            selected = []
+            for sub_pattern in current_pattern.split("+"):
+                selected += fnmatch.filter(self.options, f"{sub_pattern}")
+
+            click.clear()
+            # print(",".join(selected))
+            if len(selected) > 0:
+                print_grid(selected)
+            print(f"Pattern : {current_pattern}")
+            char = click.getchar()
+            if char == "\x7f":
+                current_pattern = current_pattern[:-1]
+            elif char == " ":
+                self._selected = pattern
+                return
+            else:
+                current_pattern += char
