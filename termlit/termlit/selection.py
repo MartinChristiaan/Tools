@@ -154,7 +154,7 @@ class Menu:
         self.name = name
         self.cache_dir = Path(cache_dir)
         self.cache_dir.mkdir(exist_ok=True, parents=True)
-        self.cache_file = self.cache_dir / "name.pkl"
+        self.cache_file = self.cache_dir / f"{name}.pkl"
         self.load_cache_state()
 
     def load_cache_state(self):
@@ -305,7 +305,7 @@ class MenuItemReturnGlob(MenuItem):
             if char == "\x7f":
                 current_pattern = current_pattern[:-1]
             elif char == " ":
-                self._selected = pattern
+                self._selected = current_pattern
                 return
             else:
                 current_pattern += char

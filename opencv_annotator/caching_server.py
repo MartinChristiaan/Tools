@@ -20,13 +20,22 @@ import pandas as pd
 import dlutils_ii as du
 
 
+def get_sod_label_config():
+    """standard label config for SOD experiments which involve only an object class."""
+    sod_label_config = du.LabelConfig(
+        {"object": 0, "ignore_area": 1, "ignore": 1, "ignore_area_seq": 2},
+        ["object", "ignore_area", "ignore_area_seq"],
+        ["ignore_frame"],
+    )
+    return sod_label_config
+
+
 def main():
 
     data_dir = Path("/diskstation/panoptes/sod/cache")
     # first select videosets/cameras
-    items = st.Menu([videoset_selector, camera_selector], "MM selector").run()
+    items = st.Menu([videoset_selector, camera_selector], "MM_selector").run(False)
     items_filtered = filter_items(videosets, items)
-    print(items_filtered, "test reload")
     # for config in configs:
 
     mm = videosets[items_filtered[0]["videoset"]].get_mediamanager(
@@ -41,12 +50,15 @@ def main():
             st.MenuItemFloat("min_temporal_spacing", 2),
         ],
         "additional caching options",
-    ).run()
+    ).run(False)[0]
     from opencv_annotator.pre_annotation_writer import MixedSourceWriter
-    from yolo_plugins.sod_utils import get_sod_label_config
 
-    for item in filter_items:
-        pathfinder = du.Pathfinder(**item, basedir="/data/local_diskstation")
+    print(additional_options)
+
+    for item in items_filtered:
+        pathfinder = du.Pathfinder(
+            **item, basedir="/data/local_diskstation", cache_dir=data_dir
+        )
         train_config = du.TrainOptions(
             False,
             [0, -15, 15],
@@ -54,6 +66,7 @@ def main():
             min_temporal_spacing=additional_options["min_temporal_spacing"],
         )
         dataset_config = du.DatasetConfig(pathfinder, train_config)
+        # raise Exception()
         writer = MixedSourceWriter(
             dataset_config,
             additional_options["data_glob"],
