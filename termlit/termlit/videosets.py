@@ -16,11 +16,12 @@ from termlit.selection import (
 )
 
 basedirpath = Path(r"/diskstation")
+basedirpath = Path(r"/data/local_diskstation")
 videosets = VideosetsII(basedirpath=basedirpath)  # basedirpath)
 videoset_names = list(videosets.to_pandas()["name"])
 
 
-def find_result_csv_in_mm_path(self, mm):
+def find_result_csv_in_mm_path(mm):
     paths = list(mm.result_dirpath.rglob("*.csv"))
     # sorted_paths = sorted(paths, key=get_modified_date)
     # path_options = [f"{x.parent.stem}/{x.name}" for x in paths]
@@ -67,7 +68,7 @@ camera_selector = CameraSelector(
 def filter_items(videosets, items):
     items_filtered = []
     for item in items:
-        if item["camera"] not in videosets[item["videoset"]].cameras:
+        if item["camera"] in videosets[item["videoset"]].cameras:
             items_filtered.append(item)
     return items_filtered
 

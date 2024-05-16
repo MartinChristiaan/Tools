@@ -114,7 +114,10 @@ class Debugger:
     def run_function(self):
         # import the function and run it
         fndata = self.function_data
+        for module in self.reloader.get_imported_modules():
+            self.reloader.import_or_reload_module(module.__name__)
         imported_module = self.reloader.import_or_reload_module(fndata.module)
+
         if not fndata.is_method:
             function = getattr(imported_module, fndata.name)
         else:

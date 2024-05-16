@@ -50,6 +50,8 @@ class TestTracer:
             for name in dir(module):
                 obj = getattr(module, name)
                 if inspect.isclass(obj):
+                    if obj.__module__ not in self.modules:
+                        continue
                     method_list = [
                         getattr(obj, func)
                         for func in dir(obj)
@@ -176,7 +178,6 @@ def main():
     ]
     name = python_module_path.split(".")[-1]
     tracer = TestTracer(modules, name=name)
-    # return
     # return
     failed = False
     t0 = time.time()

@@ -26,7 +26,7 @@ def main():
     # first select videosets/cameras
     items = st.Menu([videoset_selector, camera_selector], "MM selector").run()
     items_filtered = filter_items(videosets, items)
-    print(items_filtered)
+    print(items_filtered, "test reload")
     # for config in configs:
 
     mm = videosets[items_filtered[0]["videoset"]].get_mediamanager(
@@ -41,7 +41,7 @@ def main():
             st.MenuItemFloat("min_temporal_spacing", 2),
         ],
         "additional caching options",
-    )[0]
+    ).run()
     from opencv_annotator.pre_annotation_writer import MixedSourceWriter
     from yolo_plugins.sod_utils import get_sod_label_config
 
