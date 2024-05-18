@@ -31,10 +31,11 @@ def get_sod_label_config():
 
 
 def main():
+    debug = True
 
     data_dir = Path("/diskstation/panoptes/sod/cache")
     # first select videosets/cameras
-    items = st.Menu([videoset_selector, camera_selector], "MM_selector").run(False)
+    items = st.Menu([videoset_selector, camera_selector], "MM_selector").run(debug)
     items_filtered = filter_items(videosets, items)
     # for config in configs:
 
@@ -50,7 +51,7 @@ def main():
             st.MenuItemFloat("min_temporal_spacing", 2),
         ],
         "additional caching options",
-    ).run(False)[0]
+    ).run(debug)[0]
     from opencv_annotator.pre_annotation_writer import MixedSourceWriter
 
     print(additional_options)
@@ -67,13 +68,16 @@ def main():
         )
         dataset_config = du.DatasetConfig(pathfinder, train_config)
         # raise Exception()
-        writer = MixedSourceWriter(
-            dataset_config,
-            additional_options["data_glob"],
-            [0, -15, 15],
-            get_sod_label_config(),
-        )
-        writer.write()
+        try:
+            writer = MixedSourceWriter(
+                dataset_config,
+                additional_options["data_glob"],
+                [0, -15, 15],
+                get_sod_label_config(),
+            )
+            writer.write()
+        except:
+            pass
 
 
 if __name__ == "__main__":
