@@ -141,11 +141,9 @@ class FunctionLogger:
                     f"An error occured during execution of {fn.__name__}, please enter key to try and fix the function"
                 )
                 getchar()
-                try:
-                    result = debugger.run_function()
+                result = debugger.run_function()
+                if not result == "error":
                     break
-                except Exception as e:
-                    traceback.print_exc()
 
         t1 = time.time()
         logger_result = dict(fn_output=result, dt=t1 - t0)
