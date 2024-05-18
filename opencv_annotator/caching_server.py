@@ -31,7 +31,7 @@ def get_sod_label_config():
 
 
 def main():
-    debug = True
+    debug = False
     data_dir = Path("/diskstation/panoptes/sod/cache")
     # first select videosets/cameras
     items = st.Menu([videoset_selector, camera_selector], "MM_selector").run(debug)
@@ -53,12 +53,12 @@ def main():
     ).run(debug)[0]
     from opencv_annotator.pre_annotation_writer import MixedSourceWriter
 
-    print(additional_options)
-
     for item in items_filtered:
-        pathfinder = du.Pathfinder(
-            **item, basedir="/data/local_diskstation", cache_dir=data_dir
-        )
+        # pathfinder = du.Pathfinder(
+        #     **item, basedir="/local_diskstation", cache_dir=data_dir
+        # )
+
+        pathfinder = du.Pathfinder(**item, cache_dir=data_dir)
         train_config = du.TrainOptions(
             False,
             [0, -15, 15],

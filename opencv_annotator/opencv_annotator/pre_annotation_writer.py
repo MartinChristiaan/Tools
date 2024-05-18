@@ -70,15 +70,12 @@ class MixedSourceWriter(du.Writer):
         paths = list(set(filtered_paths))
         for path in paths:
             print(path)
-            try:
-                df = pd.read_csv(path)
-                name = path.replace(str(mm.result_dirpath, ""))
-                df["source"] = [name] * len(df)
-                if not "confidence" in df.colums:
-                    df["confidence"] = [1] * len(df)
-                data.append(df)
-            except:
-                pass
+            df = pd.read_csv(path)
+            name = path.replace(str(mm.result_dirpath, ""))
+            df["source"] = [name] * len(df)
+            if not "confidence" in df.colums:
+                df["confidence"] = [1] * len(df)
+            data.append(df)
         if len(data) == 0:
             logger.error(f"no data found for {self.pathfinder.name}")
             return None
