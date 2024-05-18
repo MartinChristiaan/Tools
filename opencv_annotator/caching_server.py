@@ -1,3 +1,4 @@
+# %%
 from pathlib import Path
 from dlutils_ii import DatasetConfig
 import termlit.selection as st
@@ -31,7 +32,7 @@ def get_sod_label_config():
 
 
 def main():
-    debug = False
+    debug = True
     data_dir = Path("/diskstation/panoptes/sod/cache")
     # first select videosets/cameras
     items = st.Menu([videoset_selector, camera_selector], "MM_selector").run(debug)
@@ -67,16 +68,13 @@ def main():
         )
         dataset_config = du.DatasetConfig(pathfinder, train_config)
         # raise Exception()
-        try:
-            writer = MixedSourceWriter(
-                dataset_config,
-                additional_options["data_glob"],
-                [0, -15, 15],
-                get_sod_label_config(),
-            )
-            writer.write()
-        except:
-            pass
+        writer = MixedSourceWriter(
+            dataset_config,
+            additional_options["data_glob"],
+            [0, -15, 15],
+            get_sod_label_config(),
+        )
+        writer.write()
 
 
 if __name__ == "__main__":

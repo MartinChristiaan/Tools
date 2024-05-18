@@ -130,7 +130,7 @@ class Debugger:
         except Exception as e:
             traceback.print_exc()
             print(f"error : {e}")
-            result = None
+            result = "error"
         t1 = time.time()
         dt = t1 - t0
         fps = 1 / dt

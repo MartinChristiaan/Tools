@@ -60,6 +60,7 @@ class MixedSourceWriter(du.Writer):
         super().__init__(config, frame_offsets, labelconfig)
 
     def load_annotation_source(self):
+
         data = []
         mm = self.pathfinder.media_manager
         paths = list(map(str, mm.result_dirpath.rglob("*.csv")))
@@ -71,12 +72,12 @@ class MixedSourceWriter(du.Writer):
         for path in paths:
             print(path)
             df = pd.read_csv(path)
-            name = path.replace(str(mm.result_dirpath, ""))
+            name = str(path).replace(str(mm.result_dirpath), "")
             df["source"] = [name] * len(df)
-            if not "confidence" in df.colums:
+            if not "confidence" in df.columns:
                 df["confidence"] = [1] * len(df)
             data.append(df)
         if len(data) == 0:
             logger.error(f"no data found for {self.pathfinder.name}")
             return None
-        return pd.concat(df)
+        return pd.concat(data)
