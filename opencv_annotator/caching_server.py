@@ -32,7 +32,6 @@ def get_sod_label_config():
 
 def main():
     debug = True
-
     data_dir = Path("/diskstation/panoptes/sod/cache")
     # first select videosets/cameras
     items = st.Menu([videoset_selector, camera_selector], "MM_selector").run(debug)
