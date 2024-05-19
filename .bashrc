@@ -145,3 +145,5 @@ case ":$PATH:" in
 esac
 eval "$(zoxide init bash)"
 # pnpm end
+
+  export PATH="${PATH}:/home/leeuwenmcv/.cargo/bin"
