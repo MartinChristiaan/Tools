@@ -48,6 +48,7 @@ class PreAnnotationWriter(du.Writer):
 
 
 class MixedSourceWriter(du.Writer):
+    # Problem, you may want to prioritize annotations and then detections from another
     def __init__(
         self,
         config: DatasetConfig,
@@ -60,6 +61,9 @@ class MixedSourceWriter(du.Writer):
         super().__init__(config, frame_offsets, labelconfig)
 
     def load_annotation_source(self):
+        """
+        #TODO run testing for various examples... should download a videoset
+        """
         data = []
         mm = self.pathfinder.media_manager
         paths = list(map(str, mm.result_dirpath.rglob("*.csv")))
@@ -75,7 +79,23 @@ class MixedSourceWriter(du.Writer):
             if not "confidence" in df.columns:
                 df["confidence"] = [1] * len(df)
             data.append(df)
+
         if len(data) == 0:
             logger.error(f"no data found for {self.pathfinder.name}")
             return None
-        return pd.concat(data)
+        df = pd.concat(data)
+        annotation_timestamps = []
+        other_timestamps = []
+        for i, row in df.iterrows():
+            if "_annotatations" in row["source"]:
+                annotation_timestamps.append(row.timestamp)
+            else:
+                other_timestamps.append(row.timestamp)
+
+        max_other_samples = self.train_options.max_samples - len(annotation_timestamps)
+        annotation_timestamps = self.limit_exported_samples(annotation_timestamps)
+        other_timestamps = self.limit_exported_samples(
+            other_timestamps, max_other_samples
+        )
+        final_df = df[df.timestamp.isin(annotation_timestamps + other_timestamps)]
+        return final_df
