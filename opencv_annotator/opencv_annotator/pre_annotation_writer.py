@@ -60,14 +60,12 @@ class MixedSourceWriter(du.Writer):
         super().__init__(config, frame_offsets, labelconfig)
 
     def load_annotation_source(self):
-
         data = []
         mm = self.pathfinder.media_manager
         paths = list(map(str, mm.result_dirpath.rglob("*.csv")))
         filtered_paths = []
         for pattern in self.source_glob_pattern.split("+"):
             filtered_paths += fnmatch.filter(paths, pattern)
-
         paths = list(set(filtered_paths))
         for path in paths:
             print(path)
