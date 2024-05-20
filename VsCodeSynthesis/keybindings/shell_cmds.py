@@ -99,4 +99,4 @@ keys = [
     ),
 ]
 add_keybindings(keys)
-add_bashrc(keys)
+# add_bashrc(keys)

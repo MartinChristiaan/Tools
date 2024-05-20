@@ -1,9 +1,11 @@
 # %%
+KEYBIND_KEY = "vim.normalModeKeyBindingsNonRecursive"
 import json
 import os
 from dataclasses import dataclass
 from typing import List
 
+from altair import binding
 from black import NewLine
 from icecream import ic
 from loguru import logger
@@ -107,17 +109,42 @@ def add_keybindings(new_bindings: List[keybinding]):
     current_keys = [str(x["before"]) for x in keybindings]
     current_idxs = list(range(len(current_keys)))
     idx_lut = dict(zip(current_keys, current_idxs))
+    idx_to_remove = []
     for binding in new_bindings:
         if str(binding.binding) in current_keys:
-            del data[key][idx_lut[str(binding.binding)]]
-        logger.info(f"adding {binding}")
-        keybindings.append(binding.get_data())
+            logger.info(f"keybinding already exists {binding}")
+            idx_to_remove.append(idx_lut[str(binding.binding)])
+    data[key] = [d for i, d in enumerate(data[key]) if i not in idx_to_remove]
+    for binding in new_bindings:
+        data[key].append(binding.get_data())
+    print(len(keybindings))
 
-    data[key] = keybindings
     with open(vscode_path, "w") as f:
         json.dump(data, f, indent=4)
 
-    # return keybindings
+
+def remove_duplicate_keybinds():
+    home = os.path.expanduser("~")
+    vscode_path = f"{home}/.config/Code/User/settings.json"
+    if not os.path.exists(vscode_path):
+        vscode_path = "/mnt/c/Users/leeuwenmcv/AppData/Roaming/Code/User/settings.json"
+        logger.info("Windows path")
+
+    with open(vscode_path, "r") as f:
+        data = json.load(f)
+    keybindings = data[KEYBIND_KEY]
+    filtered_bindings = []
+    known_keys = set()
+    for bind in keybindings:
+        key = bind["before"]
+        if key in known_keys:
+            continue
+        filtered_bindings.append(bind)
+        known_keys.add(key)
+    data[KEYBIND_KEY] = filtered_bindings
+    with open(vscode_path, "w") as f:
+        json.dump(data, f, indent=4)
 
 
-# %%
+if __name__ == "__main__":
+    remove_duplicate_keybinds()
