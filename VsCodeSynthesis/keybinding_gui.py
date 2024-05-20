@@ -1,5 +1,6 @@
 # %%
 # load settings json
+from math import e
 import os
 import json
 
@@ -15,5 +16,33 @@ with open(vscode_path, "r") as f:
 key = "vim.normalModeKeyBindingsNonRecursive"
 
 keybindings = data[key]
-for k in keybindings:
-    print(k)
+effects = []
+for item in keybindings:
+    effect = ""
+    if "after" in item:
+        effect += ",".join(item["after"])
+    if "commands" in item:
+        for command in item["commands"]:
+            if "command" in command:
+                effect += command["command"]
+            if "args" in command:
+                effect += str(command["args"])
+    effects += [effect]
+print(effects)
+# %%
+from fzf_utils import prompt
+
+# selected = prompt(effects)
+
+import click
+
+# add vscode keybinding
+keybind = ""
+while True:
+    keybindstr = keybind.replace(" ", "<leader>")
+    print(f"current_keybinding : {keybindstr}")
+    char = click.getchar()
+    if char == "\x03":
+        break
+    keybind += char
+print(keybindstr)
