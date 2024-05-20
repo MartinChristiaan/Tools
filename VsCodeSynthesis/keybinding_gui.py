@@ -3,6 +3,7 @@
 from math import e
 import os
 import json
+import random
 import shutil
 from typing import List
 
@@ -107,18 +108,39 @@ class KeybindManager:
         with open(get_vscode_path(), "w") as f:
             json.dump(self.data, f, indent=4)
 
+    def trainer(self):
+        while True:
+            random_keybind = random.choice(self.keybinds)
+            effect = ""
+            if "after" in random_keybind:
+                effect += ",".join(random_keybind["after"])
+            if "commands" in random_keybind:
+                effect += random_keybind["commands"][0]["command"]
+                if "args" in random_keybind["commands"][0]:
+                    effect += str(random_keybind["commands"][0]["args"])
+
+            print(effect)
+            guessed_keybind = get_keybind()
+            if str(guessed_keybind) == str(random_keybind["before"]):
+                print("correct")
+            else:
+                print(f"{guessed_keybind}=incorrect", random_keybind["before"])
+            click.getchar()
+
     def run(self):
 
         menu_str = """
 a : add keybinding
 d : delete keybinding
 q : quit
+t : trainer
 		"""
         print(menu_str)
         action_lut = {
             "a": self.make_vscode_keybind,
             "d": self.delete_keybind,
             "q": exit,
+            "t": self.trainer,
         }
         char = click.getchar()
         action_lut[char]()

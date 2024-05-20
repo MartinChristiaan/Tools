@@ -139,6 +139,7 @@ eval "$(zoxide init bash)"
 
   export PATH="${PATH}:/home/leeuwenmcv/.cargo/bin"
 
+alias ls='cd ~/git/tools/VsCodeSynthesis && bash local_search_symbol.sh'
 alias cs='cd ~/git/tools/VsCodeSynthesis && bash create_snippet.sh'
 alias ri='autoflake --in-place --remove-all-unused-imports ${file} '
 alias tm='tmux'
@@ -147,5 +148,5 @@ alias et='cd ~/git/tools/VsCodeSynthesis && python3 edit_tool.py'
 alias gsf='cd ~/git/tools/VsCodeSynthesis && bash filesearch.sh'
 alias gss='cd ~/git/tools/VsCodeSynthesis && bash git_search_symbol.sh'
 alias fs='cd ~/git/tools/VsCodeSynthesis && bash file_search_symbol.sh ${file}'
-alias ls='cd ~/git/tools/VsCodeSynthesis && bash local_search_symbol.sh'
+alias sl='cd ~/git/tools/VsCodeSynthesis && bash local_search_symbol.sh'
 alias qs='cd ~/git/tools/quick_edit && python3 quick_ssh.py'

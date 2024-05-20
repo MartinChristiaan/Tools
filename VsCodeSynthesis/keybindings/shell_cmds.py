@@ -80,7 +80,7 @@ keys = [
         ],
     ),
     keybinding(
-        "<leader>+l+s",  # local search symbol
+        "<leader>+s+l",  # local search symbol
         [
             c(
                 "cd ~/git/tools/VsCodeSynthesis && bash local_search_symbol.sh",
