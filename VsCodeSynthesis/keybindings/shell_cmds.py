@@ -80,6 +80,16 @@ keys = [
         ],
     ),
     keybinding(
+        "<leader>+d+p",  # run debugtracer
+        [
+            c(
+                "bash ~/git/tools/VsCodeSynthesis/run_debugtracer.sh ${file}",
+                focus=True,
+                newTerminal="false",
+            )
+        ],
+    ),
+    keybinding(
         "<leader>+s+l",  # local search symbol
         [
             c(
@@ -100,3 +110,6 @@ keys = [
 ]
 add_keybindings(keys)
 add_bashrc(keys)
+
+# Run the Python script using the -m syntax and the modified relative path
+# Run the Python script using the -m syntax and the modified relative path
