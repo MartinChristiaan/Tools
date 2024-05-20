@@ -75,7 +75,6 @@ esac
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
-    alias ls='ls --color=auto'
     alias cat='batcat'
     #alias dir='dir --color=auto'
     #alias vdir='vdir --color=auto'
@@ -128,14 +127,6 @@ if ! shopt -oq posix; then
 fi
 
 
-alias cs='cd ~/git/tools/VsCodeSynthesis && bash create_snippet.sh'
-alias ri='autoflake --in-place --remove-all-unused-imports ${file} '
-alias tm='tmux'
-alias at='cd ~/git/tools/VsCodeSynthesis && python3 add_tool.py'
-alias et='cd ~/git/tools/VsCodeSynthesis && python3 edit_tool.py'
-alias gsf='cd ~/git/tools/VsCodeSynthesis && bash filesearch.sh'
-alias gss='cd ~/git/tools/VsCodeSynthesis && bash git_search_symbol.sh'
-alias qs='cd ~/git/tools/quick_edit && python3 quick_ssh.py'
 
 # pnpm
 export PNPM_HOME="/home/leeuwenmcv/.local/share/pnpm"
@@ -147,3 +138,14 @@ eval "$(zoxide init bash)"
 # pnpm end
 
   export PATH="${PATH}:/home/leeuwenmcv/.cargo/bin"
+
+alias cs='cd ~/git/tools/VsCodeSynthesis && bash create_snippet.sh'
+alias ri='autoflake --in-place --remove-all-unused-imports ${file} '
+alias tm='tmux'
+alias at='cd ~/git/tools/VsCodeSynthesis && python3 add_tool.py'
+alias et='cd ~/git/tools/VsCodeSynthesis && python3 edit_tool.py'
+alias gsf='cd ~/git/tools/VsCodeSynthesis && bash filesearch.sh'
+alias gss='cd ~/git/tools/VsCodeSynthesis && bash git_search_symbol.sh'
+alias fs='cd ~/git/tools/VsCodeSynthesis && bash file_search_symbol.sh ${file}'
+alias ls='cd ~/git/tools/VsCodeSynthesis && bash local_search_symbol.sh'
+alias qs='cd ~/git/tools/quick_edit && python3 quick_ssh.py'
