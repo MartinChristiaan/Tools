@@ -139,7 +139,6 @@ eval "$(zoxide init bash)"
 
   export PATH="${PATH}:/home/leeuwenmcv/.cargo/bin"
 
-alias ls='cd ~/git/tools/VsCodeSynthesis && bash local_search_symbol.sh'
 alias cs='cd ~/git/tools/VsCodeSynthesis && bash create_snippet.sh'
 alias ri='autoflake --in-place --remove-all-unused-imports ${file} '
 alias tm='tmux'
