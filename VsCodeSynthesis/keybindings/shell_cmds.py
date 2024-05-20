@@ -108,8 +108,16 @@ keys = [
         ],
     ),
 ]
-add_keybindings(keys)
-add_bashrc(keys)
 
 # Run the Python script using the -m syntax and the modified relative path
 # Run the Python script using the -m syntax and the modified relative path
+
+
+def main():
+
+    add_keybindings(keys)
+    add_bashrc(keys)
+
+
+if __name__ == "__main__":
+    main()

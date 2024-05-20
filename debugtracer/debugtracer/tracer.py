@@ -164,7 +164,8 @@ class FunctionLogger:
 
 def main():
     python_module_path = sys.argv[1]
-    print(python_module_path)
+    sys.path.append(os.getcwd())
+
     module = importlib.import_module(python_module_path)
     modules = [
         x
