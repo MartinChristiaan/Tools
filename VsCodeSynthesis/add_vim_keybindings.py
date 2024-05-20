@@ -133,15 +133,18 @@ def remove_duplicate_keybinds():
     with open(vscode_path, "r") as f:
         data = json.load(f)
     keybindings = data[KEYBIND_KEY]
+    first_len = len(keybindings)
     filtered_bindings = []
     known_keys = set()
     for bind in keybindings:
         key = bind["before"]
-        if key in known_keys:
+        if str(key) in known_keys:
             continue
         filtered_bindings.append(bind)
-        known_keys.add(key)
+        known_keys.add(str(key))
     data[KEYBIND_KEY] = filtered_bindings
+    second_len = len(data[KEYBIND_KEY])
+    print("removed", first_len - second_len, "duplicate keybindings")
     with open(vscode_path, "w") as f:
         json.dump(data, f, indent=4)
 
