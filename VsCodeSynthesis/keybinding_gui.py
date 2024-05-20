@@ -3,6 +3,7 @@
 from math import e
 import os
 import json
+from typing import List
 
 home = os.path.expanduser("~")
 vscode_path = f"{home}/.config/Code/User/settings.json"
@@ -36,13 +37,39 @@ from fzf_utils import prompt
 
 import click
 
-# add vscode keybinding
-keybind = ""
-while True:
-    keybindstr = keybind.replace(" ", "<leader>")
-    print(f"current_keybinding : {keybindstr}")
-    char = click.getchar()
-    if char == "\x03":
-        break
-    keybind += char
-print(keybindstr)
+
+def get_vscode_command():
+    with open(f"{home}/git/tools/VsCodeSynthesis/vscode_commands", "r") as f:
+        commands = f.read().split("\n")
+    command = prompt(commands)
+    return command
+
+
+def get_keybind() -> List[str]:
+    keybind = ""
+    while True:
+        keybind_list = []
+        for x in keybind:
+            if x == " ":
+                keybind_list += ["<leader>"]
+            else:
+                keybind_list += [x]
+        print(f"current_keybinding : {keybind_list}")
+        char = click.getchar()
+        # check if char == escape
+        if char == "\x1b":
+            break
+        keybind += char
+    return keybind_list
+
+
+def make_vscode_keybind(keybinds: List[dict]):
+    command = get_vscode_command()
+    current_keybinds = [x["before"] for x in keybindings]
+    while keybind in current_keybinds:
+        print("keybinding already exists")
+        keybind = get_keybind()
+
+    data = dict(before=keybind, commands=[dict(command=command)])
+	keybindings.append(data)
+    return keybindings
