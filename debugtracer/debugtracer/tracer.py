@@ -126,15 +126,22 @@ class FunctionLogger:
             is_method=self.is_method,
             iteration=self.iteration,
         )
+        serialization_failed = False
         try:
             self.serialize(function_data, "meta", cross_iter=True)
             self.serialize(inputs, "inputs")
         except Exception as e:
-            logger.warning("serialization failed for ")
+            logger.warning(f"serialization failed for {fn.__name__}")
+            serialization_failed = True
         t0 = time.time()
         try:
             result = fn(*args, **kwargs)
         except Exception as e:
+            if serialization_failed:
+                logger.error(
+                    "serialization failed and error in function, unfortunately cannot debug :("
+                )
+                raise e
             traceback.print_exc()
             debugger = Debugger(self.data_path, self.data_path / f"{fn.__name__}")
             debugger.reloader = reloader
@@ -150,7 +157,12 @@ class FunctionLogger:
 
         t1 = time.time()
         logger_result = dict(fn_output=result, dt=t1 - t0)
-        self.serialize(logger_result, "outputs")
+        if not serialization_failed:
+            try:
+                self.serialize(logger_result, "outputs")
+            except:
+                logger.warning(f"Failed to serialize {fn.__name__} output")
+
         # function_data = FunctionData(
         #     args=args,
         #     kwargs=kwargs,
@@ -196,13 +208,13 @@ def main():
 
     # print(tracer.function_logger_lut.keys())
 
-    last_function = tracer.function_logger_lut[
-        list(tracer.function_logger_lut.keys())[-1]
-    ]
+    # last_function = tracer.function_logger_lut[
+    #     list(tracer.function_logger_lut.keys())[-1]
+    # ]
 
     debugger = Debugger(
         tracer.data_path,
-        tracer.data_path / f"{last_function.name}",
+        tracer.data_path / f"main",
     )
     debugger.reloader = reloader
     debugger.run()

@@ -10,3 +10,4 @@ def function_to_ignore(queue):
 def main():
     q = Queue()
     v = function_to_ignore(q)
+    print("completed")
