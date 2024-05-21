@@ -123,7 +123,7 @@ class KeybindManager:
             guessed_keybind = get_keybind()
             if str(guessed_keybind) == str(random_keybind["before"]):
                 print("correct")
-            else:
+            else
                 print(f"{guessed_keybind}=incorrect", random_keybind["before"])
             click.getchar()
 
@@ -135,15 +135,16 @@ d : delete keybinding
 q : quit
 t : trainer
 		"""
-        print(menu_str)
-        action_lut = {
-            "a": self.make_vscode_keybind,
-            "d": self.delete_keybind,
-            "q": exit,
-            "t": self.trainer,
-        }
-        char = click.getchar()
-        action_lut[char]()
+        while True:
+            print(menu_str)
+            action_lut = {
+                "a": self.make_vscode_keybind,
+                "d": self.delete_keybind,
+                "q": exit,
+                "t": self.trainer,
+            }
+            char = click.getchar()
+            action_lut[char]()
 
 
 def main():
