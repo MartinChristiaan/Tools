@@ -126,8 +126,11 @@ class FunctionLogger:
             is_method=self.is_method,
             iteration=self.iteration,
         )
-        self.serialize(function_data, "meta", cross_iter=True)
-        self.serialize(inputs, "inputs")
+        try:
+            self.serialize(function_data, "meta", cross_iter=True)
+            self.serialize(inputs, "inputs")
+        except Exception as e:
+            logger.warning("serialization failed for ")
         t0 = time.time()
         try:
             result = fn(*args, **kwargs)
