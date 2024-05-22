@@ -25,7 +25,10 @@ import click
 
 import fnmatch
 
-from fzf_utils import prompt
+try:
+    from fzf_utils import prompt
+except:
+    pass
 
 
 def flatten_list(list_of_lists):
