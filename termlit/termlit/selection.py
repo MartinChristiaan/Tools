@@ -1,4 +1,3 @@
-from ast import pattern
 from itertools import product
 from multiprocessing import Process
 import os

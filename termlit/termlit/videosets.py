@@ -16,6 +16,7 @@ from termlit.selection import (
 )
 
 basedirpath = Path(r"/diskstation")
+basedirpath = None
 # basedirpath = Path(r"/data/local_diskstation")
 videosets = VideosetsII(basedirpath=basedirpath)  # basedirpath)
 videoset_names = list(videosets.to_pandas()["name"])
