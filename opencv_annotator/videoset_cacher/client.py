@@ -7,6 +7,7 @@ from pathlib import Path
 import termlit.selection as ts
 import termlit.videosets as tv
 from icecream import ic
+from tqdm import tqdm
 
 menu_items = [
     tv.videoset_selector,
@@ -19,14 +20,18 @@ def sync_directory(source:Path,destination:Path,exclude="",include="*"):
     print(source,destination)
     current_files = list(destination.rglob(include))
     current_file_subpaths = [str(f).replace(str(destination),"") for f in current_files]
-    for file in source.rglob(include):
+    for file in tqdm(list(source.rglob(include))):
         subpath = str(file).replace(str(source),"")
         logger.info(f'syncing {subpath}')
 
         if subpath in current_file_subpaths or file.is_dir():
             continue
         else:
-            file_dest = f'{destination}\\{subpath}'
+            if os.name == 'nt':
+                file_dest = f'{destination}\\{subpath}'
+            else:
+                
+                file_dest = f'{destination}/{subpath}'
             Path(file_dest).parent.mkdir(parents=True,exist_ok=True)
             print(destination,file_dest,subpath)
             shutil.copy(file,file_dest)
