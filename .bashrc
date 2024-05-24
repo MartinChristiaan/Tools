@@ -100,6 +100,7 @@ alias qr='cd ~/git/tools/quick_open && cd $(python3 folder_select.py)'
 # alias ex='source ~/git/tools/explorer/explore.sh'
 alias ex='source ~/git/tools/explorer2/explore.sh'
 alias qc='bash ~/git/tools/gittools/quick_commit.sh'
+alias ls='exa'
 
 
 # Add an "alert" alias for long running commands.  Use like so:
