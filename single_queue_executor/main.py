@@ -46,7 +46,6 @@ class SharedQueueProcessManager():
 		self._received_inputs+=1
 	
 	def available_results(self):
-		print(self._processed_items)
 		if self._input_id_to_return in self._processed_items:
 			returnable =  self._processed_items[self._input_id_to_return]
 			del self._processed_items[self._input_id_to_return]
@@ -63,7 +62,6 @@ class SharedQueueProcessManager():
 		while len(self._processed_items) < self._received_inputs:
 			if not self.output_queue.empty():
 				id,value=  self.output_queue.get()
-				print(id)
 				self._processed_items[id] = value
 			time.sleep(0.001)
 
@@ -72,7 +70,7 @@ class SharedQueueProcessManager():
 			proc.join()
 				
 def main():
-	man = SharedQueueProcessManager(example_process,[{},{},{},{}])
+	man = SharedQueueProcessManager(example_process,[dict(name='worker1'),dict(name='worker2'),dict(name='worker3'),dict(name='worker4')])
 	man.simulate()
 	for i in range(100):
 		result =  man.available_results() 
