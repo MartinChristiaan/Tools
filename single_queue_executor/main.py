@@ -6,14 +6,16 @@ import random
 import time
 from typing import Dict
 
-def example_process(input_queue:mp.Queue, output_queue:mp.Queue,val_dict:Dict):
+def example_process(input_queue:mp.Queue, output_queue:mp.Queue,val_dict:Dict,name='worker'):
 	while not val_dict['stop']:
 		if not input_queue.empty():
 			item = input_queue.get()
 			cnt,value = item
-			sleeptime = random.randint(1, 5)/1000
+			sleeptime = random.randint(1, 20)/100
 			time.sleep(sleeptime)
-			output_queue.put((cnt, value))
+			output_queue.put((cnt, name))
+		time.sleep(0.001)
+	print('stopping')
 
 class SharedQueueProcessManager():
 	def __init__(self,process,kwargs_list) -> None:
@@ -44,26 +46,43 @@ class SharedQueueProcessManager():
 		self._received_inputs+=1
 	
 	def available_results(self):
+		print(self._processed_items)
 		if self._input_id_to_return in self._processed_items:
 			returnable =  self._processed_items[self._input_id_to_return]
-			self._input_id_to_return +=1
 			del self._processed_items[self._input_id_to_return]
+			self._input_id_to_return +=1
 			return returnable
 		else:
 			return None
 	
 	def simulate(self):
-		items = [(i,random.randint(1, 100)) for i in range(10)]
+		items = [i for i in range(100)]
 		for item in items:
 			self.add_item(item)
 		
-		while self._input_id_to_return < self._received_inputs:
-			id,value=  self.output_queue.get()
-			self._processed_items[id] = value
+		while len(self._processed_items) < self._received_inputs:
+			if not self.output_queue.empty():
+				id,value=  self.output_queue.get()
+				print(id)
+				self._processed_items[id] = value
+			time.sleep(0.001)
+
+		self.val_dict['stop'] = True
+		for proc in self.processes:
+			proc.join()
+				
+def main():
+	man = SharedQueueProcessManager(example_process,[{},{},{},{}])
+	man.simulate()
+	for i in range(100):
+		result =  man.available_results() 
+		print(result)
 
 if __name__ == "__main__":	
-	man = SharedQueueProcessManager(example_process,[{},{}])
-	man.simulate()
+	main()
+	
+
+
   
   
 
