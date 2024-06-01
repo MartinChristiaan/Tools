@@ -1,5 +1,5 @@
 # ~/.bashrc: executed by bash(1) for non-login shells.
-# see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
+# see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)   
 # for examples
 
 # If not running interactively, don't do anything
@@ -8,16 +8,16 @@ case $- in
       *) return;;
 esac
 
-# don't put duplicate lines or lines starting with space in the history.
+# don't put duplicate lines or lines starting with space in the history.     
 # See bash(1) for more options
 HISTCONTROL=ignoreboth
 
 # append to the history file, don't overwrite it
 shopt -s histappend
 
-# for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
-HISTSIZE=1000
-HISTFILESIZE=2000
+# for setting history length see HISTSIZE and HISTFILESIZE in bash(1)        
+HISTSIZE=1000000
+HISTFILESIZE=200000
 
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
@@ -30,7 +30,7 @@ shopt -s checkwinsize
 # make less more friendly for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
-# set variable identifying the chroot you work in (used in the prompt below)
+# set variable identifying the chroot you work in (used in the prompt below) 
 if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
     debian_chroot=$(cat /etc/debian_chroot)
 fi
@@ -40,24 +40,25 @@ case "$TERM" in
     xterm-color|*-256color) color_prompt=yes;;
 esac
 
-# uncomment for a colored prompt, if the terminal has the capability; turned
-# off by default to not distract the user: the focus in a terminal window
+# uncomment for a colored prompt, if the terminal has the capability; turned 
+# off by default to not distract the user: the focus in a terminal window    
 # should be on the output of commands, not on the prompt
 #force_color_prompt=yes
 
 if [ -n "$force_color_prompt" ]; then
     if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
-	# We have color support; assume it's compliant with Ecma-48
-	# (ISO/IEC-6429). (Lack of such support is extremely rare, and such
-	# a case would tend to support setf rather than setaf.)
-	color_prompt=yes
+        # We have color support; assume it's compliant with Ecma-48
+        # (ISO/IEC-6429). (Lack of such support is extremely rare, and such  
+        # a case would tend to support setf rather than setaf.)
+        color_prompt=yes
     else
-	color_prompt=
+        color_prompt=
     fi
 fi
 
 if [ "$color_prompt" = yes ]; then
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\
+[\033[01;34m\]\w\[\033[00m\]\$ '
 else
     PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
 fi
@@ -74,8 +75,8 @@ esac
 
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
-    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
-    alias cat='batcat'
+    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(di
+rcolors -b)"
     #alias dir='dir --color=auto'
     #alias vdir='vdir --color=auto'
 
@@ -85,27 +86,29 @@ if [ -x /usr/bin/dircolors ]; then
 fi
 
 # colored GCC warnings and errors
-#export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
+#export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01
+:quote=01'
 
-# some more ls aliases
 alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
 alias v='nvim'
 alias x='bash ~/git/tools/executor/execute.sh'
-# alias qe='bash -c "cd ~/git/tools/quick_open && python3 quick.py --explore"'
-# alias qc='bash -c "cd ~/git/tools/quick_open && python3 quick.py --clip"'
-# alias qr='bash -c "cd ~/git/tools/quick_open && python3 quick.py --rsync"'
-alias qr='cd ~/git/tools/quick_open && cd $(python3 folder_select.py)'
+# alias qe='bash -c "cd ~/git/tools/quick_open && python3 quick.py --explore"
+'
+# alias qc='bash -c "cd ~/git/tools/quick_open && python3 quick.py --clip"'  
+# alias qr='bash -c "cd ~/git/tools/quick_open && python3 quick.py --rsync"' 
+alias qr='cd ~/git/tools/quick_open && cd $(python3 folder_select.py)'       
 # alias ex='source ~/git/tools/explorer/explore.sh'
 alias ex='source ~/git/tools/explorer2/explore.sh'
 alias qc='bash ~/git/tools/gittools/quick_commit.sh'
-alias ls='exa'
 
 
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
-alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || e
+cho error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert
+$//'\'')"'
 
 # Alias definitions.
 # You may want to put all your additions into a separate file like
@@ -127,8 +130,11 @@ if ! shopt -oq posix; then
   fi
 fi
 
-
-
+export PATH="~/git/tools/bin:$PATH"
+export TOOLS=~/git/tools
+alias ex='source ~/git/tools/explorer2/explore.sh'
+alias x="bash ~/git/tools/executor/execute.sh"
+alias qo="cd ~/git/tools/quick_open/ && bash nautilus_quick_open.sh"
 # pnpm
 export PNPM_HOME="/home/leeuwenmcv/.local/share/pnpm"
 case ":$PATH:" in
@@ -138,17 +144,36 @@ esac
 eval "$(zoxide init bash)"
 # pnpm end
 
-  export PATH="${PATH}:/home/leeuwenmcv/.cargo/bin"
+export PATH="${PATH}:/home/leeuwenmcv/.cargo/bin"
+export MASTER=~/git/master/
 
 
+alias pm='cd ~/git/master && git commit -am "pushed " &&  git push'
 alias cs='cd ~/git/tools/VsCodeSynthesis && bash create_snippet.sh'
 alias ri='autoflake --in-place --remove-all-unused-imports ${file} '
 alias tm='tmux'
 alias at='cd ~/git/tools/VsCodeSynthesis && python3 add_tool.py'
 alias et='cd ~/git/tools/VsCodeSynthesis && python3 edit_tool.py'
 alias gsf='cd ~/git/tools/VsCodeSynthesis && bash filesearch.sh'
-alias gss='cd ~/git/tools/VsCodeSynthesis && bash git_search_symbol.sh'
-alias fs='cd ~/git/tools/VsCodeSynthesis && bash file_search_symbol.sh ${file}'
-alias dp='bash ~/git/tools/VsCodeSynthesis/run_debugtracer.sh ${file}'
-alias sl='cd ~/git/tools/VsCodeSynthesis && bash local_search_symbol.sh'
-alias qs='cd ~/git/tools/quick_edit && python3 quick_ssh.py'
+alias gss='cd ~/git/tools/VsCodeSynthesis && bash git_search_symbol.sh'      
+alias fs='cd ~/git/tools/VsCodeSynthesis && bash file_search_symbol.sh ${file
+}'
+alias dp='bash ~/git/tools/VsCodeSynthesis/run_debugtracer.sh ${file}'       
+alias sl='cd ~/git/tools/VsCodeSynthesis && bash local_search_symbol.sh'     
+alias qs='quick_ssh'
+alias sm='cd ~/git/master && git add . && git commit -am "pushed " &&  git pu
+sh'
+alias gm='cd ~/git/master && git pull'
+alias dkr='ln -s ~/git/master/dev/dev ; python3 -m dev.env.docker_manager'   
+alias pg='python3 ~/git/master/dev/dev/shell/python_runner.py'
+
+alias scmd_gen='sudo python3 ~/git/master/dev/install/command_generator.py'  
+alias cmd_gen='python3 ~/git/master/dev/install/command_generator.py'   
+
+alias resource='source ~/.bashrc'
+
+# alternatives
+
+# alias cat="batcat"
+# alias ls='exa'
+# alias cd='z
