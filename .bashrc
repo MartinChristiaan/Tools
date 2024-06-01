@@ -165,7 +165,7 @@ alias sm='cd ~/git/master && git add . && git commit -am "pushed " &&  git pu
 sh'
 alias gm='cd ~/git/master && git pull'
 alias dkr='ln -s ~/git/master/dev/dev ; python3 -m dev.env.docker_manager'   
-alias pg='python3 ~/git/master/dev/dev/shell/python_runner.py'
+alias pg='python_runner'
 
 alias scmd_gen='sudo python3 ~/git/master/dev/install/command_generator.py'  
 alias cmd_gen='python3 ~/git/master/dev/install/command_generator.py'   
