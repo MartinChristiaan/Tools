@@ -88,19 +88,24 @@ class MenuItemBool(MenuItem):
 
 
 def print_grid(strings):
-    # Get terminal width
-    terminal_width = os.get_terminal_size().columns
+    try:
+        # Get terminal width
+        terminal_width = os.get_terminal_size().columns
 
-    # Calculate number of columns based on terminal width
-    num_columns = terminal_width // (max(len(s) for s in strings) + 2)  # +2 for padding
+        # Calculate number of columns based on terminal width
+        num_columns = terminal_width // (
+            max(len(s) for s in strings) + 2
+        )  # +2 for padding
 
-    # Pad shorter strings with spaces to ensure equal length
-    padded_strings = [s.ljust(max(len(s) for s in strings) + 2) for s in strings]
+        # Pad shorter strings with spaces to ensure equal length
+        padded_strings = [s.ljust(max(len(s) for s in strings) + 2) for s in strings]
 
-    # Print grid
-    for i in range(0, len(padded_strings), num_columns):
-        row = padded_strings[i : i + num_columns]
-        print("".join(row))
+        # Print grid
+        for i in range(0, len(padded_strings), num_columns):
+            row = padded_strings[i : i + num_columns]
+            print("".join(row))
+    except:
+        print(strings)
 
 
 @dataclass
