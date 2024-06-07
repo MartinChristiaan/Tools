@@ -20,6 +20,7 @@ def get_modified_date(path):
 
 @dataclass
 class IOData(du.Pathfinder):
+    cameras : List[str] = None
     detections_sources: List[str] = None
     selected_sources: List[str] = None
     annotation_suffix: str = "smallObjectsCorrected"
@@ -34,9 +35,9 @@ class IOData(du.Pathfinder):
     def videoset_obj(self):
         return videosets[self.videoset]
 
-    @property
-    def cameras(self):
-        return self.videoset_obj.cameras
+    # @property
+    # def cameras(self):
+    #     return self.videoset_obj.cameras
 
     def to_dict(self):
         cached_timestamps = []
@@ -71,7 +72,8 @@ class IOData(du.Pathfinder):
     def set_videoset_data(self, data):
         if self.videoset != data["videoset"]:
             self.videoset = data["videoset"]
-            self.cameras = videosets[self.videoset].cameras
+            self.cameras = [x for x in videosets[self.videoset].cameras if 'halfres' in x]
+            # self.cameras = videosets[self.videoset].cameras
             self.camera = self.cameras[0]
             self.update_mm()
 
