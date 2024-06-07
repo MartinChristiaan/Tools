@@ -6,41 +6,7 @@ import { Form } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Typeahead } from 'react-bootstrap-typeahead'; // ES2015
 import 'react-bootstrap-typeahead/css/Typeahead.css';
-
-
-
-export class ServerData {
-	videoset: string;
-	camera: string;
-	cameras: string[];
-	videosets: string[];
-	sources: string[];
-	selected_sources: string[];
-	timestamps : number[];
-	cached_timestamps : number[];
-	groupbys: string[];
-	groupbys_options: string[];
-	plotmode:string;
-	color:string;
-	comment:string;
-
-	constructor(data: any) {
-		this.videoset = data.videoset;
-		this.camera = data.camera;
-		this.cameras = data.cameras;
-		this.videosets = data.videosets;
-		this.sources = data.sources;
-		this.selected_sources = data.selected_sources;
-		this.timestamps = data.timestamps
-		this.cached_timestamps = data.cached_timestamps
-		this.plotmode= data.plotmode
-		this.groupbys = data.groupbys
-		this.groupbys_options = data.groupbys_options
-		this.color = data.color
-		this.comment=data.comment
-	}
-}
-
+import { ServerData } from '../lib/ServerData';
 
 export default function InputSelector({serverData, setServerData} : {serverData:ServerData,setServerData:any})
 {

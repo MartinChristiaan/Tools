@@ -24,12 +24,13 @@ class IOData(du.Pathfinder):
     detections_sources: List[str] = None
     selected_sources: List[str] = None
     annotation_suffix: str = "smallObjectsCorrected"
-    groupbys: List[str] = None
-    groupbys_options: List[str] = None
+    pivot_columns: List[str] = None
+    pivot_column_options: List[str] = None
     color = ""
     plotmode: str = "markers"  # can also be set to lines
-    timestamp: float = 0
-    comment:str = ""
+    selected_detection: List[float] = None
+    comment: str = ""
+    y_axis_label: str = "bbox_x"
 
     @property
     def videoset_obj(self):
@@ -40,34 +41,7 @@ class IOData(du.Pathfinder):
     #     return self.videoset_obj.cameras
 
     def to_dict(self):
-        cached_timestamps = []
-        # if self.logfile_path(0).exists():
-        #     cached_timestamps =
-        return dict(
-            videoset=self.videoset,
-            camera=self.camera,
-            cameras=self.cameras,
-            videosets=names,
-            sources=[str(x) for x in self.detections_sources],
-            selected_sources=[str(x) for x in self.selected_sources],
-            cached_timestamps=cached_timestamps,
-            timestamps=self.timestamps,
-            groupbys_options=self.groupbys_options,
-            groupbys=self.groupbys,
-            plotmode=self.plotmode,
-            color=self.color,
-            timestamp=self.timestamp,
-            comment=self.comment
-        )
-
-    # def save(self):
-    #     data = self.to_dict()
-    #     with open('./saves','wb') as f:
-    #         pickle.dump(metadata,f)
-    #     pass
-
-    # def load(self):
-    #     pass
+        return {k: v for k, v in self.__dict__.items() if not k.startswith("_")}
 
     def set_videoset_data(self, data):
         if self.videoset != data["videoset"]:
@@ -86,7 +60,9 @@ class IOData(du.Pathfinder):
             self.detections = self.load_detections()
 
         self.plotmode = data["plotmode"]
-        self.groupbys = [x for x in data["groupbys"] if x in self.groupbys_options]
+        self.pivot_columns = [
+            x for x in data["groupbys"] if x in self.pivot_column_options
+        ]
         self.color = data["color"]
 
     def update_mm(self):
@@ -123,10 +99,10 @@ class IOData(du.Pathfinder):
 
         if len(detections_list) > 0:
             df = pd.concat(detections_list)
-            self.groupbys_options = [str(x) for x in df.columns]
+            self.pivot_column_options = [str(x) for x in df.columns]
             return df
 
-        self.groupbys_options = []
+        self.pivot_column_options = []
         return None
 
     def find_result_csv_in_mm_path(self, mm):
@@ -148,8 +124,7 @@ class IOData(du.Pathfinder):
     def get_xt_plot(self, source):
         data = self.detections
         data = data[data.source == source]
-
-        if len(self.groupbys) == 0:
+        if len(self.pivot_columns) == 0:
             datadict = dict(
                 x=list(data.timestamp),
                 y=list(data.bbox_x),
@@ -170,7 +145,7 @@ class IOData(du.Pathfinder):
 
         else:
             datas = []
-            for groups, groupdf in data.groupby(self.groupbys):
+            for groups, groupdf in data.groupby(self.pivot_columns):
                 datadict = dict(
                     x=list(groupdf.timestamp),
                     y=list(groupdf.bbox_x),

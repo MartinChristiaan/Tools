@@ -1,0 +1,7 @@
+test set,model,mAP
+Ground,specific,0.83
+Maritime,specific,0.68
+Air-to-ground,specific,0.66
+Ground,diverse,0.86
+Maritime,diverse,0.76
+Air-to-ground,diverse,0.66

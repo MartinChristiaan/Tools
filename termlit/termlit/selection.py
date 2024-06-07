@@ -25,6 +25,11 @@ import click
 
 import fnmatch
 
+try:
+    from fzf_utils import prompt
+except:
+    pass
+
 
 def flatten_list(list_of_lists):
     result = []
@@ -83,19 +88,37 @@ class MenuItemBool(MenuItem):
 
 
 def print_grid(strings):
-    # Get terminal width
-    terminal_width = os.get_terminal_size().columns
+    try:
+        # Get terminal width
+        terminal_width = os.get_terminal_size().columns
 
-    # Calculate number of columns based on terminal width
-    num_columns = terminal_width // (max(len(s) for s in strings) + 2)  # +2 for padding
+        # Calculate number of columns based on terminal width
+        num_columns = terminal_width // (
+            max(len(s) for s in strings) + 2
+        )  # +2 for padding
 
-    # Pad shorter strings with spaces to ensure equal length
-    padded_strings = [s.ljust(max(len(s) for s in strings) + 2) for s in strings]
+        # Pad shorter strings with spaces to ensure equal length
+        padded_strings = [s.ljust(max(len(s) for s in strings) + 2) for s in strings]
 
-    # Print grid
-    for i in range(0, len(padded_strings), num_columns):
-        row = padded_strings[i : i + num_columns]
-        print("".join(row))
+        # Print grid
+        for i in range(0, len(padded_strings), num_columns):
+            row = padded_strings[i : i + num_columns]
+            print("".join(row))
+    except:
+        print(strings)
+
+
+@dataclass
+class MenuItemSelectStr(MenuItem):
+    options: List = None
+    single_value: bool = True
+
+    def select(self):
+        print("selecting")
+        self._selected = prompt(
+            self.options, multi=not self.single_value, cachename="menu_cache"
+        )
+        return self._selected
 
 
 @dataclass
@@ -138,7 +161,7 @@ class Menu:
         self.name = name
         self.cache_dir = Path(cache_dir)
         self.cache_dir.mkdir(exist_ok=True, parents=True)
-        self.cache_file = self.cache_dir / "name.pkl"
+        self.cache_file = self.cache_dir / f"{name}.pkl"
         self.load_cache_state()
 
     def load_cache_state(self):
@@ -155,11 +178,12 @@ class Menu:
         with open(self.cache_file, "wb") as f:
             pickle.dump(state, f)
 
-    def run(self):
+    def run(self, debug=False):
         pass
 
         selected_idx = 0
-        while True:
+        configs = {x.name: x.selected for x in self.menu_items}
+        while not debug:
             click.clear()
             print(self.name)
             print("")
@@ -265,3 +289,30 @@ class QueueControl(MenuItem):
                 self.processer.queue = []
             if c == "\x1b":  # esc
                 return
+
+
+@dataclass
+class MenuItemReturnGlob(MenuItem):
+    options: List = None
+
+    def select(self):
+        print("selecting")
+        current_pattern = ""
+        while True:
+            selected = []
+            for sub_pattern in current_pattern.split("+"):
+                selected += fnmatch.filter(self.options, f"{sub_pattern}")
+
+            click.clear()
+            # print(",".join(selected))
+            if len(selected) > 0:
+                print_grid(selected)
+            print(f"Pattern : {current_pattern}")
+            char = click.getchar()
+            if char == "\x7f":
+                current_pattern = current_pattern[:-1]
+            elif char == " ":
+                self._selected = current_pattern
+                return
+            else:
+                current_pattern += char

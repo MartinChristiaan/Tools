@@ -1,6 +1,5 @@
 # %%
 # from symbol import term
-import vscode_commands as v
 from add_vim_keybindings import (
     add_bashrc,
     add_keybindings,
@@ -71,7 +70,36 @@ keys = [
         ],
     ),
     keybinding(
-        "<leader>+q+s",  # git search symbol
+        "<leader>+f+s",  # file search symbol
+        [
+            c(
+                "cd ~/git/tools/VsCodeSynthesis && bash file_search_symbol.sh ${file}",
+                focus=True,
+                newTerminal="false",
+            )
+        ],
+    ),
+    keybinding(
+        "<leader>+d+p",  # run debugtracer
+        [
+            c(
+                "bash ~/git/tools/VsCodeSynthesis/run_debugtracer.sh ${file}",
+                focus=True,
+                newTerminal="false",
+            )
+        ],
+    ),
+    keybinding(
+        "<leader>+s+l",  # local search symbol
+        [
+            c(
+                "cd ~/git/tools/VsCodeSynthesis && bash local_search_symbol.sh",
+                focus=True,
+            )
+        ],
+    ),
+    keybinding(
+        "<leader>+q+s",  # quick ssh
         [
             c(
                 "cd ~/git/tools/quick_edit && python3 quick_ssh.py",
@@ -80,5 +108,16 @@ keys = [
         ],
     ),
 ]
-add_keybindings(keys)
-add_bashrc(keys)
+
+# Run the Python script using the -m syntax and the modified relative path
+# Run the Python script using the -m syntax and the modified relative path
+
+
+def main():
+
+    add_keybindings(keys)
+    add_bashrc(keys)
+
+
+if __name__ == "__main__":
+    main()

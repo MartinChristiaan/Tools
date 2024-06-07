@@ -1,42 +1,113 @@
+import json
+from datetime import datetime
+import os
 from pathlib import Path
 import pickle
 from flask import Flask, Response, jsonify, request
 from flask_cors import CORS
 import cv2
 
-from mm_io_manager import IOData
 
 app = Flask(__name__)
 CORS(app)
 
 
-class VideosetAPI:
-    def __init__(self):
-        self.manager = IOData(
-            "aot",
-            "part1/video0360",
-            selected_sources=[],
-            groupbys=[],
-            groupbys_options=[],
-        )
-        self.manager.update_mm()
+from pathlib import Path
 
-    def get_frame(self, timestamp):
+from videosets_ii.videosets_ii import VideosetsII
+
+basedirpath = Path(r"/diskstation")
+videosets = VideosetsII(basedirpath=basedirpath)  # basedirpath)
+
+
+def get_modified_date(path):
+    return os.path.getmtime(path)
+
+
+def find_result_csv_in_mm_path(media_manager):
+    paths = list(media_manager.result_dirpath.rglob("*.csv"))
+    sorted_paths = sorted(paths, key=get_modified_date)[::-1]
+    path_options = [f"{x.parent.stem}/{x.name}" for x in sorted_paths]
+    return path_options
+
+
+class VideosetAPI:
+    def __init__(self) -> None:
+        self.current_videoset = None
+        self.media_manager = None
+
+        self.videoset_lut = {}
+
+        for videoset_name, videoset in videosets.videosets_by_name.items():
+            self.videoset_lut[videoset_name] = [camera for camera in videoset.cameras]
+
+    def get_videosets(self):
+        videoset_data = []
+        for videoset_name, videoset in videosets.videosets_by_name.items():
+            videoset_data += [dict(videoset=videoset_name, cameras=videoset.cameras)]
+        return videoset_data
+
+    def get_frame(self, videoset, camera, timestamp):
+        self._set_manager(videoset, camera)
+
         if timestamp == 0:
-            timestamp = self.manager.timestamps[0]
-        frame = self.manager.get_frame(timestamp, 0)
+            timestamp = self.media_manager.timestamps[0]
+
+        frame = self.media_manager.get_frame(timestamp)
         _, encoded_frame = cv2.imencode(".jpeg", frame)
         encoded_frame = encoded_frame.tobytes()
         return Response(encoded_frame, content_type="image/jpeg")
 
-    def get_detections(self, timestamp, source):
-        if timestamp == 0:
-            timestamp = self.manager.timestamps[0]
+    def _set_manager(self, videoset, camera):
+        if videoset not in self.videoset_lut:
+            return False
+        if camera not in self.videoset_lut[videoset]:
+            return False
 
-        data = self.manager.get_detections(timestamp)
-        data = data[data.source == source]
-        # TODO check if works with len(0)
-        return data.to_json(orient="records")
+        if self.current_videoset != videoset + camera:
+            self.current_videoset = videoset + camera
+            self.media_manager = videosets[videoset].get_mediamanager(camera)
+            return True
+
+    def get_detections_options(self, videoset, camera):
+        if self._set_manager(videoset, camera):
+            return [str(x) for x in find_result_csv_in_mm_path(self.media_manager)]
+        else:
+            return []
+
+    def get_detection_data(self, videoset, camera, detections_path):
+        self._set_manager(videoset, camera)
+        data = self.media_manager.load(detections_path)
+        return data.to_json()
+
+    @property
+    def snapshot_dir(self):
+        snapshot_dir = Path("/data/track_viewer_shapshots/")
+        snapshot_dir.mkdir(exist_ok=True, parents=True)
+        return snapshot_dir
+
+    def save_snapshot(self, state_dict):
+        videoset = state_dict["videoset"]
+        camera = state_dict["camera"]
+        datestr = datetime.now().strftime("%Y%m%dT%H%M%S")
+        save_path = (
+            self.snapshot_dir / f"{datestr}_{videoset}_{camera.replace('/','_')}.pkl"
+        )
+        with open(save_path, "w") as f:
+            json.dump(state_dict, f)
+
+    def save_ux_state(self, state_dict):
+        save_path = self.snapshot_dir / f"uxstate.pkl"
+        with open(save_path, "wb") as f:
+            pickle.dump(state_dict, f)
+
+    def load_ux_state(self):
+        save_path = self.snapshot_dir / f"uxstate.pkl"
+        if save_path.exists():
+            with open(save_path, "rb") as f:
+                return pickle.load(f)
+        else:
+            return {}
 
 
 videoset_api = VideosetAPI()
@@ -46,53 +117,61 @@ from threading import Lock
 lock = Lock()
 
 
-@app.route("/frame/<timestamp>", methods=["GET"])
-def get_frame(timestamp):
+# Define endpoints
+@app.route("/videosets", methods=["GET"])
+def get_videosets():
+    videosets = videoset_api.get_videosets()
+    return jsonify(videosets)
+
+
+@app.route("/frame", methods=["GET"])
+def get_frame():
+    videoset = request.args.get("videoset")
+    camera = request.args.get("camera")
+    timestamp = float(request.args.get("timestamp"))
     with lock:
-        return videoset_api.get_frame(float(timestamp))
+        frame = videoset_api.get_frame(videoset, camera, timestamp)
+    return Response(frame, content_type="image/jpeg")
 
 
-@app.route("/detections/<source_and_timstamps>", methods=["GET"])
-def get_detections(source_and_timstamps):
-    source, timestamp = source_and_timstamps.split("SPLIT")
-    source = source.replace("DASH", "/")
-    return videoset_api.get_detections(float(timestamp), source)
+@app.route("/detections_options", methods=["GET"])
+def get_detections_options():
+    videoset = request.args.get("videoset")
+    camera = request.args.get("camera")
+
+    options = videoset_api.get_detections_options(videoset, camera)
+    return jsonify(options)
 
 
-@app.route("/plotdata/<source>", methods=["GET"])
-def get_xt_plot(source):
-    source = source.replace("DASH", "/")
-    return jsonify(videoset_api.manager.get_xt_plot(source))
+@app.route("/detection_data", methods=["GET"])
+def get_detection_data():
+    videoset = request.args.get("videoset")
+    camera = request.args.get("camera")
+    detections_path = request.args.get("detections_path")
+
+    data = videoset_api.get_detection_data(videoset, camera, detections_path)
+    return data
 
 
-@app.route("/videoset", methods=["GET"])
-def get_videoset():
-    return jsonify(videoset_api.manager.to_dict())
+@app.route("/save_snapshot", methods=["POST"])
+def save_snapshot():
+    state_dict = request.json
+
+    videoset_api.save_snapshot(state_dict)
+
+    return "Snapshot saved successfully"
 
 
-@app.route("/videoset", methods=["POST"])
-def set_videoset():
-    data = request.json  # JSON data sent in the request
-    videoset_api.manager.set_videoset_data(data)
-    return jsonify(videoset_api.manager.to_dict())
+@app.route("/save_ux_state", methods=["POST"])
+def save_ux_state():
+    state_dict = request.json
+    videoset_api.save_ux_state(state_dict)
+    return "ux saved successfully"
 
 
-
-@app.route("/save/<timestamp_and_comment>", methods=["GET"])
-def save(timestamp_and_comment):
-    saves_folder = Path("/data/track-viewer-saves/")
-    saves_folder.mkdir(exist_ok=True)
-    from datetime import datetime
-
-    manager = videoset_api.manager
-    timestamp,comment = timestamp_and_comment.split('___')
-    manager.timestamp = float(timestamp)
-    manager.comment = comment
-    datestr = datetime.now().strftime("%Y%m%dT%H%M%S")
-    save_path = saves_folder / f"{datestr}_{manager.videoset}_{manager.camera_flat}.pkl"
-    with open(save_path, "wb") as f:
-        pickle.dump(manager.to_dict(), f)
-    return '{"status":"succes"}'
+@app.route("/load_ux_state", methods=["GET"])
+def load_ux_state():
+    return jsonify(videoset_api.load_ux_state())
 
 
 if __name__ == "__main__":

@@ -9,9 +9,7 @@ from google_task import GoogleTask
 
 # %%
 
-
 basedir = Path(__file__).parent
-
 
 @dataclass
 class GoogleTaskList:
