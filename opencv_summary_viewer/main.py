@@ -10,6 +10,7 @@ summaries = (
     "/mnt/dl-41/data/leeuwenmcv/general/mantis_mist/multi-frame-adv-mist-aug/summaries"
 )
 summaries = sorted(list(Path(summaries).rglob("*.pkl")))
+summaries = [x for x in summaries if "mist" in x.stem]
 from pathlib import Path
 
 from videosets_ii.videosets_ii import VideosetsII
