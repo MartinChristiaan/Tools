@@ -50,12 +50,22 @@ while True:
     if should_exit:
         break
     next_video = False
+    label = "false_pos"
     while not next_video and not should_exit:
         print("opening video", summary.stem, video_idx)
-        label = "false_pos"
         cap = cv2.VideoCapture(str(summary_video))
         while cap.isOpened():
             ret, frame = cap.read()
+            cv2.putText(
+                frame,
+                label,
+                (10, 10),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                1,
+                (255, 255, 255),
+                2,
+                cv2.LINE_AA,
+            )
             if not ret:
                 cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
                 ret, frame = cap.read()
@@ -81,28 +91,35 @@ while True:
                             track_id=track_id,
                             comment="",
                         )
-                        interesting_path = Path("interesting_moments.csv")
+                        interesting_path = Path("classifications.csv")
+                        pd.DataFrame([data]).to_csv(
+                            interesting_path,
+                            header=not interesting_path.exists(),
+                            mode="a",
+                            index=False,
+                        )
 
             cv2.imshow("summary", frame)
             cv2.setMouseCallback("summary", mouse_callback)
             k = cv2.waitKey(1)
 
-            if k == ord("n"):
+            if k == 32:
                 next_video = True
                 video_idx += 1
                 break
             if k == ord("q"):
                 should_exit = True
                 break
-            if k == ord("0"):
-                print("drone selected")
-                label = "drone"
-            if k == ord("1"):
-                print("bird selected")
-                label = "bird"
-            if k == ord("2"):
-                print("aircraft selected")
-                label = "aircraft"
+            labellut = {
+                ord("0"): "false_pos",
+                ord("1"): "drone",
+                ord("2"): "bird",
+                ord("3"): "aircraft",
+            }
+            if k in labellut:
+                label = labellut[k]
+                print(f"Label set to {label}")
+
             time.sleep(1 / 30)
 
 cv2.destroyAllWindows()

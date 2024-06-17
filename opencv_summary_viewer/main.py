@@ -40,6 +40,7 @@ should_exit = False
 
 video_idx = 0
 
+label = "false_pos"
 # for summary in list(summaries)[::-1]:
 while True:
     summary = summaries[video_idx]
@@ -80,6 +81,7 @@ while True:
                             camera=metadata["camera"],
                             track_id=track_id,
                             comment="",
+                            label=label,
                         )
                         print(data)
                         interesting_path = Path("interesting_moments.csv")
