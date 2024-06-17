@@ -5,7 +5,6 @@ import pickle
 import time
 import cv2
 
-
 # summaries = (
 #     "/mnt/dl-41/data/leeuwenmcv/general/mantis_mist/multi-frame-adv-mist-aug/summaries"
 # )
@@ -53,6 +52,7 @@ while True:
     next_video = False
     while not next_video and not should_exit:
         print("opening video", summary.stem, video_idx)
+        label = "false_pos"
         cap = cv2.VideoCapture(str(summary_video))
         while cap.isOpened():
             ret, frame = cap.read()
@@ -81,15 +81,7 @@ while True:
                             track_id=track_id,
                             comment="",
                         )
-                        print(data)
                         interesting_path = Path("interesting_moments.csv")
-
-                        pd.DataFrame([data]).to_csv(
-                            interesting_path,
-                            header=not interesting_path.exists(),
-                            mode="a",
-                            index=False,
-                        )
 
             cv2.imshow("summary", frame)
             cv2.setMouseCallback("summary", mouse_callback)
@@ -102,6 +94,15 @@ while True:
             if k == ord("q"):
                 should_exit = True
                 break
+            if k == ord("0"):
+                print("drone selected")
+                label = "drone"
+            if k == ord("1"):
+                print("bird selected")
+                label = "bird"
+            if k == ord("2"):
+                print("aircraft selected")
+                label = "aircraft"
             time.sleep(1 / 30)
 
 cv2.destroyAllWindows()
