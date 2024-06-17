@@ -40,6 +40,7 @@ should_exit = False
 video_idx = 0
 
 # for summary in list(summaries)[::-1]:
+label = "false_pos"
 while True:
     summary = summaries[video_idx]
     metadata = pickle.load(open(summary, "rb"))
@@ -50,7 +51,6 @@ while True:
     if should_exit:
         break
     next_video = False
-    label = "false_pos"
     while not next_video and not should_exit:
         print("opening video", summary.stem, video_idx)
         cap = cv2.VideoCapture(str(summary_video))
@@ -89,7 +89,7 @@ while True:
                             videoset=metadata["videoset"],
                             camera=metadata["camera"],
                             track_id=track_id,
-                            comment="",
+                            label=label,
                         )
                         interesting_path = Path("classifications.csv")
                         pd.DataFrame([data]).to_csv(
