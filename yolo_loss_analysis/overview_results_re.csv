@@ -1,0 +1,16 @@
+model,metric,value
+proposed,precision,0.906
+proposed,recal,0.67885
+proposed,mAP50,0.76337
+virat mixed,precision,0.76572
+virat mixed,recal,0.47125
+virat mixed,mAP50,0.52982
+virat only,precision,0.59821
+virat only,recal,0.1273
+virat only,mAP50,0.36224
+visdrone mixed,precision,0.70973
+visdrone mixed,recal,0.43234
+visdrone mixed,mAP50,0.49067
+visdrone only,precision,0.12854
+visdrone only,recal,0.23876
+visdrone only,mAP50,0.16652

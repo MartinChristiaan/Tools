@@ -1,0 +1,394 @@
+{
+  "C_Cpp.default.cppStandard": "c++17",
+  "cSpell.enabledLanguageIds": [
+    "html",
+    "json",
+    "markdown",
+    "plaintext",
+    "pug",
+    "restructuredtext",
+    "rust",
+    "scala",
+    "scss",
+    "text",
+    "yaml",
+    "yml"
+  ],
+  "debug.onTaskErrors": "debugAnyway",
+  "editor.cursorStyle": "line",
+  "editor.insertSpaces": false,
+  "editor.lineNumbers": "on",
+  "editor.minimap.enabled": false,
+  "editor.renderWhitespace": "none",
+  "editor.rulers": [
+    88
+  ],
+  "editor.unicodeHighlight.invisibleCharacters": false,
+  "editor.wordSeparators": "/\\()\"':,.;<>~!@#$%^&*|+=[]{}`?-",
+  "editor.wordWrap": "off",
+  "explorer.confirmDelete": false,
+  "explorer.confirmDragAndDrop": false,
+  "git.ignoreWindowsGit27Warning": true,
+  "glassit-linux.opacity": 40,
+  "glassit.alpha": 221,
+  "glassit.step": 1,
+  "jupyter.askForKernelRestart": false,
+  "keyboard.dispatch": "keyCode",
+  "notebook.cellToolbarLocation": {
+    "default": "right",
+    "jupyter-notebook": "left"
+  },
+  "python.analysis.extraPaths": [
+    "/home/martin/Sync/utils",
+    "C:\\Users\\marti\\Sync\\utils"
+  ],
+  "python.formatting.provider": "black",
+  "python3.languageServer": "Pylance",
+  "remote.SSH.remotePlatform": {
+    "192.168.1.154": "linux",
+    "192.168.1.32": "linux",
+    "iilab42.labs.tno.nl": "linux",
+    "iilab51.labs.tno.nl": "linux",
+    "pc-08680": "linux",
+    "pc-09011": "linux",
+    "pc-11393": "linux",
+    "srv.delftdynamics.nl": "linux"
+  },
+  "settingsSync.ignoredExtensions": [
+    "s-nlf-fh.glassit"
+  ],
+  "settingsSync.ignoredSettings": [
+    "glassit.alpha"
+  ],
+  "sourcery.token": "user_hzJviV4l_cOp9isvNz2cVKYX05fP8p5MMZA5LyKgSCP1_D8YPZzooI5HlcA",
+  "terminal.explorerKind": "external",
+  "terminal.external.windowsExec": "wt -p cmd cmd",
+  "terminal.integrated.defaultProfile.windows": "Command Prompt",
+  "terminal.integrated.shell.linux": "/bin/bash",
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "vim.easymotion": true,
+  "vim.handleKeys": {
+    "<C-r>": false,
+    "<C-t>": false
+  },
+  "vim.highlightedyank.enable": true,
+  "vim.leader": " ",
+  "vim.normalModeKeyBindingsNonRecursive": [
+    {
+      "after": [
+        "d",
+        "d",
+        "m",
+        "a",
+        "g",
+        "g",
+        "O",
+        "<esc>",
+        "p",
+        "<",
+        "<",
+        "<",
+        "<",
+        "<",
+        "<",
+        "'",
+        "a"
+      ],
+      "before": [
+        "<leader>",
+        "m",
+        "i"
+      ]
+    },
+    {
+      "after": [
+        "<esc>",
+        "m",
+        "a",
+        "F",
+        "\"",
+        "i",
+        "f",
+        "<esc>",
+        "`",
+        "a"
+      ],
+      "before": [
+        "<leader>",
+        "f",
+        "s"
+      ]
+    },
+    {
+      "after": [
+        "m",
+        "b",
+        "y",
+        "i",
+        "w",
+        "v",
+        "e",
+        "U",
+        "i",
+        "{",
+        "<esc>",
+        "e",
+        "a",
+        "}",
+        "esc",
+        "O",
+        "esc",
+        "p",
+        "v",
+        "b",
+        "U",
+        "A",
+        " ",
+        "=",
+        " ",
+        "\"",
+        "<esc>",
+        "p",
+        "`",
+        "b"
+      ],
+      "before": [
+        "<leader>",
+        "c",
+        "w"
+      ]
+    },
+    {
+      "after": [
+        "y",
+        "i",
+        "w",
+        "/",
+        "\n",
+        "\n",
+        "<enter>",
+        "N",
+        "N",
+        "o",
+        "<esc>",
+        "p",
+        "v",
+        "b",
+        "U",
+        "A",
+        " ",
+        "=",
+        " ",
+        "\"",
+        "<esc>",
+        "p",
+        ":",
+        "s",
+        ""
+      ],
+      "before": [
+        "<leader>",
+        "c",
+        "W"
+      ]
+    },
+    {
+      "after": [
+        "y",
+        "i",
+        "w",
+        "A",
+        " ",
+        "=",
+        " ",
+        "\"",
+        "<esc>",
+        "p",
+        "v",
+        "b",
+        "u",
+        "<esc>"
+      ],
+      "before": [
+        "<leader>",
+        "c",
+        "s"
+      ]
+    },
+    {
+      "before": [
+        "<leader>",
+        "f",
+        "t"
+      ],
+      "commands": [
+        {
+          "command": "editor.action.indentationToTabs"
+        }
+      ]
+    },
+    {
+      "before": [
+        "<leader>",
+        "a"
+      ],
+      "commands": [
+        {
+          "args": {
+            "cmd": "python3 ${file}",
+            "focus": true,
+            "newTerminal": false,
+            "saveAllFiles": true,
+            "showTerminal": true
+          },
+          "command": "terminalCommandKeys.run"
+        }
+      ]
+    },
+    {
+      "before": [
+        "<leader>",
+        "p"
+      ],
+      "commands": [
+        {
+          "args": {
+            "cmd": "bash ~/cmds/pythoncall.sh ${file}",
+            "newTerminal": false,
+            "saveAllFiles": true,
+            "showTerminal": true
+          },
+          "command": "terminalCommandKeys.run"
+        }
+      ]
+    },
+    {
+      "before": [
+        "<leader>",
+        "m"
+      ],
+      "commands": [
+        {
+          "args": {
+            "cmd": "python3 ~/cmds/makefileutil.py",
+            "focus": true,
+            "newTerminal": false,
+            "saveAllFiles": true,
+            "showTerminal": true
+          },
+          "command": "terminalCommandKeys.run"
+        }
+      ]
+    },
+    {
+      "before": [
+        "<leader>",
+        "r"
+      ],
+      "commands": [
+        {
+          "args": {
+            "cmd": "!!",
+            "newTerminal": false,
+            "saveAllFiles": true,
+            "showTerminal": true
+          },
+          "command": "terminalCommandKeys.run"
+        }
+      ]
+    },
+    {
+      "before": [
+        "<leader>",
+        "z"
+      ],
+      "commands": [
+        {
+          "args": {
+            "cmd": "rdamessages",
+            "newTerminal": false,
+            "saveAllFiles": true,
+            "showTerminal": true
+          },
+          "command": "terminalCommandKeys.run"
+        }
+      ]
+    },
+    {
+      "before": [
+        "<leader>",
+        "s"
+      ],
+      "commands": [
+        {
+          "args": {
+            "cmd": "sh ${file}",
+            "newTerminal": false,
+            "saveAllFiles": true,
+            "showTerminal": true
+          },
+          "command": "terminalCommandKeys.run"
+        }
+      ]
+    },
+    {
+      "before": [
+        "<leader>",
+        "c",
+        "f"
+      ],
+      "commands": {
+        "command": "explorer.newFile"
+      }
+    },
+    {
+      "before": [
+        "<leader>",
+        "r",
+        "f"
+      ],
+      "commands": {
+        "command": "fileutils.renameFile"
+      }
+    },
+    {
+      "before": [
+        "<leader>",
+        "c",
+        "d"
+      ],
+      "commands": {
+        "command": "fileutils.newFolder"
+      }
+    },
+    {
+      "before": [
+        "<leader>",
+        "m",
+        "f"
+      ],
+      "commands": {
+        "command": "fileutils.moveFile"
+      }
+    },
+    {
+      "before": [
+        "<leader>",
+        "c",
+        "p"
+      ],
+      "commands": {
+        "command": "copyFilePath"
+      }
+    }
+  ],
+  "vim.useSystemClipboard": true,
+  "window.menuBarVisibility": "toggle",
+  "workbench.colorCustomizations": {
+    "[Material Theme Darker]": {}
+  },
+  "workbench.colorTheme": "Night Owl",
+  "workbench.editorAssociations": {
+    "*.ipynb": "jupyter-notebook"
+  }
+}

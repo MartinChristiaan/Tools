@@ -1,0 +1,245 @@
+{
+  " example": {
+    "body": [
+      "\nhome = os.path.expanduser('~')\nsnippets_backup_folder = f\"/home/leeuwenmcv/git/tools/VsCodeSynthesis/backups\"\nos.makedirs(snippets_backup_folder,exist_ok=True)\ndatestr = datetime.now().strftime(\"%d%m%YT%H%M%S\")\nshutil.copy(snippet_path_code,f'/home/leeuwenmcv/git/tools/VsCodeSynthesis/backups/python_30072023T105154.json')\n"
+    ],
+    "prefix": " example",
+    "scope": "python"
+  },
+  "Logger": {
+    "body": [
+      "Logger",
+      "import logging",
+      "logging.basicConfig(",
+      "    format='%(asctime)s %(levelname)-8s %(message)s',",
+      "    level=logging.INFO,",
+      "    datefmt='%Y-%m-%d %H:%M:%S')"
+    ],
+    "description": "Logger",
+    "prefix": "Logger",
+    "scope": "python"
+  },
+  "VideoWriter": {
+    "body": [
+      "fourcc = cv2.VideoWriter_fourcc('m', 'p', '4', 'v')",
+      "writer = cv2.VideoWriter('${1:out.mp4}', fourcc, 24, (w, h))"
+    ],
+    "description": "CV2 video writer",
+    "prefix": "VideoWriter",
+    "scope": "python"
+  },
+  "argparse": {
+    "body": [
+      "argparse",
+      "parser = argparse.ArgumentParser(",
+      "                    prog = 'ProgramName',",
+      "                    description = 'What the program does',",
+      "                    epilog = 'Text at the bottom of help')",
+      "parser.add_argument('--filename',type=str,default=default)",
+      "parser.add_argument('-v', '--verbose',action='store_true')",
+      "args = parser.parse_args()"
+    ],
+    "description": "argparse",
+    "prefix": "argparse",
+    "scope": "python"
+  },
+  "bookmarks": {
+    "body": [
+      "bookmarks",
+      "import json",
+      "bookmarks = \"/home/martin/.config/BraveSoftware/Brave-Browser/Default/Bookmarks\"",
+      "with open(bookmarks,'r') as f:",
+      "\tbookmarks = json.load(f)",
+      "top_level_items =bookmarks['roots']['bookmark_bar']['children']",
+      "for item in top_level_items:",
+      "\tif \"Spotify\" in item['name']:",
+      "\t\tfor linkitem in item['children']:",
+      "\t\t\turl = linkitem['url']",
+      "\t\t\tprint(url)"
+    ],
+    "description": "bookmarks",
+    "prefix": "bookmarks",
+    "scope": "python"
+  },
+  "datestr": {
+    "body": [
+      "from datetime import datetime",
+      "datestr = datetime.now().strftime(\"%d%m%YT%H%M%S\")"
+    ],
+    "description": "Date Time String",
+    "prefix": "datestr",
+    "scope": "python"
+  },
+  "engine": {
+    "body": [
+      "engine",
+      "from typing import Dict, List",
+      "from engine_utils.engine_utils import AbstractEngineJsonOut,Output1DictListMixIn,AbstractEngine,Input1MixIn",
+      "import os",
+      "class ${1:EngineExample}(Input1MixIn,Output1DictListMixIn,AbstractEngine):",
+      "    def __init__(self, parameter1=0, parameter2=2.0):",
+      "        super().__init__()",
+      "        self._config[\"parameter1\"] = parameter1 "
+    ],
+    "description": "engine",
+    "prefix": "engine",
+    "scope": "python"
+  },
+  "float": {
+    "body": [
+      "float",
+      "    def init_sample(self, timestampdata, data): "
+    ],
+    "description": "float",
+    "prefix": "float",
+    "scope": "python"
+  },
+  "folder_read": {
+    "body": [
+      "${1:folder} = \"${2:path}\"",
+      "for filename in os.listdir(${1:folder}):",
+      "    with open(f'{${1:folder}}/{filename}', 'r') as f:",
+      "        text = f.read()",
+      ""
+    ],
+    "description": "folder_read",
+    "prefix": "folder_read",
+    "scope": "python"
+  },
+  "folderread": {
+    "body": [
+      "folder read",
+      "${1:folder} = \"${2:path}\"",
+      "for filename in os.listdir(${1:folder}):",
+      "    with open(f'{${1:folder}}/{filename}', 'r') as f:",
+      "        text = f.read()"
+    ],
+    "description": "folderread",
+    "prefix": "folderread",
+    "scope": "python"
+  },
+  "fread": {
+    "body": [
+      "with open(${1:filename},'${2:r}') as f:",
+      "    text = f.read()"
+    ],
+    "description": "fread",
+    "prefix": "fread",
+    "scope": "python"
+  },
+  "fwrite": {
+    "body": [
+      "with open(${1:filename},'${2:w}') as f:",
+      "    f.write(${3:text})"
+    ],
+    "description": "fwrite",
+    "prefix": "fwrite",
+    "scope": "python"
+  },
+  "home": {
+    "body": [
+      "home = os.path.expanduser('~')"
+    ],
+    "description": "home",
+    "prefix": "home",
+    "scope": "python"
+  },
+  "int": {
+    "body": [
+      "int",
+      "        self._config[\"parameter2\"] = parameter2 "
+    ],
+    "description": "int",
+    "prefix": "int",
+    "scope": "python"
+  },
+  "mpl": {
+    "body": [
+      "import matplotlib",
+      "matplotlib.use('GTK3Agg')"
+    ],
+    "description": "utils",
+    "prefix": "mpl",
+    "scope": "python"
+  },
+  "optional!!": {
+    "body": [
+      "optional!!",
+      "        self.something_to_intialize = some_fun(data[0][0][\"data\"])",
+      "        ",
+      "    def process_sample(self, timestampdata, data):",
+      "        data = data[0][0][\"data\"]",
+      "        d = 1.0",
+      "        "
+    ],
+    "description": "optional!!",
+    "prefix": "optional!!",
+    "scope": "python"
+  },
+  "rdamodule": {
+    "body": [
+      "rdamodule",
+      "#!/usr/bin/python3 -u",
+      "import os",
+      "import numpy as np",
+      "import rda",
+      "from rda_utils.basemodule import RDAModuleBase",
+      "from rda_utils.fifo import RDAOutputFiFo,PickleOutputFiFo",
+      "home = os.path.expanduser('~')",
+      "class v4r_${1:ModuleName}(RDAModuleBase):",
+      "\tdef __init__(self) -> None:",
+      "\t\tself.input = \"input\"",
+      "\tdef init(self, h) -> None:",
+      "\t\tself.output= PickleOutputFiFo()",
+      "\t\tself.output.create(h)",
+      "\tdef update(self, h):",
+      "\t\titem,attr = rda.getvarex(h,self.input)",
+      "\t\tself.output.put(h,[item],attr)",
+      "if __name__ == \"__main__\":",
+      "    m = v4r_${1:ModuleName}",
+      "    rda.rda_module(m.arg, m.init, m.body, m.trigger, m.cleanup)"
+    ],
+    "description": "rdamodule",
+    "prefix": "rdamodule",
+    "scope": "python"
+  },
+  "setuppy": {
+    "body": [
+      "import setuptools",
+      "setuptools.setup(",
+      "name='shmcomms',",
+      "packages=setuptools.find_packages(),",
+      "install_requires=[],",
+      "python_requires='>=3.6',",
+      ")"
+    ],
+    "description": "setuppy",
+    "prefix": "setuppy",
+    "scope": "python"
+  },
+  "videoshow": {
+    "body": [
+      "videoshow",
+      "vid = cv2.VideoCapture(${1:0})",
+      "while(True):",
+      "    ret, frame = vid.read()",
+      "    cv2.imshow('frame', frame)",
+      "    if cv2.waitKey(1) & 0xFF == ord('q'):",
+      "        break",
+      "vid.release()",
+      "cv2.destroyAllWindows()"
+    ],
+    "description": "videoshow",
+    "prefix": "videoshow",
+    "scope": "python"
+  },
+  "whenalistofdictsisreturned,addtimestamp!!!": {
+    "body": [
+      "when a list of dicts is returned, add timestamp!!!",
+      "        return [[{\"timestamp\": timestampdata[\"timestamp\"], \"some_value\": d}]]"
+    ],
+    "description": "whenalistofdictsisreturned,addtimestamp!!!",
+    "prefix": "whenalistofdictsisreturned,addtimestamp!!!",
+    "scope": "python"
+  }
+}

@@ -1,0 +1,13 @@
+create
+a python class for verifying annotations
+args:
+	frame (np array)
+	boundingboxes (dict list)
+
+it should open an opencv window showing the current bounding boxes
+if the user clicks on one of the bounding boxes, its dictionary should be verified
+
+bboxes will be a list of dictionaries with as keys
+bbox_x,bbox_y,bbox_w,bbox_y
+
+use opencv

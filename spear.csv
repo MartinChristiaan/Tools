@@ -1,0 +1,2 @@
+videodir,resultsdir,detections_path,tracks_path,video_suffix,log_column
+C:\Users\leeuwenmcv\Downloads\20230612T140302_jeroen_volgend\video\EO,C:\Users\leeuwenmcv\Downloads\20230612T140302_jeroen_volgend\results,,C:\Users\leeuwenmcv\Downloads\20230612T140302_jeroen_volgend\results\tracks\tracks_live.csv,.avi,0

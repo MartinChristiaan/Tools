@@ -1,0 +1,25 @@
+./snippet_from_clipboard.py:def extract_words(input_string):
+./edit_tool.py:class SFzfPrompt(FzfPrompt):
+./edit_tool.py:    def prompt(self, choices=[], multi=False, prompt_text=None, return_idx=False):
+./edit_tool.py:    def prompt_index(self, choices, fzf_options=""):
+./keybindings.py:def parse_keybinding(keybinding):
+./keybindings.py:def update_keybindings():
+./keybindings/shell_cmds.py:                "rg -g '*.py' -i  '(def |class )' . | fzf | awk -F ':' '{ system(\"code \" $1) }'",
+./snippets.py:def update_snippets():
+./add_vim_keybindings.py:class BaseCommand:
+./add_vim_keybindings.py:    def get_dict(self):
+./add_vim_keybindings.py:class terminalCommand(BaseCommand):
+./add_vim_keybindings.py:    def get_dict(self):
+./add_vim_keybindings.py:class vscodeCommand(BaseCommand):
+./add_vim_keybindings.py:    def get_dict(self):
+./add_vim_keybindings.py:class keybinding:
+./add_vim_keybindings.py:    def binding(self):
+./add_vim_keybindings.py:    def get_data(self):
+./add_vim_keybindings.py:def add_bashrc(new_bindings: List[keybinding]):
+./add_vim_keybindings.py:def add_keybindings(new_bindings: List[keybinding]):
+./priompt.py:def select_option_with_prompt(choices, prompt_text):
+./generate_command_types.py:def format_as_constant(name: str):
+./generate_command_types.py:def format_as_value(name: str):
+./open_code_file.py:class SFzfPrompt(FzfPrompt):
+./open_code_file.py:    def prompt(self, choices=[], multi=False, prompt_text=None, return_idx=False):
+./open_code_file.py:    def prompt_index(self, choices, fzf_options=""):

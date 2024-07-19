@@ -1,0 +1,5 @@
+click
+pyfzf
+pandas
+autoflake
+black

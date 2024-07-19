@@ -1,0 +1,108 @@
+{
+  "VideoWriter": {
+    "body": [
+      "fourcc = cv2.VideoWriter_fourcc('m', 'p', '4', 'v')",
+      "writer = cv2.VideoWriter('${1:out.mp4}', fourcc, 24, (w, h))"
+    ],
+    "description": "CV2 video writer",
+    "prefix": "VideoWriter",
+    "scope": "python"
+  },
+  "argparse": {
+    "body": [
+      " argparse",
+      "parser = argparse.ArgumentParser(",
+      "                    prog = 'ProgramName',",
+      "                    description = 'What the program does',",
+      "                    epilog = 'Text at the bottom of help')",
+      "parser.add_argument('--filename',type=str,default=default)",
+      "parser.add_argument('-v', '--verbose',action='store_true')",
+      "args = parser.parse_args()"
+    ],
+    "description": "argparse",
+    "prefix": "argparse",
+    "scope": "python"
+  },
+  "datestr": {
+    "body": [
+      "from datetime import datetime",
+      "date_time = now.strftime(\"%d%m%Y%H%M%S\")"
+    ],
+    "description": "Date Time String",
+    "prefix": "datestr",
+    "scope": "python"
+  },
+  "folder_read": {
+    "body": [
+      "${1:folder} = \"${2:path}\"",
+      "for filename in os.listdir(${1:folder}):",
+      "    with open(f'{${1:folder}}/{filename}', 'r') as f:",
+      "        text = f.read()",
+      ""
+    ],
+    "description": "folder_read",
+    "prefix": "folder_read",
+    "scope": "python"
+  },
+  "folderread": {
+    "body": [
+      " folder read",
+      "${1:folder} = \"${2:path}\"",
+      "for filename in os.listdir(${1:folder}):",
+      "    with open(f'{${1:folder}}/{filename}', 'r') as f:",
+      "        text = f.read()"
+    ],
+    "description": "folderread",
+    "prefix": "folderread",
+    "scope": "python"
+  },
+  "fread": {
+    "body": [
+      "with open('${1:filename}','${2:r}') as f:",
+      "    text = f.read()"
+    ],
+    "description": "fread",
+    "prefix": "fread",
+    "scope": "python"
+  },
+  "fwrite": {
+    "body": [
+      "with open('${1:filename}','${2:w}') as f:",
+      "    f.write(${3:text})"
+    ],
+    "description": "fwrite",
+    "prefix": "fwrite",
+    "scope": "python"
+  },
+  "home": {
+    "body": [
+      "home = os.path.expanduser('~')"
+    ],
+    "description": "home",
+    "prefix": "home",
+    "scope": "python"
+  },
+  "mpl": {
+    "body": [
+      "import matplotlib",
+      "matplotlib.use('GTK3Agg')"
+    ],
+    "description": "utils",
+    "prefix": "mpl",
+    "scope": "python"
+  },
+  "setuppy": {
+    "body": [
+      "import setuptools",
+      "setuptools.setup(",
+      "name='shmcomms',",
+      "packages=setuptools.find_packages(),",
+      "install_requires=[],",
+      "python_requires='>=3.6',",
+      ")"
+    ],
+    "description": "setuppy",
+    "prefix": "setuppy",
+    "scope": "python"
+  }
+}

@@ -1,0 +1,786 @@
+class MANTIS_20221221:
+    NAME = "mantis_20221221"
+    CAM_EO_OVERVIEW = "EO_overview"
+    CAM_EO_ZOOM = "EO_zoom"
+    CAM_LWIR = "lwir"
+    RESULT_DETECTIONS_DETECTIONS_COMBINED_IGN_T640_2XUS_L = (
+        "detections/detections_COMBINED-IGN-T640-2XUS-L.csv"
+    )
+    RESULT_DETECTIONS_T2_VIRAT_15F = "detections_T2-VIRAT_15f.temporary.csv"
+    RESULT_DETECTIONS_YOLOV5X = "detections/yolov5x.csv"
+    RESULT_DETECTIONS_DETECTIONS_T2_VIRAT_7F = "detections/detections_T2-VIRAT_7f.csv"
+    RESULT_DETECTIONS_DETECTIONS_T2_VIRAT_15F = "detections/detections_T2-VIRAT_15f.csv"
+
+
+class MANTIS_2023:
+    NAME = "mantis_2023"
+    CAM_20230310T163009_CRONTAB_RECORDING_PERSON_RAINY_WINDY_SNOWY_EO_ZOOM_LQ = (
+        "20230310T163009_crontab_recording_person_rainy_windy_snowy/EO_zoom_lq"
+    )
+    CAM_20230310T163009_CRONTAB_RECORDING_PERSON_RAINY_WINDY_SNOWY_EO_ZOOM = (
+        "20230310T163009_crontab_recording_person_rainy_windy_snowy/EO_zoom"
+    )
+    CAM_20230310T163009_CRONTAB_RECORDING_PERSON_RAINY_WINDY_SNOWY_EO_OVERVIEW = (
+        "20230310T163009_crontab_recording_person_rainy_windy_snowy/EO_overview"
+    )
+    CAM_20230310T163009_CRONTAB_RECORDING_PERSON_RAINY_WINDY_SNOWY_EO_ZOOM_CHANGES = (
+        "20230310T163009_crontab_recording_person_rainy_windy_snowy/EO_zoom_changes"
+    )
+    CAM_20230310T163009_CRONTAB_RECORDING_PERSON_RAINY_WINDY_SNOWY_EO_ZOOM_LQ_1280 = (
+        "20230310T163009_crontab_recording_person_rainy_windy_snowy/EO_zoom_lq_1280"
+    )
+    CAM_20230310T163009_CRONTAB_RECORDING_PERSON_RAINY_WINDY_SNOWY_EO_ZOOM_ANALYSIS = (
+        "20230310T163009_crontab_recording_person_rainy_windy_snowy/EO_zoom_analysis"
+    )
+    CAM_20230311T121509_CRONTAB_RECORDING_PERSON_SUNNY_EO_ZOOM_LQ = (
+        "20230311T121509_crontab_recording_person_sunny/EO_zoom_lq"
+    )
+    CAM_20230311T121509_CRONTAB_RECORDING_PERSON_SUNNY_EO_ZOOM = (
+        "20230311T121509_crontab_recording_person_sunny/EO_zoom"
+    )
+    CAM_20230311T121509_CRONTAB_RECORDING_PERSON_SUNNY_EO_OVERVIEW = (
+        "20230311T121509_crontab_recording_person_sunny/EO_overview"
+    )
+    CAM_20230311T121509_CRONTAB_RECORDING_PERSON_SUNNY_EO_ZOOM_CHANGES = (
+        "20230311T121509_crontab_recording_person_sunny/EO_zoom_changes"
+    )
+    CAM_20230311T121509_CRONTAB_RECORDING_PERSON_SUNNY_EO_ZOOM_LQ_1280 = (
+        "20230311T121509_crontab_recording_person_sunny/EO_zoom_lq_1280"
+    )
+    CAM_20230324T163455_CRONTAB_RECORDING_PERSON_WINDY_SUNNY_EO_ZOOM_LQ = (
+        "20230324T163455_crontab_recording_person_windy_sunny/EO_zoom_lq"
+    )
+    CAM_20230324T163455_CRONTAB_RECORDING_PERSON_WINDY_SUNNY_EO_ZOOM = (
+        "20230324T163455_crontab_recording_person_windy_sunny/EO_zoom"
+    )
+    CAM_20230324T163455_CRONTAB_RECORDING_PERSON_WINDY_SUNNY_EO_OVERVIEW = (
+        "20230324T163455_crontab_recording_person_windy_sunny/EO_overview"
+    )
+    CAM_20230324T163455_CRONTAB_RECORDING_PERSON_WINDY_SUNNY_EO_ZOOM_CHANGES = (
+        "20230324T163455_crontab_recording_person_windy_sunny/EO_zoom_changes"
+    )
+    CAM_20230324T163455_CRONTAB_RECORDING_PERSON_WINDY_SUNNY_EO_ZOOM_LQ_1280 = (
+        "20230324T163455_crontab_recording_person_windy_sunny/EO_zoom_lq_1280"
+    )
+    CAM_20230324T172542_CRONTAB_RECORDING_PERSON_WINDY_SUNNY_EO_ZOOM_LQ = (
+        "20230324T172542_crontab_recording_person_windy_sunny/EO_zoom_lq"
+    )
+    CAM_20230324T172542_CRONTAB_RECORDING_PERSON_WINDY_SUNNY_EO_ZOOM = (
+        "20230324T172542_crontab_recording_person_windy_sunny/EO_zoom"
+    )
+    CAM_20230324T172542_CRONTAB_RECORDING_PERSON_WINDY_SUNNY_EO_OVERVIEW = (
+        "20230324T172542_crontab_recording_person_windy_sunny/EO_overview"
+    )
+    CAM_20230324T172542_CRONTAB_RECORDING_PERSON_WINDY_SUNNY_EO_ZOOM_CHANGES = (
+        "20230324T172542_crontab_recording_person_windy_sunny/EO_zoom_changes"
+    )
+    CAM_20230324T172542_CRONTAB_RECORDING_PERSON_WINDY_SUNNY_EO_ZOOM_LQ_1280 = (
+        "20230324T172542_crontab_recording_person_windy_sunny/EO_zoom_lq_1280"
+    )
+    CAM_20230324T173522_CRONTAB_RECORDING_PERSON_WINDY_SUNNY_EO_ZOOM_LQ = (
+        "20230324T173522_crontab_recording_person_windy_sunny/EO_zoom_lq"
+    )
+    CAM_20230324T173522_CRONTAB_RECORDING_PERSON_WINDY_SUNNY_EO_ZOOM = (
+        "20230324T173522_crontab_recording_person_windy_sunny/EO_zoom"
+    )
+    CAM_20230324T173522_CRONTAB_RECORDING_PERSON_WINDY_SUNNY_EO_OVERVIEW = (
+        "20230324T173522_crontab_recording_person_windy_sunny/EO_overview"
+    )
+    CAM_20230324T173522_CRONTAB_RECORDING_PERSON_WINDY_SUNNY_EO_ZOOM_CHANGES = (
+        "20230324T173522_crontab_recording_person_windy_sunny/EO_zoom_changes"
+    )
+    CAM_20230324T173522_CRONTAB_RECORDING_PERSON_WINDY_SUNNY_EO_ZOOM_LQ_1280 = (
+        "20230324T173522_crontab_recording_person_windy_sunny/EO_zoom_lq_1280"
+    )
+    CAM_20230327T121511_CRONTAB_RECORDING_PERSON_SUNNY_EO_ZOOM_LQ = (
+        "20230327T121511_crontab_recording_person_sunny/EO_zoom_lq"
+    )
+    CAM_20230327T121511_CRONTAB_RECORDING_PERSON_SUNNY_EO_ZOOM = (
+        "20230327T121511_crontab_recording_person_sunny/EO_zoom"
+    )
+    CAM_20230327T121511_CRONTAB_RECORDING_PERSON_SUNNY_EO_OVERVIEW = (
+        "20230327T121511_crontab_recording_person_sunny/EO_overview"
+    )
+    CAM_20230327T121511_CRONTAB_RECORDING_PERSON_SUNNY_EO_ZOOM_CHANGES = (
+        "20230327T121511_crontab_recording_person_sunny/EO_zoom_changes"
+    )
+    CAM_20230327T121511_CRONTAB_RECORDING_PERSON_SUNNY_EO_ZOOM_LQ_1280 = (
+        "20230327T121511_crontab_recording_person_sunny/EO_zoom_lq_1280"
+    )
+    CAM_20230401T121510_CRONTAB_RECORDING_PERSON_RAINY_EO_ZOOM_LQ = (
+        "20230401T121510_crontab_recording_person_rainy/EO_zoom_lq"
+    )
+    CAM_20230401T121510_CRONTAB_RECORDING_PERSON_RAINY_EO_ZOOM = (
+        "20230401T121510_crontab_recording_person_rainy/EO_zoom"
+    )
+    CAM_20230401T121510_CRONTAB_RECORDING_PERSON_RAINY_EO_OVERVIEW = (
+        "20230401T121510_crontab_recording_person_rainy/EO_overview"
+    )
+    CAM_20230401T121510_CRONTAB_RECORDING_PERSON_RAINY_EO_ZOOM_CHANGES = (
+        "20230401T121510_crontab_recording_person_rainy/EO_zoom_changes"
+    )
+    CAM_20230401T121510_CRONTAB_RECORDING_PERSON_RAINY_EO_ZOOM_LQ_1280 = (
+        "20230401T121510_crontab_recording_person_rainy/EO_zoom_lq_1280"
+    )
+    CAM_20230401T181510_CRONTAB_RECORDING_PERSON_EO_ZOOM_LQ = (
+        "20230401T181510_crontab_recording_person/EO_zoom_lq"
+    )
+    CAM_20230401T181510_CRONTAB_RECORDING_PERSON_EO_ZOOM = (
+        "20230401T181510_crontab_recording_person/EO_zoom"
+    )
+    CAM_20230401T181510_CRONTAB_RECORDING_PERSON_EO_OVERVIEW = (
+        "20230401T181510_crontab_recording_person/EO_overview"
+    )
+    CAM_20230401T181510_CRONTAB_RECORDING_PERSON_EO_ZOOM_CHANGES = (
+        "20230401T181510_crontab_recording_person/EO_zoom_changes"
+    )
+    CAM_20230401T181510_CRONTAB_RECORDING_PERSON_EO_ZOOM_LQ_1280 = (
+        "20230401T181510_crontab_recording_person/EO_zoom_lq_1280"
+    )
+    CAM_20230411T181512_CRONTAB_RECORDING_PERSON_EO_ZOOM_LQ = (
+        "20230411T181512_crontab_recording_person/EO_zoom_lq"
+    )
+    CAM_20230411T181512_CRONTAB_RECORDING_PERSON_EO_ZOOM = (
+        "20230411T181512_crontab_recording_person/EO_zoom"
+    )
+    CAM_20230411T181512_CRONTAB_RECORDING_PERSON_EO_OVERVIEW = (
+        "20230411T181512_crontab_recording_person/EO_overview"
+    )
+    CAM_20230411T181512_CRONTAB_RECORDING_PERSON_EO_ZOOM_CHANGES = (
+        "20230411T181512_crontab_recording_person/EO_zoom_changes"
+    )
+    CAM_20230411T181512_CRONTAB_RECORDING_PERSON_EO_ZOOM_LQ_1280 = (
+        "20230411T181512_crontab_recording_person/EO_zoom_lq_1280"
+    )
+    CAM_20230413T181510_CRONTAB_RECORDING_PERSON_SUNNY_EO_ZOOM_LQ = (
+        "20230413T181510_crontab_recording_person_sunny/EO_zoom_lq"
+    )
+    CAM_20230413T181510_CRONTAB_RECORDING_PERSON_SUNNY_EO_ZOOM = (
+        "20230413T181510_crontab_recording_person_sunny/EO_zoom"
+    )
+    CAM_20230413T181510_CRONTAB_RECORDING_PERSON_SUNNY_EO_OVERVIEW = (
+        "20230413T181510_crontab_recording_person_sunny/EO_overview"
+    )
+    CAM_20230413T181510_CRONTAB_RECORDING_PERSON_SUNNY_EO_ZOOM_CHANGES = (
+        "20230413T181510_crontab_recording_person_sunny/EO_zoom_changes"
+    )
+    CAM_20230413T181510_CRONTAB_RECORDING_PERSON_SUNNY_EO_ZOOM_LQ_1280 = (
+        "20230413T181510_crontab_recording_person_sunny/EO_zoom_lq_1280"
+    )
+    CAM_20230414T163010_CRONTAB_RECORDING_PERSON_EO_ZOOM_LQ = (
+        "20230414T163010_crontab_recording_person/EO_zoom_lq"
+    )
+    CAM_20230414T163010_CRONTAB_RECORDING_PERSON_EO_ZOOM = (
+        "20230414T163010_crontab_recording_person/EO_zoom"
+    )
+    CAM_20230414T163010_CRONTAB_RECORDING_PERSON_EO_OVERVIEW = (
+        "20230414T163010_crontab_recording_person/EO_overview"
+    )
+    CAM_20230414T163010_CRONTAB_RECORDING_PERSON_EO_ZOOM_CHANGES = (
+        "20230414T163010_crontab_recording_person/EO_zoom_changes"
+    )
+    CAM_20230414T163010_CRONTAB_RECORDING_PERSON_EO_ZOOM_LQ_1280 = (
+        "20230414T163010_crontab_recording_person/EO_zoom_lq_1280"
+    )
+    CAM_20230525T121509_CRONTAB_RECORDING_PERSON_EO_ZOOM_LQ = (
+        "20230525T121509_crontab_recording_person/EO_zoom_lq"
+    )
+    CAM_20230525T121509_CRONTAB_RECORDING_PERSON_EO_ZOOM = (
+        "20230525T121509_crontab_recording_person/EO_zoom"
+    )
+    CAM_20230525T121509_CRONTAB_RECORDING_PERSON_EO_OVERVIEW = (
+        "20230525T121509_crontab_recording_person/EO_overview"
+    )
+    CAM_20230525T121509_CRONTAB_RECORDING_PERSON_EO_ZOOM_CHANGES = (
+        "20230525T121509_crontab_recording_person/EO_zoom_changes"
+    )
+    CAM_20230525T121509_CRONTAB_RECORDING_PERSON_EO_ZOOM_LQ_1280 = (
+        "20230525T121509_crontab_recording_person/EO_zoom_lq_1280"
+    )
+    CAM_20230602T163009_CRONTAB_RECORDING_PERSON_SUNNY_EO_ZOOM_LQ = (
+        "20230602T163009_crontab_recording_person_sunny/EO_zoom_lq"
+    )
+    CAM_20230602T163009_CRONTAB_RECORDING_PERSON_SUNNY_EO_ZOOM = (
+        "20230602T163009_crontab_recording_person_sunny/EO_zoom"
+    )
+    CAM_20230602T163009_CRONTAB_RECORDING_PERSON_SUNNY_EO_OVERVIEW = (
+        "20230602T163009_crontab_recording_person_sunny/EO_overview"
+    )
+    CAM_20230602T163009_CRONTAB_RECORDING_PERSON_SUNNY_EO_ZOOM_CHANGES = (
+        "20230602T163009_crontab_recording_person_sunny/EO_zoom_changes"
+    )
+    CAM_20230602T163009_CRONTAB_RECORDING_PERSON_SUNNY_EO_ZOOM_LQ_1280 = (
+        "20230602T163009_crontab_recording_person_sunny/EO_zoom_lq_1280"
+    )
+    CAM_20230603T181510_CRONTAB_RECORDING_PERSON_SUNNY_EO_ZOOM_LQ = (
+        "20230603T181510_crontab_recording_person_sunny/EO_zoom_lq"
+    )
+    CAM_20230603T181510_CRONTAB_RECORDING_PERSON_SUNNY_EO_ZOOM = (
+        "20230603T181510_crontab_recording_person_sunny/EO_zoom"
+    )
+    CAM_20230603T181510_CRONTAB_RECORDING_PERSON_SUNNY_EO_OVERVIEW = (
+        "20230603T181510_crontab_recording_person_sunny/EO_overview"
+    )
+    CAM_20230603T181510_CRONTAB_RECORDING_PERSON_SUNNY_EO_ZOOM_CHANGES = (
+        "20230603T181510_crontab_recording_person_sunny/EO_zoom_changes"
+    )
+    CAM_20230603T181510_CRONTAB_RECORDING_PERSON_SUNNY_EO_ZOOM_LQ_1280 = (
+        "20230603T181510_crontab_recording_person_sunny/EO_zoom_lq_1280"
+    )
+    CAM_20230605T181510_CRONTAB_RECORDING_PERSON_SUNNY_EO_ZOOM_LQ = (
+        "20230605T181510_crontab_recording_person_sunny/EO_zoom_lq"
+    )
+    CAM_20230605T181510_CRONTAB_RECORDING_PERSON_SUNNY_EO_ZOOM = (
+        "20230605T181510_crontab_recording_person_sunny/EO_zoom"
+    )
+    CAM_20230605T181510_CRONTAB_RECORDING_PERSON_SUNNY_EO_OVERVIEW = (
+        "20230605T181510_crontab_recording_person_sunny/EO_overview"
+    )
+    CAM_20230605T181510_CRONTAB_RECORDING_PERSON_SUNNY_EO_ZOOM_CHANGES = (
+        "20230605T181510_crontab_recording_person_sunny/EO_zoom_changes"
+    )
+    CAM_20230605T181510_CRONTAB_RECORDING_PERSON_SUNNY_EO_ZOOM_LQ_1280 = (
+        "20230605T181510_crontab_recording_person_sunny/EO_zoom_lq_1280"
+    )
+    CAM_20230606T121510_CRONTAB_RECORDING_PERSON_SUNNY_EO_ZOOM_LQ = (
+        "20230606T121510_crontab_recording_person_sunny/EO_zoom_lq"
+    )
+    CAM_20230606T121510_CRONTAB_RECORDING_PERSON_SUNNY_EO_ZOOM = (
+        "20230606T121510_crontab_recording_person_sunny/EO_zoom"
+    )
+    CAM_20230606T121510_CRONTAB_RECORDING_PERSON_SUNNY_EO_OVERVIEW = (
+        "20230606T121510_crontab_recording_person_sunny/EO_overview"
+    )
+    CAM_20230606T121510_CRONTAB_RECORDING_PERSON_SUNNY_EO_ZOOM_CHANGES = (
+        "20230606T121510_crontab_recording_person_sunny/EO_zoom_changes"
+    )
+    CAM_20230606T121510_CRONTAB_RECORDING_PERSON_SUNNY_EO_ZOOM_LQ_1280 = (
+        "20230606T121510_crontab_recording_person_sunny/EO_zoom_lq_1280"
+    )
+    CAM_20230608T181510_CRONTAB_RECORDING_PERSON_SUNNY_EO_ZOOM_LQ = (
+        "20230608T181510_crontab_recording_person_sunny/EO_zoom_lq"
+    )
+    CAM_20230608T181510_CRONTAB_RECORDING_PERSON_SUNNY_EO_ZOOM = (
+        "20230608T181510_crontab_recording_person_sunny/EO_zoom"
+    )
+    CAM_20230608T181510_CRONTAB_RECORDING_PERSON_SUNNY_EO_OVERVIEW = (
+        "20230608T181510_crontab_recording_person_sunny/EO_overview"
+    )
+    CAM_20230608T181510_CRONTAB_RECORDING_PERSON_SUNNY_EO_ZOOM_CHANGES = (
+        "20230608T181510_crontab_recording_person_sunny/EO_zoom_changes"
+    )
+    CAM_20230608T181510_CRONTAB_RECORDING_PERSON_SUNNY_EO_ZOOM_LQ_1280 = (
+        "20230608T181510_crontab_recording_person_sunny/EO_zoom_lq_1280"
+    )
+    CAM_20230609T163010_CRONTAB_RECORDING_PERSON_SUNNY_EO_ZOOM_LQ = (
+        "20230609T163010_crontab_recording_person_sunny/EO_zoom_lq"
+    )
+    CAM_20230609T163010_CRONTAB_RECORDING_PERSON_SUNNY_EO_ZOOM = (
+        "20230609T163010_crontab_recording_person_sunny/EO_zoom"
+    )
+    CAM_20230609T163010_CRONTAB_RECORDING_PERSON_SUNNY_EO_OVERVIEW = (
+        "20230609T163010_crontab_recording_person_sunny/EO_overview"
+    )
+    CAM_20230609T163010_CRONTAB_RECORDING_PERSON_SUNNY_EO_ZOOM_CHANGES = (
+        "20230609T163010_crontab_recording_person_sunny/EO_zoom_changes"
+    )
+    CAM_20230609T163010_CRONTAB_RECORDING_PERSON_SUNNY_EO_ZOOM_LQ_1280 = (
+        "20230609T163010_crontab_recording_person_sunny/EO_zoom_lq_1280"
+    )
+    CAM_20230610T181510_CRONTAB_RECORDING_PERSON_SUNNY_EO_ZOOM_LQ = (
+        "20230610T181510_crontab_recording_person_sunny/EO_zoom_lq"
+    )
+    CAM_20230610T181510_CRONTAB_RECORDING_PERSON_SUNNY_EO_ZOOM = (
+        "20230610T181510_crontab_recording_person_sunny/EO_zoom"
+    )
+    CAM_20230610T181510_CRONTAB_RECORDING_PERSON_SUNNY_EO_OVERVIEW = (
+        "20230610T181510_crontab_recording_person_sunny/EO_overview"
+    )
+    CAM_20230610T181510_CRONTAB_RECORDING_PERSON_SUNNY_EO_ZOOM_CHANGES = (
+        "20230610T181510_crontab_recording_person_sunny/EO_zoom_changes"
+    )
+    CAM_20230610T181510_CRONTAB_RECORDING_PERSON_SUNNY_EO_ZOOM_LQ_1280 = (
+        "20230610T181510_crontab_recording_person_sunny/EO_zoom_lq_1280"
+    )
+    CAM_20230612T121510_CRONTAB_RECORDING_PERSON_SUNNY_EO_ZOOM_LQ = (
+        "20230612T121510_crontab_recording_person_sunny/EO_zoom_lq"
+    )
+    CAM_20230612T121510_CRONTAB_RECORDING_PERSON_SUNNY_EO_ZOOM = (
+        "20230612T121510_crontab_recording_person_sunny/EO_zoom"
+    )
+    CAM_20230612T121510_CRONTAB_RECORDING_PERSON_SUNNY_EO_OVERVIEW = (
+        "20230612T121510_crontab_recording_person_sunny/EO_overview"
+    )
+    CAM_20230612T121510_CRONTAB_RECORDING_PERSON_SUNNY_EO_ZOOM_CHANGES = (
+        "20230612T121510_crontab_recording_person_sunny/EO_zoom_changes"
+    )
+    CAM_20230612T121510_CRONTAB_RECORDING_PERSON_SUNNY_EO_ZOOM_LQ_1280 = (
+        "20230612T121510_crontab_recording_person_sunny/EO_zoom_lq_1280"
+    )
+    CAM_20230622T121510_CRONTAB_RECORDING_PERSON_EO_ZOOM_LQ = (
+        "20230622T121510_crontab_recording_person/EO_zoom_lq"
+    )
+    CAM_20230622T121510_CRONTAB_RECORDING_PERSON_EO_ZOOM = (
+        "20230622T121510_crontab_recording_person/EO_zoom"
+    )
+    CAM_20230622T121510_CRONTAB_RECORDING_PERSON_EO_OVERVIEW = (
+        "20230622T121510_crontab_recording_person/EO_overview"
+    )
+    CAM_20230622T121510_CRONTAB_RECORDING_PERSON_EO_ZOOM_CHANGES = (
+        "20230622T121510_crontab_recording_person/EO_zoom_changes"
+    )
+    CAM_20230622T121510_CRONTAB_RECORDING_PERSON_EO_ZOOM_LQ_1280 = (
+        "20230622T121510_crontab_recording_person/EO_zoom_lq_1280"
+    )
+    CAM_20230629T211512_CRONTAB_RECORDING_PERSON_EO_ZOOM_LQ = (
+        "20230629T211512_crontab_recording_person/EO_zoom_lq"
+    )
+    CAM_20230629T211512_CRONTAB_RECORDING_PERSON_EO_ZOOM = (
+        "20230629T211512_crontab_recording_person/EO_zoom"
+    )
+    CAM_20230629T211512_CRONTAB_RECORDING_PERSON_EO_OVERVIEW = (
+        "20230629T211512_crontab_recording_person/EO_overview"
+    )
+    CAM_20230629T211512_CRONTAB_RECORDING_PERSON_EO_ZOOM_CHANGES = (
+        "20230629T211512_crontab_recording_person/EO_zoom_changes"
+    )
+    CAM_20230629T211512_CRONTAB_RECORDING_PERSON_EO_ZOOM_LQ_1280 = (
+        "20230629T211512_crontab_recording_person/EO_zoom_lq_1280"
+    )
+    CAM_20230701T211508_CRONTAB_RECORDING_PERSON_EO_ZOOM_LQ = (
+        "20230701T211508_crontab_recording_person/EO_zoom_lq"
+    )
+    CAM_20230701T211508_CRONTAB_RECORDING_PERSON_EO_ZOOM = (
+        "20230701T211508_crontab_recording_person/EO_zoom"
+    )
+    CAM_20230701T211508_CRONTAB_RECORDING_PERSON_EO_OVERVIEW = (
+        "20230701T211508_crontab_recording_person/EO_overview"
+    )
+    CAM_20230701T211508_CRONTAB_RECORDING_PERSON_EO_ZOOM_CHANGES = (
+        "20230701T211508_crontab_recording_person/EO_zoom_changes"
+    )
+    CAM_20230701T211508_CRONTAB_RECORDING_PERSON_EO_ZOOM_LQ_1280 = (
+        "20230701T211508_crontab_recording_person/EO_zoom_lq_1280"
+    )
+    CAM_20230713T211509_CRONTAB_RECORDING_PERSON_EO_ZOOM = (
+        "20230713T211509_crontab_recording_person/EO_zoom"
+    )
+    CAM_20230713T211509_CRONTAB_RECORDING_PERSON_EO_OVERVIEW = (
+        "20230713T211509_crontab_recording_person/EO_overview"
+    )
+    CAM_20230713T211509_CRONTAB_RECORDING_PERSON_EO_ZOOM_CHANGES = (
+        "20230713T211509_crontab_recording_person/EO_zoom_changes"
+    )
+    CAM_20230713T211509_CRONTAB_RECORDING_PERSON_EO_ZOOM_LQ_1280 = (
+        "20230713T211509_crontab_recording_person/EO_zoom_lq_1280"
+    )
+    CAM_20230714T211508_CRONTAB_RECORDING_RAINY_EO_ZOOM = (
+        "20230714T211508_crontab_recording_rainy/EO_zoom"
+    )
+    CAM_20230714T211508_CRONTAB_RECORDING_RAINY_EO_OVERVIEW = (
+        "20230714T211508_crontab_recording_rainy/EO_overview"
+    )
+    CAM_20230714T211508_CRONTAB_RECORDING_RAINY_EO_ZOOM_CHANGES = (
+        "20230714T211508_crontab_recording_rainy/EO_zoom_changes"
+    )
+    CAM_20230714T211508_CRONTAB_RECORDING_RAINY_EO_ZOOM_LQ_1280 = (
+        "20230714T211508_crontab_recording_rainy/EO_zoom_lq_1280"
+    )
+    CAM_20230717T120830_TOD_TEST_PERSON_RAINY_EO_ZOOM = (
+        "20230717T120830_TOD_test_person_rainy/EO_zoom"
+    )
+    CAM_20230717T120830_TOD_TEST_PERSON_RAINY_EO_OVERVIEW = (
+        "20230717T120830_TOD_test_person_rainy/EO_overview"
+    )
+    CAM_20230717T120830_TOD_TEST_PERSON_RAINY_EO_ZOOM_CHANGES = (
+        "20230717T120830_TOD_test_person_rainy/EO_zoom_changes"
+    )
+    CAM_20230717T120830_TOD_TEST_PERSON_RAINY_EO_ZOOM_LQ_1280 = (
+        "20230717T120830_TOD_test_person_rainy/EO_zoom_lq_1280"
+    )
+    CAM_20230717T122718_TOD_TEST_REAL_PERSON_RAINY_EO_ZOOM = (
+        "20230717T122718_TOD_test_real_person_rainy/EO_zoom"
+    )
+    CAM_20230717T122718_TOD_TEST_REAL_PERSON_RAINY_EO_OVERVIEW = (
+        "20230717T122718_TOD_test_real_person_rainy/EO_overview"
+    )
+    CAM_20230717T122718_TOD_TEST_REAL_PERSON_RAINY_EO_ZOOM_CHANGES = (
+        "20230717T122718_TOD_test_real_person_rainy/EO_zoom_changes"
+    )
+    CAM_20230717T122718_TOD_TEST_REAL_PERSON_RAINY_EO_ZOOM_LQ_1280 = (
+        "20230717T122718_TOD_test_real_person_rainy/EO_zoom_lq_1280"
+    )
+    CAM_20230824T203008_CRONTAB_RECORDING_PERSON_RAINY_EO_ZOOM = (
+        "20230824T203008_crontab_recording_person_rainy/EO_zoom"
+    )
+    CAM_20230824T203008_CRONTAB_RECORDING_PERSON_RAINY_EO_OVERVIEW = (
+        "20230824T203008_crontab_recording_person_rainy/EO_overview"
+    )
+    CAM_20230824T203008_CRONTAB_RECORDING_PERSON_RAINY_EO_ZOOM_CHANGES = (
+        "20230824T203008_crontab_recording_person_rainy/EO_zoom_changes"
+    )
+    CAM_20230824T203008_CRONTAB_RECORDING_PERSON_RAINY_EO_ZOOM_LQ_1280 = (
+        "20230824T203008_crontab_recording_person_rainy/EO_zoom_lq_1280"
+    )
+    CAM_20230825T180008_CRONTAB_RECORDING_PERSON_EO_ZOOM = (
+        "20230825T180008_crontab_recording_person/EO_zoom"
+    )
+    CAM_20230825T180008_CRONTAB_RECORDING_PERSON_EO_OVERVIEW = (
+        "20230825T180008_crontab_recording_person/EO_overview"
+    )
+    CAM_20230825T180008_CRONTAB_RECORDING_PERSON_EO_ZOOM_CHANGES = (
+        "20230825T180008_crontab_recording_person/EO_zoom_changes"
+    )
+    CAM_20230825T180008_CRONTAB_RECORDING_PERSON_EO_ZOOM_LQ_1280 = (
+        "20230825T180008_crontab_recording_person/EO_zoom_lq_1280"
+    )
+    CAM_20230826T193008_CRONTAB_RECORDING_PERSON_EO_ZOOM_LQ = (
+        "20230826T193008_crontab_recording_person/EO_zoom_lq"
+    )
+    CAM_20230826T193008_CRONTAB_RECORDING_PERSON_EO_ZOOM = (
+        "20230826T193008_crontab_recording_person/EO_zoom"
+    )
+    CAM_20230826T193008_CRONTAB_RECORDING_PERSON_EO_OVERVIEW = (
+        "20230826T193008_crontab_recording_person/EO_overview"
+    )
+    CAM_20230826T193008_CRONTAB_RECORDING_PERSON_EO_ZOOM_CHANGES = (
+        "20230826T193008_crontab_recording_person/EO_zoom_changes"
+    )
+    CAM_20230826T193008_CRONTAB_RECORDING_PERSON_EO_ZOOM_LQ_1280 = (
+        "20230826T193008_crontab_recording_person/EO_zoom_lq_1280"
+    )
+    CAM_20230827T093008_CRONTAB_RECORDING_PERSON_RAINY_EO_ZOOM = (
+        "20230827T093008_crontab_recording_person_rainy/EO_zoom"
+    )
+    CAM_20230827T093008_CRONTAB_RECORDING_PERSON_RAINY_EO_OVERVIEW = (
+        "20230827T093008_crontab_recording_person_rainy/EO_overview"
+    )
+    CAM_20230827T093008_CRONTAB_RECORDING_PERSON_RAINY_EO_ZOOM_CHANGES = (
+        "20230827T093008_crontab_recording_person_rainy/EO_zoom_changes"
+    )
+    CAM_20230827T093008_CRONTAB_RECORDING_PERSON_RAINY_EO_ZOOM_LQ_1280 = (
+        "20230827T093008_crontab_recording_person_rainy/EO_zoom_lq_1280"
+    )
+    CAM_20230828T103008_CRONTAB_RECORDING_PERSON_SUNNY_EO_ZOOM = (
+        "20230828T103008_crontab_recording_person_sunny/EO_zoom"
+    )
+    CAM_20230828T103008_CRONTAB_RECORDING_PERSON_SUNNY_EO_OVERVIEW = (
+        "20230828T103008_crontab_recording_person_sunny/EO_overview"
+    )
+    CAM_20230828T103008_CRONTAB_RECORDING_PERSON_SUNNY_EO_ZOOM_CHANGES = (
+        "20230828T103008_crontab_recording_person_sunny/EO_zoom_changes"
+    )
+    CAM_20230828T103008_CRONTAB_RECORDING_PERSON_SUNNY_EO_ZOOM_LQ_1280 = (
+        "20230828T103008_crontab_recording_person_sunny/EO_zoom_lq_1280"
+    )
+    CAM_20230830T094508_CRONTAB_RECORDING_PERSON_EO_ZOOM = (
+        "20230830T094508_crontab_recording_person/EO_zoom"
+    )
+    CAM_20230830T094508_CRONTAB_RECORDING_PERSON_EO_OVERVIEW = (
+        "20230830T094508_crontab_recording_person/EO_overview"
+    )
+    CAM_20230830T094508_CRONTAB_RECORDING_PERSON_EO_ZOOM_CHANGES = (
+        "20230830T094508_crontab_recording_person/EO_zoom_changes"
+    )
+    CAM_20230830T094508_CRONTAB_RECORDING_PERSON_EO_ZOOM_LQ_1280 = (
+        "20230830T094508_crontab_recording_person/EO_zoom_lq_1280"
+    )
+    CAM_20230831T203008_CRONTAB_RECORDING_PERSON_EO_ZOOM = (
+        "20230831T203008_crontab_recording_person/EO_zoom"
+    )
+    CAM_20230831T203008_CRONTAB_RECORDING_PERSON_EO_OVERVIEW = (
+        "20230831T203008_crontab_recording_person/EO_overview"
+    )
+    CAM_20230831T203008_CRONTAB_RECORDING_PERSON_EO_ZOOM_CHANGES = (
+        "20230831T203008_crontab_recording_person/EO_zoom_changes"
+    )
+    CAM_20230831T203008_CRONTAB_RECORDING_PERSON_EO_ZOOM_LQ_1280 = (
+        "20230831T203008_crontab_recording_person/EO_zoom_lq_1280"
+    )
+    CAM_20230901T100225_CRONTAB_RECORDING_HANDMATIG_PERSON_RAINY_EO_ZOOM = (
+        "20230901T100225_crontab_recording_handmatig_person_rainy/EO_zoom"
+    )
+    CAM_20230901T100225_CRONTAB_RECORDING_HANDMATIG_PERSON_RAINY_EO_OVERVIEW = (
+        "20230901T100225_crontab_recording_handmatig_person_rainy/EO_overview"
+    )
+    CAM_20230901T100225_CRONTAB_RECORDING_HANDMATIG_PERSON_RAINY_EO_ZOOM_CHANGES = (
+        "20230901T100225_crontab_recording_handmatig_person_rainy/EO_zoom_changes"
+    )
+    CAM_20230901T100225_CRONTAB_RECORDING_HANDMATIG_PERSON_RAINY_EO_ZOOM_LQ_1280 = (
+        "20230901T100225_crontab_recording_handmatig_person_rainy/EO_zoom_lq_1280"
+    )
+    CAM_20230903T090008_CRONTAB_RECORDING_PERSON_SUNNY_EO_ZOOM = (
+        "20230903T090008_crontab_recording_person_sunny/EO_zoom"
+    )
+    CAM_20230903T090008_CRONTAB_RECORDING_PERSON_SUNNY_EO_OVERVIEW = (
+        "20230903T090008_crontab_recording_person_sunny/EO_overview"
+    )
+    CAM_20230903T090008_CRONTAB_RECORDING_PERSON_SUNNY_EO_ZOOM_CHANGES = (
+        "20230903T090008_crontab_recording_person_sunny/EO_zoom_changes"
+    )
+    CAM_20230903T090008_CRONTAB_RECORDING_PERSON_SUNNY_EO_ZOOM_LQ_1280 = (
+        "20230903T090008_crontab_recording_person_sunny/EO_zoom_lq_1280"
+    )
+    CAM_20230905T080008_CRONTAB_RECORDING_PERSON_SUNNY_EO_ZOOM = (
+        "20230905T080008_crontab_recording_person_sunny/EO_zoom"
+    )
+    CAM_20230905T080008_CRONTAB_RECORDING_PERSON_SUNNY_EO_OVERVIEW = (
+        "20230905T080008_crontab_recording_person_sunny/EO_overview"
+    )
+    CAM_20230905T080008_CRONTAB_RECORDING_PERSON_SUNNY_EO_ZOOM_CHANGES = (
+        "20230905T080008_crontab_recording_person_sunny/EO_zoom_changes"
+    )
+    CAM_20230905T080008_CRONTAB_RECORDING_PERSON_SUNNY_EO_ZOOM_LQ_1280 = (
+        "20230905T080008_crontab_recording_person_sunny/EO_zoom_lq_1280"
+    )
+    CAM_20230905T140008_CRONTAB_RECORDING_PERSON_SUNNY_EO_ZOOM = (
+        "20230905T140008_crontab_recording_person_sunny/EO_zoom"
+    )
+    CAM_20230905T140008_CRONTAB_RECORDING_PERSON_SUNNY_EO_OVERVIEW = (
+        "20230905T140008_crontab_recording_person_sunny/EO_overview"
+    )
+    CAM_20230905T140008_CRONTAB_RECORDING_PERSON_SUNNY_EO_ZOOM_CHANGES = (
+        "20230905T140008_crontab_recording_person_sunny/EO_zoom_changes"
+    )
+    CAM_20230905T140008_CRONTAB_RECORDING_PERSON_SUNNY_EO_ZOOM_LQ_1280 = (
+        "20230905T140008_crontab_recording_person_sunny/EO_zoom_lq_1280"
+    )
+    CAM_20230906T083008_CRONTAB_RECORDING_PERSON_SUNNY_EO_ZOOM = (
+        "20230906T083008_crontab_recording_person_sunny/EO_zoom"
+    )
+    CAM_20230906T083008_CRONTAB_RECORDING_PERSON_SUNNY_EO_OVERVIEW = (
+        "20230906T083008_crontab_recording_person_sunny/EO_overview"
+    )
+    CAM_20230906T083008_CRONTAB_RECORDING_PERSON_SUNNY_EO_ZOOM_CHANGES = (
+        "20230906T083008_crontab_recording_person_sunny/EO_zoom_changes"
+    )
+    CAM_20230906T083008_CRONTAB_RECORDING_PERSON_SUNNY_EO_ZOOM_LQ_1280 = (
+        "20230906T083008_crontab_recording_person_sunny/EO_zoom_lq_1280"
+    )
+    CAM_20230906T100009_CRONTAB_RECORDING_PERSON_SUNNY_EO_ZOOM = (
+        "20230906T100009_crontab_recording_person_sunny/EO_zoom"
+    )
+    CAM_20230906T100009_CRONTAB_RECORDING_PERSON_SUNNY_EO_OVERVIEW = (
+        "20230906T100009_crontab_recording_person_sunny/EO_overview"
+    )
+    CAM_20230906T100009_CRONTAB_RECORDING_PERSON_SUNNY_EO_ZOOM_CHANGES = (
+        "20230906T100009_crontab_recording_person_sunny/EO_zoom_changes"
+    )
+    CAM_20230906T100009_CRONTAB_RECORDING_PERSON_SUNNY_EO_ZOOM_LQ_1280 = (
+        "20230906T100009_crontab_recording_person_sunny/EO_zoom_lq_1280"
+    )
+    CAM_20230907T203009_CRONTAB_RECORDING_PERSON_EO_ZOOM = (
+        "20230907T203009_crontab_recording_person/EO_zoom"
+    )
+    CAM_20230907T203009_CRONTAB_RECORDING_PERSON_EO_OVERVIEW = (
+        "20230907T203009_crontab_recording_person/EO_overview"
+    )
+    CAM_20230907T203009_CRONTAB_RECORDING_PERSON_EO_ZOOM_CHANGES = (
+        "20230907T203009_crontab_recording_person/EO_zoom_changes"
+    )
+    CAM_20230907T203009_CRONTAB_RECORDING_PERSON_EO_ZOOM_LQ_1280 = (
+        "20230907T203009_crontab_recording_person/EO_zoom_lq_1280"
+    )
+    CAM_20230910T090009_CRONTAB_RECORDING_PERSON_SUNNY_EO_ZOOM = (
+        "20230910T090009_crontab_recording_person_sunny/EO_zoom"
+    )
+    CAM_20230910T090009_CRONTAB_RECORDING_PERSON_SUNNY_EO_OVERVIEW = (
+        "20230910T090009_crontab_recording_person_sunny/EO_overview"
+    )
+    CAM_20230910T090009_CRONTAB_RECORDING_PERSON_SUNNY_EO_ZOOM_CHANGES = (
+        "20230910T090009_crontab_recording_person_sunny/EO_zoom_changes"
+    )
+    CAM_20230910T090009_CRONTAB_RECORDING_PERSON_SUNNY_EO_ZOOM_LQ_1280 = (
+        "20230910T090009_crontab_recording_person_sunny/EO_zoom_lq_1280"
+    )
+    CAM_20230911T170008_CRONTAB_RECORDING_PERSON_RAINY_EO_ZOOM = (
+        "20230911T170008_crontab_recording_person_rainy/EO_zoom"
+    )
+    CAM_20230911T170008_CRONTAB_RECORDING_PERSON_RAINY_EO_OVERVIEW = (
+        "20230911T170008_crontab_recording_person_rainy/EO_overview"
+    )
+    CAM_20230911T170008_CRONTAB_RECORDING_PERSON_RAINY_EO_ZOOM_CHANGES = (
+        "20230911T170008_crontab_recording_person_rainy/EO_zoom_changes"
+    )
+    CAM_20230911T170008_CRONTAB_RECORDING_PERSON_RAINY_EO_ZOOM_LQ_1280 = (
+        "20230911T170008_crontab_recording_person_rainy/EO_zoom_lq_1280"
+    )
+    CAM_20230914T203009_CRONTAB_RECORDING_PERSON_EO_ZOOM_LQ = (
+        "20230914T203009_crontab_recording_person/EO_zoom_lq"
+    )
+    CAM_20230914T203009_CRONTAB_RECORDING_PERSON_EO_ZOOM = (
+        "20230914T203009_crontab_recording_person/EO_zoom"
+    )
+    CAM_20230914T203009_CRONTAB_RECORDING_PERSON_EO_OVERVIEW = (
+        "20230914T203009_crontab_recording_person/EO_overview"
+    )
+    CAM_20230914T203009_CRONTAB_RECORDING_PERSON_EO_ZOOM_CHANGES = (
+        "20230914T203009_crontab_recording_person/EO_zoom_changes"
+    )
+    CAM_20230914T203009_CRONTAB_RECORDING_PERSON_EO_ZOOM_LQ_1280 = (
+        "20230914T203009_crontab_recording_person/EO_zoom_lq_1280"
+    )
+    CAM_20230915T180008_CRONTAB_RECORDING_PERSON_EO_ZOOM = (
+        "20230915T180008_crontab_recording_person/EO_zoom"
+    )
+    CAM_20230915T180008_CRONTAB_RECORDING_PERSON_EO_OVERVIEW = (
+        "20230915T180008_crontab_recording_person/EO_overview"
+    )
+    CAM_20230915T180008_CRONTAB_RECORDING_PERSON_EO_ZOOM_CHANGES = (
+        "20230915T180008_crontab_recording_person/EO_zoom_changes"
+    )
+    CAM_20230915T180008_CRONTAB_RECORDING_PERSON_EO_ZOOM_LQ_1280 = (
+        "20230915T180008_crontab_recording_person/EO_zoom_lq_1280"
+    )
+    CAM_20230916T143008_CRONTAB_RECORDING_PERSON_EO_ZOOM = (
+        "20230916T143008_crontab_recording_person/EO_zoom"
+    )
+    CAM_20230916T143008_CRONTAB_RECORDING_PERSON_EO_OVERVIEW = (
+        "20230916T143008_crontab_recording_person/EO_overview"
+    )
+    CAM_20230916T143008_CRONTAB_RECORDING_PERSON_EO_ZOOM_CHANGES = (
+        "20230916T143008_crontab_recording_person/EO_zoom_changes"
+    )
+    CAM_20230916T143008_CRONTAB_RECORDING_PERSON_EO_ZOOM_LQ_1280 = (
+        "20230916T143008_crontab_recording_person/EO_zoom_lq_1280"
+    )
+    CAM_20230917T090008_CRONTAB_RECORDING_PERSON_RAINY_EO_ZOOM = (
+        "20230917T090008_crontab_recording_person_rainy/EO_zoom"
+    )
+    CAM_20230917T090008_CRONTAB_RECORDING_PERSON_RAINY_EO_OVERVIEW = (
+        "20230917T090008_crontab_recording_person_rainy/EO_overview"
+    )
+    CAM_20230917T090008_CRONTAB_RECORDING_PERSON_RAINY_EO_ZOOM_CHANGES = (
+        "20230917T090008_crontab_recording_person_rainy/EO_zoom_changes"
+    )
+    CAM_20230917T090008_CRONTAB_RECORDING_PERSON_RAINY_EO_ZOOM_LQ_1280 = (
+        "20230917T090008_crontab_recording_person_rainy/EO_zoom_lq_1280"
+    )
+    CAM_20230918T174658_CRONTAB_RECORDING_HANDMATIG_REGEN_PERSON_RAINY_EO_ZOOM = (
+        "20230918T174658_crontab_recording_handmatig_regen_person_rainy/EO_zoom"
+    )
+    CAM_20230918T174658_CRONTAB_RECORDING_HANDMATIG_REGEN_PERSON_RAINY_EO_OVERVIEW = (
+        "20230918T174658_crontab_recording_handmatig_regen_person_rainy/EO_overview"
+    )
+    CAM_20230918T174658_CRONTAB_RECORDING_HANDMATIG_REGEN_PERSON_RAINY_EO_ZOOM_CHANGES = (
+        "20230918T174658_crontab_recording_handmatig_regen_person_rainy/EO_zoom_changes"
+    )
+    CAM_20230918T174658_CRONTAB_RECORDING_HANDMATIG_REGEN_PERSON_RAINY_EO_ZOOM_LQ_1280 = (
+        "20230918T174658_crontab_recording_handmatig_regen_person_rainy/EO_zoom_lq_1280"
+    )
+    CAM_20230919T080009_CRONTAB_RECORDING_PERSON_EO_ZOOM = (
+        "20230919T080009_crontab_recording_person/EO_zoom"
+    )
+    CAM_20230919T080009_CRONTAB_RECORDING_PERSON_EO_OVERVIEW = (
+        "20230919T080009_crontab_recording_person/EO_overview"
+    )
+    CAM_20230919T080009_CRONTAB_RECORDING_PERSON_EO_ZOOM_CHANGES = (
+        "20230919T080009_crontab_recording_person/EO_zoom_changes"
+    )
+    CAM_20230919T080009_CRONTAB_RECORDING_PERSON_EO_ZOOM_LQ_1280 = (
+        "20230919T080009_crontab_recording_person/EO_zoom_lq_1280"
+    )
+    CAM_20230919T140008_CRONTAB_RECORDING_PERSON_RAINY_WINDY_EO_ZOOM = (
+        "20230919T140008_crontab_recording_person_rainy_windy/EO_zoom"
+    )
+    CAM_20230919T140008_CRONTAB_RECORDING_PERSON_RAINY_WINDY_EO_OVERVIEW = (
+        "20230919T140008_crontab_recording_person_rainy_windy/EO_overview"
+    )
+    CAM_20230919T140008_CRONTAB_RECORDING_PERSON_RAINY_WINDY_EO_ZOOM_CHANGES = (
+        "20230919T140008_crontab_recording_person_rainy_windy/EO_zoom_changes"
+    )
+    CAM_20230919T140008_CRONTAB_RECORDING_PERSON_RAINY_WINDY_EO_ZOOM_LQ_1280 = (
+        "20230919T140008_crontab_recording_person_rainy_windy/EO_zoom_lq_1280"
+    )
+    CAM_20230920T133009_CRONTAB_RECORDING_PERSON_WINDY_EO_ZOOM = (
+        "20230920T133009_crontab_recording_person_windy/EO_zoom"
+    )
+    CAM_20230920T133009_CRONTAB_RECORDING_PERSON_WINDY_EO_OVERVIEW = (
+        "20230920T133009_crontab_recording_person_windy/EO_overview"
+    )
+    CAM_20230920T133009_CRONTAB_RECORDING_PERSON_WINDY_EO_ZOOM_CHANGES = (
+        "20230920T133009_crontab_recording_person_windy/EO_zoom_changes"
+    )
+    CAM_20230920T133009_CRONTAB_RECORDING_PERSON_WINDY_EO_ZOOM_LQ_1280 = (
+        "20230920T133009_crontab_recording_person_windy/EO_zoom_lq_1280"
+    )
+
+
+class MANTIS_DRONE_2023:
+    NAME = "mantis_drone_2023"
+    CAM_DJI_202309100220_001_WIDE_HD = "DJI_202309100220_001/wide_hd"
+    CAM_DJI_202309100249_002_WIDE_HD = "DJI_202309100249_002/wide_hd"
+    CAM_DJI_202309100352_003_WIDE_HD = "DJI_202309100352_003/wide_hd"
+    CAM_DJI_202309100418_004_WIDE_HD = "DJI_202309100418_004/wide_hd"
+    CAM_DJI_202309100531_001_WIDE_HD = "DJI_202309100531_001/wide_hd"
+    CAM_DJI_202309100705_005_WIDE_HD = "DJI_202309100705_005/wide_hd"
+    CAM_DJI_202309100738_007_WIDE_HD = "DJI_202309100738_007/wide_hd"
+    CAM_DJI_202309100902_009_WIDE_HD = "DJI_202309100902_009/wide_hd"
+    CAM_DJI_202309100923_002_WIDE_HD = "DJI_202309100923_002/wide_hd"
+    CAM_DJI_202309101429_006_WIDE_HD = "DJI_202309101429_006/wide_hd"
+    CAM_DJI_202309101443_008_WIDE_HD = "DJI_202309101443_008/wide_hd"
+    CAM_DJI_202309100220_001_ZOOM_HD = "DJI_202309100220_001/zoom_hd"
+    CAM_DJI_202309100249_002_ZOOM_HD = "DJI_202309100249_002/zoom_hd"
+    CAM_DJI_202309100352_003_ZOOM_HD = "DJI_202309100352_003/zoom_hd"
+    CAM_DJI_202309100418_004_ZOOM_HD = "DJI_202309100418_004/zoom_hd"
+    CAM_DJI_202309100531_001_ZOOM_HD = "DJI_202309100531_001/zoom_hd"
+    CAM_DJI_202309100705_005_ZOOM_HD = "DJI_202309100705_005/zoom_hd"
+    CAM_DJI_202309100738_007_ZOOM_HD = "DJI_202309100738_007/zoom_hd"
+    CAM_DJI_202309100902_009_ZOOM_HD = "DJI_202309100902_009/zoom_hd"
+    CAM_DJI_202309100923_002_ZOOM_HD = "DJI_202309100923_002/zoom_hd"
+    CAM_DJI_202309101429_006_ZOOM_HD = "DJI_202309101429_006/zoom_hd"
+    CAM_DJI_202309101443_008_ZOOM_HD = "DJI_202309101443_008/zoom_hd"
+    CAM_DJI_202309100220_001_ZOOM_4K = "DJI_202309100220_001/zoom_4k"
+    CAM_DJI_202309100249_002_ZOOM_4K = "DJI_202309100249_002/zoom_4k"
+    CAM_DJI_202309100352_003_ZOOM_4K = "DJI_202309100352_003/zoom_4k"
+    CAM_DJI_202309100418_004_ZOOM_4K = "DJI_202309100418_004/zoom_4k"
+    CAM_DJI_202309100531_001_ZOOM_4K = "DJI_202309100531_001/zoom_4k"
+    CAM_DJI_202309100705_005_ZOOM_4K = "DJI_202309100705_005/zoom_4k"
+    CAM_DJI_202309100738_007_ZOOM_4K = "DJI_202309100738_007/zoom_4k"
+    CAM_DJI_202309100902_009_ZOOM_4K = "DJI_202309100902_009/zoom_4k"
+    CAM_DJI_202309100923_002_ZOOM_4K = "DJI_202309100923_002/zoom_4k"
+    CAM_DJI_202309101429_006_ZOOM_4K = "DJI_202309101429_006/zoom_4k"
+    CAM_DJI_202309101443_008_ZOOM_4K = "DJI_202309101443_008/zoom_4k"
+    CAM_DJI_202309100220_001_IR = "DJI_202309100220_001/ir"
+    CAM_DJI_202309100249_002_IR = "DJI_202309100249_002/ir"
+    CAM_DJI_202309100352_003_IR = "DJI_202309100352_003/ir"
+    CAM_DJI_202309100418_004_IR = "DJI_202309100418_004/ir"
+    CAM_DJI_202309100531_001_IR = "DJI_202309100531_001/ir"
+    CAM_DJI_202309100705_005_IR = "DJI_202309100705_005/ir"
+    CAM_DJI_202309100738_007_IR = "DJI_202309100738_007/ir"
+    CAM_DJI_202309100902_009_IR = "DJI_202309100902_009/ir"
+    CAM_DJI_202309100923_002_IR = "DJI_202309100923_002/ir"
+    CAM_DJI_202309101429_006_IR = "DJI_202309101429_006/ir"
+    CAM_DJI_202309101443_008_IR = "DJI_202309101443_008/ir"
+    RESULT_YOLOV5X = "yolov5x.csv"
+
+
+class MANTIS_20230414_4PERSONS:
+    NAME = "mantis_20230414_4persons"
+    CAM_EO_OVERVIEW = "EO_overview"
+    CAM_EO_ZOOM = "EO_zoom"
+    RESULT_TYOLOV8_CV90_DETECTIONS_T2YOLOV5 = (
+        "tyolov8-cv90/detections_t2yolov5.temporary.csv"
+    )
+    RESULT_DETECTIONS_TEMPORALYOLO_DT_1 = (
+        "detections_temporalyolo_dt_1.5_run1.temporary.csv"
+    )
+    RESULT_DETECTIONS_DETECTIONS_COMBINED_IGN_T640_2XUS_L = (
+        "detections/detections_COMBINED-IGN-T640-2XUS-L.csv"
+    )
+    RESULT_DETECTIONS_DETECTIONS_TOREN_OPTIMIZED = (
+        "detections/detections_TOREN-OPTIMIZED.csv"
+    )
+    RESULT_TYOLOV8_CV90_DETECTIONS_TDIFF_YOLO = "tyolov8-cv90/detections_tdiff-yolo.csv"
+    RESULT_DETECTIONS_DETECTIONS_T2_VIRAT_7F = "detections/detections_T2-VIRAT_7f.csv"
+    RESULT_TYOLOV8_CV90_DETECTIONS_TYOLO = "tyolov8-cv90/detections_tyolo.csv"
+    RESULT_TYOLOV8_CV90_DETECTIONS_T2_VIRAT_YOLOV5X = (
+        "tyolov8-cv90/detections_t2-virat-yolov5x.csv"
+    )
+
+
+class MANTIS_20230328:
+    NAME = "mantis_20230328"
+    CAM_EO_OVERVIEW = "EO_overview"
+    CAM_EO_ZOOM = "EO_zoom"
+    CAM_LWIR = "lwir"

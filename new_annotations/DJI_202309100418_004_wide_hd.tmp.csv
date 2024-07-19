@@ -1,0 +1,7 @@
+bbox_x,bbox_y,bbox_w,bbox_h,class_id,label,timestamp,confidence,real_detection,track_id,n
+0,0,500,500,10,ignore_frame,1694319654.003,2,1,99,1
+0,0,500,500,10,ignore_frame,1694319656.572,2,1,99,1
+0,0,500,500,10,ignore_frame,1694319659.075,2,1,99,1
+0,0,500,500,10,ignore_frame,1694319661.577,2,1,99,1
+0,0,500,500,10,ignore_frame,1694319664.113,2,1,99,1
+0,0,500,500,10,ignore_frame,1694319673.901,2,1,99,1

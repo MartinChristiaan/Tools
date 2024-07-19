@@ -1,0 +1,261 @@
+2023-12-23T14:32:41.877437+0100 INFO updating repo at $HOME/git/tools
+2023-12-23T14:32:43.090016+0100 INFO Succesfully updated all repos
+2023-12-23T14:33:55.819605+0100 INFO updating repo at $HOME/git/tools
+2023-12-23T14:33:57.171412+0100 INFO Succesfully updated all repos
+2023-12-23T14:37:58.075681+0100 INFO updating repo at $HOME/git/tools
+2023-12-23T14:37:58.144450+0100 ERROR Failed to execute command in $HOME/git/tools. Error: fatal: unable to access 'https://github.com/MartinChristiaan/Tools.git/': Could not resolve host: github.com
+
+2023-12-23T14:37:58.144658+0100 INFO Succesfully updated all repos
+2023-12-23T14:47:58.243421+0100 INFO updating repo at $HOME/git/tools
+2023-12-23T14:48:07.860709+0100 ERROR Failed to execute command in $HOME/git/tools. Error: absolufy-imports.........................................................Passed
+isort....................................................................Passed
+black....................................................................Failed
+- hook id: black
+- exit code: 123
+- files were modified by this hook
+
+error: cannot format VsCodeSynthesis/keybindings/windows.py: Cannot parse: 2:0: %load_ext autoreload
+error: cannot format VsCodeSynthesis/keybindings/files.py: Cannot parse: 2:0: %load_ext autoreload
+error: cannot format opencv_annotator/scripts/annotate_mantis.py: Cannot parse: 2:0: %load_ext autoreload
+error: cannot format opencv_annotator/scripts/annotate_mantis_ipynb.py: Cannot parse: 2:0: %load_ext autoreload
+error: cannot format opencv_annotator/scripts/annotate_alpha.py: Cannot parse: 2:0: %load_ext autoreload
+error: cannot format quick_open/open_latest_rda.py: Cannot parse: 6:30: max(os.listdir(latest_folder),??)
+reformatted opencv_annotator/scripts/compute_motion_models.py
+reformatted iphone_sync/sync_phone.py
+reformatted opencv_annotator/components/bbox_maker.py
+reformatted opencv_annotator/components/roi_drawer.py
+reformatted SuperPath/argparse_enhanced.py
+
+Oh no! 💥 💔 💥
+5 files reformatted, 135 files left unchanged, 6 files failed to reformat.
+
+blacken-docs.............................................................Passed
+autoflake................................................................Passed
+check python ast.........................................................Failed
+- hook id: check-ast
+- exit code: 1
+
+opencv_annotator/scripts/annotate_mantis_ipynb.py: failed parsing with CPython 3.10.6:
+
+    Traceback (most recent call last):
+      File "/home/martin/.cache/pre-commit/repoxpx8xlsj/py_env-python3/lib/python3.10/site-packages/pre_commit_hooks/check_ast.py", line 21, in main
+        ast.parse(f.read(), filename=filename)
+      File "/usr/lib/python3.10/ast.py", line 50, in parse
+        return compile(source, filename, mode, flags,
+      File "opencv_annotator/scripts/annotate_mantis_ipynb.py", line 2
+        %load_ext autoreload
+        ^
+    SyntaxError: invalid syntax
+
+VsCodeSynthesis/keybindings/windows.py: failed parsing with CPython 3.10.6:
+
+    Traceback (most recent call last):
+      File "/home/martin/.cache/pre-commit/repoxpx8xlsj/py_env-python3/lib/python3.10/site-packages/pre_commit_hooks/check_ast.py", line 21, in main
+        ast.parse(f.read(), filename=filename)
+      File "/usr/lib/python3.10/ast.py", line 50, in parse
+        return compile(source, filename, mode, flags,
+      File "VsCodeSynthesis/keybindings/windows.py", line 2
+        %load_ext autoreload
+        ^
+    SyntaxError: invalid syntax
+
+quick_open/open_latest_rda.py: failed parsing with CPython 3.10.6:
+
+    Traceback (most recent call last):
+      File "/home/martin/.cache/pre-commit/repoxpx8xlsj/py_env-python3/lib/python3.10/site-packages/pre_commit_hooks/check_ast.py", line 21, in main
+        ast.parse(f.read(), filename=filename)
+      File "/usr/lib/python3.10/ast.py", line 50, in parse
+        return compile(source, filename, mode, flags,
+      File "quick_open/open_latest_rda.py", line 6
+        max(os.listdir(latest_folder),??)
+                                      ^
+    SyntaxError: invalid syntax
+
+VsCodeSynthesis/keybindings/files.py: failed parsing with CPython 3.10.6:
+
+    Traceback (most recent call last):
+      File "/home/martin/.cache/pre-commit/repoxpx8xlsj/py_env-python3/lib/python3.10/site-packages/pre_commit_hooks/check_ast.py", line 21, in main
+        ast.parse(f.read(), filename=filename)
+      File "/usr/lib/python3.10/ast.py", line 50, in parse
+        return compile(source, filename, mode, flags,
+      File "VsCodeSynthesis/keybindings/files.py", line 2
+        %load_ext autoreload
+        ^
+    SyntaxError: invalid syntax
+
+opencv_annotator/scripts/annotate_mantis.py: failed parsing with CPython 3.10.6:
+
+    Traceback (most recent call last):
+      File "/home/martin/.cache/pre-commit/repoxpx8xlsj/py_env-python3/lib/python3.10/site-packages/pre_commit_hooks/check_ast.py", line 21, in main
+        ast.parse(f.read(), filename=filename)
+      File "/usr/lib/python3.10/ast.py", line 50, in parse
+        return compile(source, filename, mode, flags,
+      File "opencv_annotator/scripts/annotate_mantis.py", line 2
+        %load_ext autoreload
+        ^
+    SyntaxError: invalid syntax
+
+opencv_annotator/scripts/annotate_alpha.py: failed parsing with CPython 3.10.6:
+
+    Traceback (most recent call last):
+      File "/home/martin/.cache/pre-commit/repoxpx8xlsj/py_env-python3/lib/python3.10/site-packages/pre_commit_hooks/check_ast.py", line 21, in main
+        ast.parse(f.read(), filename=filename)
+      File "/usr/lib/python3.10/ast.py", line 50, in parse
+        return compile(source, filename, mode, flags,
+      File "opencv_annotator/scripts/annotate_alpha.py", line 2
+        %load_ext autoreload
+        ^
+    SyntaxError: invalid syntax
+
+check for case conflicts.................................................Passed
+check for merge conflicts................................................Passed
+check for broken symlinks............................(no files to check)Skipped
+check yaml...............................................................Failed
+- hook id: check-yaml
+- exit code: 1
+
+mapping values are not allowed in this context
+  in "fzf_explorer/pop-os.yml", line 3, column 9
+
+detect destroyed symlinks................................................Passed
+fix utf-8 byte order marker..............................................Passed
+detect private key.......................................................Passed
+fix end of files.........................................................Failed
+- hook id: end-of-file-fixer
+- exit code: 1
+- files were modified by this hook
+
+Fixing cmds/spear-exp-blue-rsync.sh
+Fixing cmds/spear-exp-blue-keycopy.sh
+Fixing cmds/dl-41-ssh.sh
+Fixing cmds/toren-rsync.sh
+Fixing cmds/spear-blue-rsync.sh
+Fixing cmds/xavier2-ib-keycopy.sh
+Fixing cmds/spear-exp-ssh.sh
+Fixing cmds/dl-41-ssh-martin.sh
+Fixing cmds/orin-mantis-b-keycopy.sh
+Fixing cmds/spear-green-keycopy.sh
+Fixing cmds/dl-41-keycopy.sh
+Fixing cmds/dl-11-ssh.sh
+Fixing cmds/spear-exp-green-ssh.sh
+Fixing cmds/reidpc-keycopy.sh
+Fixing cmds/xavier2-ib-ibotics-ssh.sh
+Fixing cmds/spear-delft-dynamics-jetson-keycopy.sh
+Fixing cmds/reidpc-ssh.sh
+Fixing cmds/spear-exp-yellow-ssh.sh
+Fixing cmds/orin-mantis-b-rsync.sh
+Fixing cmds/laptop-cv90-mount.sh
+Fixing cmds/orin-mantis-b-ssh.sh
+Fixing cmds/spear-green-ssh.sh
+Fixing cmds/orin-gold-rsync-mantis.sh
+Fixing cmds/orin-mantis-mount.sh
+Fixing cmds/dl-11-mount.sh
+Fixing cmds/spear-exp-blue-ssh.sh
+Fixing cmds/xavier1-ib-rsync.sh
+Fixing cmds/startlight4-pf.sh
+Fixing cmds/spear-green-mount.sh
+Fixing cmds/spear-exp-rsync.sh
+Fixing cmds/gold-mantis-rsync.sh
+Fixing cmds/spear-blue-keycopy.sh
+Fixing cmds/xavier2-ib-ibotics-keycopy.sh
+Fixing cmds/starlight_rsync_prx.sh
+Fixing cmds/spear-exp-mount.sh
+Fixing cmds/spear-yellow-mount.sh
+Fixing cmds/spear-exp-green-mount.sh
+Fixing cmds/spear-yellow-ssh.sh
+Fixing cmds/dl-3-ssh.sh
+Fixing cmds/orin-gold-ssh.sh
+Fixing cmds/xavier1-ib-ibotics-mount.sh
+Fixing cmds/laptop-cv90-ssh.sh
+Fixing cmds/spear-jetson-keycopy.sh
+Fixing cmds/orin-gold-pf.sh
+Fixing cmds/orin-gold-rsync.sh
+Fixing cmds/spear-delft-dynamics-jetson-rsync.sh
+Fixing cmds/xavier1-ib-ibotics-rsync.sh
+Fixing cmds/linux-pc-rsync.sh
+Fixing cmds/dl-11-rsync.sh
+Fixing cmds/dl-11-rsync_spear.sh
+Fixing cmds/spear-delft-dynamics-jetson-mount.sh
+Fixing cmds/dl-3-keycopy.sh
+Fixing cmds/spear-jetson-root-pf.sh
+Fixing cmds/dl-11-keycopy.sh
+Fixing cmds/spear-green-rsync.sh
+Fixing fzf_explorer/pop-os.yml
+Fixing cmds/toren-keycopy.sh
+Fixing cmds/startlight4-rsync.sh
+Fixing cmds/laptop-cv90-rsync.sh
+Fixing cmds/spear-exp-blue-mount.sh
+Fixing cmds/reidpc-rsync.sh
+Fixing cmds/xavier1-ib-ibotics-ssh.sh
+Fixing cmds/linux-pc-keycopy.sh
+Fixing cmds/orin-mantis-pf.sh
+Fixing cmds/startlight4-keycopy.sh
+Fixing cmds/reidpc-mount.sh
+Fixing cmds/xavier2-ib-rsync.sh
+Fixing cmds/exp_mount.sh
+Fixing cmds/spear-exp-yellow-keycopy.sh
+Fixing gpt-cli/formats/class
+Fixing cmds/xavier2-ib-mount.sh
+Fixing cmds/xavier2-ib-ibotics-rsync.sh
+Fixing cmds/orin-mantis-keycopy.sh
+Fixing cmds/spear-yellow-rsync.sh
+Fixing cmds/spear-jetson-root-ssh.sh
+Fixing cmds/spear-exp-yellow-rsync.sh
+Fixing cmds/spear-jetson-root-rsync.sh
+Fixing cmds/xavier2-ib-ibotics-mount.sh
+Fixing cmds/spear-blue-mount.sh
+Fixing cmds/startlight4-mount.sh
+Fixing cmds/xavier1-ib-ssh.sh
+Fixing cmds/dl-41-mount.sh
+Fixing cmds/get_testday5.sh
+Fixing cmds/avalor-jetson-ssh.sh
+Fixing cmds/orin-mantis-rsync.sh
+Fixing cmds/linux-pc-mount.sh
+Fixing cmds/orin-gold-mount.sh
+Fixing cmds/xavier2-ib-ssh.sh
+Fixing cmds/dl-41-rsync-yolo.sh
+Fixing cmds/spear-exp-green-keycopy.sh
+Fixing cmds/spear-blue-ssh.sh
+Fixing cmds/spear-jetson-ssh.sh
+Fixing cmds/dl-3-mount.sh
+Fixing cmds/orin-mantis-ssh.sh
+Fixing cmds/toren-ssh.sh
+Fixing cmds/xavier1-ib-mount.sh
+Fixing cmds/spear-yellow-keycopy.sh
+Fixing cmds/orin-gold-keycopy.sh
+Fixing cmds/spear-jetson-root-mount.sh
+Fixing cmds/startlight4-ssh.sh
+Fixing cmds/dl-3-rsync.sh
+Fixing cmds/avalor-jetson-keycopy.sh
+Fixing cmds/dl-11-rsync_tools.sh
+Fixing cmds/orin-mantis-b-mount.sh
+Fixing cmds/spear-jetson-mount.sh
+Fixing cmds/spear-jetson-root-keycopy.sh
+Fixing cmds/laptop-cv90-keycopy.sh
+Fixing cmds/toren-mount.sh
+Fixing cmds/spear-exp-green-rsync.sh
+Fixing cmds/spear-jetson-rsync.sh
+Fixing cmds/spear-exp-yellow-mount.sh
+Fixing cmds/xavier1-ib-ibotics-keycopy.sh
+Fixing cmds/linux-pc-ssh.sh
+Fixing cmds/avalor-jetson-mount.sh
+Fixing cmds/xavier1-ib-keycopy.sh
+Fixing cmds/dl-41-rsync.sh
+Fixing cmds/spear-exp-keycopy.sh
+Fixing cmds/spear-delft-dynamics-jetson-ssh.sh
+Fixing cmds/avalor-jetson-rsync.sh
+
+pretty format json.......................................................Failed
+- hook id: pretty-format-json
+- exit code: 1
+- files were modified by this hook
+
+Fixing file VsCodeSynthesis/python.json
+
+check for added large files..............................................Passed
+mixed line ending........................................................Passed
+trim trailing whitespace.................................................Passed
+
+2023-12-23T14:48:07.861510+0100 INFO Succesfully updated all repos
+2023-12-23T14:58:07.959420+0100 INFO updating repo at $HOME/git/tools
+2023-12-23T14:58:18.954192+0100 INFO Succesfully updated all repos

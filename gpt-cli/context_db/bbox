@@ -1,0 +1,15 @@
+Bbox:
+	Bbox class with bbox and anchor
+	Args:
+		bbox: numpy array of N x (x,y,w,h) -> Nx4
+		anchor: BboxAnchor class (default bottomcenter)
+
+	The bbox class can contain more bboxes for performance reasons: it takes less time to calculate
+	the overlap or the extrapolation.
+
+	Internally the bbox is stored as x,y,w,h. Other type (like x2, xcenter, x_anchor) are property functions.
+
+	Examples:
+		bbox1 = Bbox(np.array([[1,2,3,4]])) # use twice brackets [[ and ]] to make it a 1x4 Array
+
+		bbox10x = Bbox(np.array([[1,2,3,4]]*10))
